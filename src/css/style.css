@@ -1,0 +1,14 @@
+@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+* {
+  margin: 0;
+  padding: 0;
+  transition: width 0.4s ease-out, height 0.4s ease-out, transform 0.3s ease-out, opacity 0.4s ease-in-out, background 0.4s ease-in-out;
+}
+.unselectable {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+body,
+html {
+  backface-visibility: hidden;
+}

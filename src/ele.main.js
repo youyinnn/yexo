@@ -48,8 +48,17 @@ if (!gotTheLock) {
                     script: 'npm run less'
                 },
                 {
+                    action: 'script',
+                    target: '.*\.js',
+                    script: 'npm run wp'
+                },
+                {
                     action: 'app.relaunch',
-                    target: 'preload.js|index.js|prop.yaml'
+                    target: 'ele.main.js'
+                },
+                {
+                    action: 'app.reload',
+                    target: 'bundle.js'
                 }
             ],
             log: true,
@@ -76,7 +85,7 @@ if (!gotTheLock) {
             win.loadFile(path.join(__dirname, 'index.html'));
 
             // Open the DevTools.
-            // mainWindow.webContents.openDevTools();
+            win.webContents.openDevTools();
             win.on('closed', () => {
                 win = null
             })

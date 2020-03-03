@@ -3,15 +3,16 @@
   "productName": "yexo",
   "version": "1.0.0",
   "description": "My Electron application description",
-  "main": "src/main.js",
+  "main": "src/ele.main.js",
   "scripts": {
-    "start": "electron-forge start -- --dev",
+    "start": "npm run wp && npm run less && electron-forge start -- --dev",
     "package": "electron-forge package",
     "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
-    "less": "lessc src/css/style.less src/css/style.css",
-    "babel": "./node_modules/.bin/babel src/js --out-dir src/babel"
+    "less": "lessc src/css/index.less src/css/style.css",
+    "babel": "npx babel src/js --out-dir src/babel",
+    "wp": "webpack --config src/config/webpack.config.js"
   },
   "keywords": [],
   "author": {
@@ -47,7 +48,9 @@
     }
   },
   "dependencies": {
-    "electron-squirrel-startup": "^1.0.0"
+    "bootstrap": "^4.4.1",
+    "electron-squirrel-startup": "^1.0.0",
+    "jquery": "^3.4.1"
   },
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.50",
@@ -56,6 +59,8 @@
     "@electron-forge/maker-squirrel": "6.0.0-beta.50",
     "@electron-forge/maker-zip": "6.0.0-beta.50",
     "electron": "8.0.2",
-    "electron-nice-auto-reload": "^1.0.3"
+    "electron-nice-auto-reload": "^1.0.3",
+    "webpack": "^4.42.0",
+    "webpack-cli": "^3.3.11"
   }
 }
