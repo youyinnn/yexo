@@ -1,0 +1,59 @@
+@topFrameHeight: 35px;
+
+#apptitle{
+    display: inline-block;
+    height: @topFrameHeight;
+    line-height: @topFrameHeight;
+    padding: 0 10px;
+}
+
+#topframe {
+  position: absolute;
+  top: 0;
+  height: @topFrameHeight;
+  width: 100%;
+  background-color: #adb5bd;
+
+  -webkit-app-region: drag;
+
+  .pbtn {
+    -webkit-app-region: no-drag;
+  }
+}
+
+#contantframe {
+  position: absolute;
+  top: @topFrameHeight;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+}
+
+.pbtn {
+  position: relative;
+  float: left;
+  height: @topFrameHeight;
+  width: 6rem;
+  text-align: center;
+  line-height: @topFrameHeight;
+  // color: @pbtnFontColor;
+  cursor: pointer;
+  transition: all .2s !important;
+  top: 0;
+  font-size: larger;
+
+  .unselectable();
+
+  &:hover {
+    background-color: #93979b;
+  }
+
+  &:active i {
+    transform: translateY(3px);
+  }
+}
+
+.pbtnright {
+  float: right;
+  width: 2.5rem;
+}

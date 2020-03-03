@@ -6,3 +6,6 @@ require('../../node_modules/bootstrap/dist/js/bootstrap.bundle')
 // my init
 var init = require('./init')
 init.init()
+
+// Global Constant
+process.env.APPNAME = 'Yexo'

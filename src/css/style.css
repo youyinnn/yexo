@@ -1,4 +1,6 @@
 @import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
+@import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+@import "../../node_modules/animate.css/animate.min.css";
 * {
   margin: 0;
   padding: 0;
@@ -11,4 +13,52 @@
 body,
 html {
   backface-visibility: hidden;
+}
+#apptitle {
+  display: inline-block;
+  height: 35px;
+  line-height: 35px;
+  padding: 0 10px;
+}
+#topframe {
+  position: absolute;
+  top: 0;
+  height: 35px;
+  width: 100%;
+  background-color: #adb5bd;
+  -webkit-app-region: drag;
+}
+#topframe .pbtn {
+  -webkit-app-region: no-drag;
+}
+#contantframe {
+  position: absolute;
+  top: 35px;
+  bottom: 0;
+  width: 100%;
+  padding: 15px;
+}
+.pbtn {
+  position: relative;
+  float: left;
+  height: 35px;
+  width: 6rem;
+  text-align: center;
+  line-height: 35px;
+  cursor: pointer;
+  transition: all 0.2s !important;
+  top: 0;
+  font-size: larger;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+.pbtn:hover {
+  background-color: #93979b;
+}
+.pbtn:active i {
+  transform: translateY(3px);
+}
+.pbtnright {
+  float: right;
+  width: 2.5rem;
 }

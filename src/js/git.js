@@ -1,3 +1,3 @@
-exports.get = () => {
-    console.log('git')
+exports.gitInit = () => {
+    console.log('git init')
 }
