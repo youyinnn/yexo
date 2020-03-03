@@ -1,8 +1,7 @@
-function init() {
-    console.log(123)
-    this.hello = () => {
-        console.log(456)
-    }
+exports.init = () => {
+    var git = require('./git')
+    git.get()
+    $(function() {
+        $('[data-toggle="tooltip"]').tooltip()
+    })
 }
-
-module.exports = init

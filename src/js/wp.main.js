@@ -1,5 +1,8 @@
+// jquery in electron
 window.$ = window.jQuery = require('../../node_modules/jquery/dist/jquery.js');
-var init = require('./init')
+// bootstrap bundle
+require('../../node_modules/bootstrap/dist/js/bootstrap.bundle')
 
-init = new init()
-init.hello()
+// my init
+var init = require('./init')
+init.init()

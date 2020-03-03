@@ -105,7 +105,7 @@ if (!gotTheLock) {
                     win.webContents.openDevTools()
                 }
             })
-            globalShortcut.register('CommandOrControl+C', () => {
+            globalShortcut.register('CommandOrControl+Shift+C', () => {
                 app.quit()
             })
         }
