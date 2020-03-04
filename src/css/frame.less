@@ -1,13 +1,13 @@
-@topFrameHeight: 35px;
+@topFrameHeight: 32px;
 
-#apptitle{
+#app-title{
     display: inline-block;
     height: @topFrameHeight;
     line-height: @topFrameHeight;
     padding: 0 10px;
 }
 
-#topframe {
+#app-frame {
   position: absolute;
   top: 0;
   height: @topFrameHeight;
@@ -21,12 +21,23 @@
   }
 }
 
-#contantframe {
+#content-frame {
   position: absolute;
   top: @topFrameHeight;
   bottom: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
+  margin: auto;
   padding: 15px;
+}
+
+.app-frame-botton {
+  float: right;
+  -webkit-app-region: no-drag;
+
+  &:focus {
+    box-shadow: none !important;
+  }
 }
 
 .pbtn {
@@ -56,4 +67,8 @@
 .pbtnright {
   float: right;
   width: 2.5rem;
+}
+
+.haha {
+  background-color: salmon;
 }

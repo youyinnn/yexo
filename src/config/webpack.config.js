@@ -10,5 +10,10 @@ module.exports = {
         // 输出文件都放到 dist 目录下
         path: path.resolve(__dirname, '..', 'js'),
     },
-    mode: 'development'
+    mode: 'development',
+    resolve: {
+        alias: {
+            'vue$': path.resolve(__dirname, '..', '..', 'node_modules', 'vue/dist/vue.common.js')
+        }
+    }
 };

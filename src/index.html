@@ -5,29 +5,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval'; img-src 'self' data:; font-src 'self' data:" />
     <title>Yexo</title>
+    <script src="../node_modules/vue/dist/vue.min.js"></script>
+    <script src="../node_modules/view-design/dist/iview.min.js"></script>
     <link rel="stylesheet" href="./css/style.css">
 </head>
 
 <body>
 
-    <div id="topframe">
-        <div id="apptitle">
-          
+    <div id="app-frame">
+        <div id="app-title">
+            {{ title }}
         </div>
-        <div id="winclose" class="pbtn pbtnright">
-            <i class="fa fa-times"></i>
-        </div>
-        <div id="winmaximize" class="pbtn pbtnright">
-            <i class="fa"></i>
-        </div>
-        <div id="winminimize" class="pbtn pbtnright">
-            <i class="fa fa-minus"></i>
-        </div>
+        <i-button class="app-frame-botton" type="text" icon="md-close" @click="appClose" ghost>
+        </i-button>
+        <i-button class="app-frame-botton"  type="text" icon="md-remove" @click="appMinimize" ghost>
+        </i-button>
     </div>
 
-    <div id="contantframe">
-      <h1>💖 Hello World!</h1>
-      <p>Welcome to your Electron application.</p>
+    <div id="content-frame">
+        <div-example title="Hello World" content="Welcome to here."></div-example>
+        <hr>
+        <div-example title="Hello World" content="Welcome to here."></div-example>
+        <i-button @click="show">Click me!</i-button>
     </div>
 
     <script src="./js/bundle.js"></script>

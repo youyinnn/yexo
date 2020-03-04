@@ -1,6 +1,5 @@
-@import "../../node_modules/bootstrap/dist/css/bootstrap.min.css";
-@import "../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
 @import "../../node_modules/animate.css/animate.min.css";
+@import "../../node_modules/view-design/dist/styles/iview.css";
 * {
   margin: 0;
   padding: 0;
@@ -14,37 +13,46 @@ body,
 html {
   backface-visibility: hidden;
 }
-#apptitle {
+#app-title {
   display: inline-block;
-  height: 35px;
-  line-height: 35px;
+  height: 32px;
+  line-height: 32px;
   padding: 0 10px;
 }
-#topframe {
+#app-frame {
   position: absolute;
   top: 0;
-  height: 35px;
+  height: 32px;
   width: 100%;
   background-color: #adb5bd;
   -webkit-app-region: drag;
 }
-#topframe .pbtn {
+#app-frame .pbtn {
   -webkit-app-region: no-drag;
 }
-#contantframe {
+#content-frame {
   position: absolute;
-  top: 35px;
+  top: 32px;
   bottom: 0;
-  width: 100%;
+  left: 0;
+  right: 0;
+  margin: auto;
   padding: 15px;
+}
+.app-frame-botton {
+  float: right;
+  -webkit-app-region: no-drag;
+}
+.app-frame-botton:focus {
+  box-shadow: none !important;
 }
 .pbtn {
   position: relative;
   float: left;
-  height: 35px;
+  height: 32px;
   width: 6rem;
   text-align: center;
-  line-height: 35px;
+  line-height: 32px;
   cursor: pointer;
   transition: all 0.2s !important;
   top: 0;
@@ -61,4 +69,7 @@ html {
 .pbtnright {
   float: right;
   width: 2.5rem;
+}
+.haha {
+  background-color: salmon;
 }

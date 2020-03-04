@@ -75,7 +75,7 @@ if (!gotTheLock) {
                 },
                 autoHideMenuBar: true,
                 frame: false,
-                // resizable: false,
+                resizable: false,
                 x: 180,
                 y: 100,
                 show: false
