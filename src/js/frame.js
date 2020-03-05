@@ -9,14 +9,14 @@ export default () => {
     Vue.component('app-frame', {
         props: ['title'],
         template: `
-            <div id="app-frame" class="teal">
-                <div id="app-title">
+            <div id="app-frame" class="teal lighten-1">
+                <div id="app-title" style="color: #EEEEEE">
                     {{ title }}
                 </div>
-                <v-btn :ripple="false" tile small text @click="winClose">
+                <v-btn color="teal darken-1" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winClose">
                     <v-icon>mdi-close</v-icon>
                 </v-btn>                
-                <v-btn :ripple="false" tile small text @click="winMinimize">
+                <v-btn color="teal" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winMinimize">
                     <v-icon>mdi-minus</v-icon>
                 </v-btn>
             </div>
