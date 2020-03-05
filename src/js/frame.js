@@ -1,5 +1,8 @@
-exports.frameInit = () => {
-    var win = require('electron').remote.getGlobal('share').win
+import { remote } from 'electron'
+import Vue from 'vue'
+
+function frameInit() {
+    var win = remote.getGlobal('share').win
 
     var appFrame = new Vue({
         el: '#app-frame',
@@ -44,4 +47,8 @@ exports.frameInit = () => {
         }
     })
 
+}
+
+export {
+    frameInit
 }

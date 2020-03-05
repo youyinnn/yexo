@@ -1,6 +1,6 @@
 // my init
-var init = require('./init')
-init.init()
+import init from './init'
+init()
 
 // Global Constant
 process.env.APPNAME = 'Yexo'
