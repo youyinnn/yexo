@@ -1,4 +1,5 @@
 const path = require('path');
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
     target: 'electron-renderer',
@@ -13,11 +14,18 @@ module.exports = {
     mode: 'development',
     resolve: {
         alias: {
-            'vue$': path.resolve(__dirname, '..', '..', 'node_modules', 'vue/dist/vue.common.js')
+            'vue$': path.resolve(__dirname, '..', '..', 'node_modules', 'vue/dist/vue.common.js'),
+            'component': '../component'
         }
     },
     module: {
         rules: [{
+                test: /\.vue$/,
+                use: {
+                    loader: 'vue-loader'
+                }
+            },
+            {
                 test: /\.css$/,
                 use: ['style-loader', 'css-loader']
             },
@@ -45,5 +53,9 @@ module.exports = {
                 ]
             }
         ]
-    }
+    },
+    plugins: [
+        // 请确保引入这个插件！
+        new VueLoaderPlugin()
+    ]
 };

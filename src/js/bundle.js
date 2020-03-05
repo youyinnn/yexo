@@ -215,6 +215,42 @@ eval("\n\nvar isOldIE = function isOldIE() {\n  var memo;\n  return function mem
 
 /***/ }),
 
+/***/ "./node_modules/vue-loader/lib/index.js?!./src/component/app-frame.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib??vue-loader-options!./src/component/app-frame.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ \"electron\");\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n//\n\n\n\nvar win = electron__WEBPACK_IMPORTED_MODULE_0__[\"remote\"].getGlobal('share').win\n\n/* harmony default export */ __webpack_exports__[\"default\"] = ({\n    props: ['title'],\n    methods: {\n        winMinimize: function() {\n            win.minimize()\n        },\n        winClose: function() {\n            win.close()\n        },\n    }\n});\n\n\n//# sourceURL=webpack:///./src/component/app-frame.vue?./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/component/app-frame.vue?vue&type=template&id=47e01e66&":
+/*!**************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./src/component/app-frame.vue?vue&type=template&id=47e01e66& ***!
+  \**************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return render; });\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return staticRenderFns; });\nvar render = function() {\n  var _vm = this\n  var _h = _vm.$createElement\n  var _c = _vm._self._c || _h\n  return _c(\n    \"div\",\n    { staticClass: \"red lighten-1\", attrs: { id: \"app-frame\" } },\n    [\n      _c(\n        \"div\",\n        { staticStyle: { color: \"#EEEEEE\" }, attrs: { id: \"app-title\" } },\n        [_vm._v(\"\\n        \" + _vm._s(_vm.title) + \"\\n    \")]\n      ),\n      _vm._v(\" \"),\n      _c(\n        \"v-btn\",\n        {\n          staticStyle: { color: \"#EEEEEE\" },\n          attrs: {\n            color: \"teal lighten-1\",\n            ripple: false,\n            tile: \"\",\n            small: \"\",\n            depressed: \"\"\n          },\n          on: { click: _vm.winClose }\n        },\n        [_c(\"v-icon\", [_vm._v(\"mdi-close\")])],\n        1\n      ),\n      _vm._v(\" \"),\n      _c(\n        \"v-btn\",\n        {\n          staticStyle: { color: \"#EEEEEE\" },\n          attrs: {\n            color: \"blue\",\n            ripple: false,\n            tile: \"\",\n            small: \"\",\n            depressed: \"\"\n          },\n          on: { click: _vm.winMinimize }\n        },\n        [_c(\"v-icon\", [_vm._v(\"mdi-minus\")])],\n        1\n      )\n    ],\n    1\n  )\n}\nvar staticRenderFns = []\nrender._withStripped = true\n\n\n\n//# sourceURL=webpack:///./src/component/app-frame.vue?./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options");
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"default\", function() { return normalizeComponent; });\n/* globals __VUE_SSR_CONTEXT__ */\n\n// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).\n// This module is a runtime utility for cleaner component module output and will\n// be included in the final webpack user bundle.\n\nfunction normalizeComponent (\n  scriptExports,\n  render,\n  staticRenderFns,\n  functionalTemplate,\n  injectStyles,\n  scopeId,\n  moduleIdentifier, /* server only */\n  shadowMode /* vue-cli only */\n) {\n  // Vue.extend constructor export interop\n  var options = typeof scriptExports === 'function'\n    ? scriptExports.options\n    : scriptExports\n\n  // render functions\n  if (render) {\n    options.render = render\n    options.staticRenderFns = staticRenderFns\n    options._compiled = true\n  }\n\n  // functional template\n  if (functionalTemplate) {\n    options.functional = true\n  }\n\n  // scopedId\n  if (scopeId) {\n    options._scopeId = 'data-v-' + scopeId\n  }\n\n  var hook\n  if (moduleIdentifier) { // server build\n    hook = function (context) {\n      // 2.3 injection\n      context =\n        context || // cached call\n        (this.$vnode && this.$vnode.ssrContext) || // stateful\n        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional\n      // 2.2 with runInNewContext: true\n      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {\n        context = __VUE_SSR_CONTEXT__\n      }\n      // inject component styles\n      if (injectStyles) {\n        injectStyles.call(this, context)\n      }\n      // register component module identifier for async chunk inferrence\n      if (context && context._registeredComponents) {\n        context._registeredComponents.add(moduleIdentifier)\n      }\n    }\n    // used by ssr in case component is cached and beforeCreate\n    // never gets called\n    options._ssrRegister = hook\n  } else if (injectStyles) {\n    hook = shadowMode\n      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }\n      : injectStyles\n  }\n\n  if (hook) {\n    if (options.functional) {\n      // for template-only hot-reload because in that case the render fn doesn't\n      // go through the normalizer\n      options._injectStyles = hook\n      // register for functional component in vue file\n      var originalRender = options.render\n      options.render = function renderWithStyleInjection (h, context) {\n        hook.call(context)\n        return originalRender(h, context)\n      }\n    } else {\n      // inject component registration as beforeCreate hook\n      var existing = options.beforeCreate\n      options.beforeCreate = existing\n        ? [].concat(existing, hook)\n        : [hook]\n    }\n  }\n\n  return {\n    exports: scriptExports,\n    options: options\n  }\n}\n\n\n//# sourceURL=webpack:///./node_modules/vue-loader/lib/runtime/componentNormalizer.js?");
+
+/***/ }),
+
 /***/ "./node_modules/vue/dist/vue.common.dev.js":
 /*!*************************************************!*\
   !*** ./node_modules/vue/dist/vue.common.dev.js ***!
@@ -260,6 +296,42 @@ eval("var api = __webpack_require__(/*! ../../style-loader/dist/runtime/injectSt
 
 /***/ }),
 
+/***/ "./src/component/app-frame.vue":
+/*!*************************************!*\
+  !*** ./src/component/app-frame.vue ***!
+  \*************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./app-frame.vue?vue&type=template&id=47e01e66& */ \"./src/component/app-frame.vue?vue&type=template&id=47e01e66&\");\n/* harmony import */ var _app_frame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-frame.vue?vue&type=script&lang=js& */ \"./src/component/app-frame.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ \"./node_modules/vue-loader/lib/runtime/componentNormalizer.js\");\n\n\n\n\n\n/* normalize component */\n\nvar component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__[\"default\"])(\n  _app_frame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[\"default\"],\n  _app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__[\"render\"],\n  _app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"],\n  false,\n  null,\n  null,\n  null\n  \n)\n\n/* hot reload */\nif (false) { var api; }\ncomponent.options.__file = \"src/component/app-frame.vue\"\n/* harmony default export */ __webpack_exports__[\"default\"] = (component.exports);\n\n//# sourceURL=webpack:///./src/component/app-frame.vue?");
+
+/***/ }),
+
+/***/ "./src/component/app-frame.vue?vue&type=script&lang=js&":
+/*!**************************************************************!*\
+  !*** ./src/component/app-frame.vue?vue&type=script&lang=js& ***!
+  \**************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_index_js_vue_loader_options_app_frame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib??vue-loader-options!./app-frame.vue?vue&type=script&lang=js& */ \"./node_modules/vue-loader/lib/index.js?!./src/component/app-frame.vue?vue&type=script&lang=js&\");\n/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__[\"default\"] = (_node_modules_vue_loader_lib_index_js_vue_loader_options_app_frame_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[\"default\"]); \n\n//# sourceURL=webpack:///./src/component/app-frame.vue?");
+
+/***/ }),
+
+/***/ "./src/component/app-frame.vue?vue&type=template&id=47e01e66&":
+/*!********************************************************************!*\
+  !*** ./src/component/app-frame.vue?vue&type=template&id=47e01e66& ***!
+  \********************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../node_modules/vue-loader/lib??vue-loader-options!./app-frame.vue?vue&type=template&id=47e01e66& */ \"./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./src/component/app-frame.vue?vue&type=template&id=47e01e66&\");\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"render\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__[\"render\"]; });\n\n/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, \"staticRenderFns\", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_app_frame_vue_vue_type_template_id_47e01e66___WEBPACK_IMPORTED_MODULE_0__[\"staticRenderFns\"]; });\n\n\n\n//# sourceURL=webpack:///./src/component/app-frame.vue?");
+
+/***/ }),
+
 /***/ "./src/js/frame.js":
 /*!*************************!*\
   !*** ./src/js/frame.js ***!
@@ -268,7 +340,7 @@ eval("var api = __webpack_require__(/*! ../../style-loader/dist/runtime/injectSt
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! electron */ \"electron\");\n/* harmony import */ var electron__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(electron__WEBPACK_IMPORTED_MODULE_0__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.common.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);\n\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (() => {\n    var win = electron__WEBPACK_IMPORTED_MODULE_0__[\"remote\"].getGlobal('share').win\n\n    vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('app-frame', {\n        props: ['title'],\n        template: `\n            <div id=\"app-frame\" class=\"teal lighten-1\">\n                <div id=\"app-title\" style=\"color: #EEEEEE\">\n                    {{ title }}\n                </div>\n                <v-btn color=\"teal darken-1\" style=\"color: #EEEEEE\" :ripple=\"false\" tile small depressed @click=\"winClose\">\n                    <v-icon>mdi-close</v-icon>\n                </v-btn>                \n                <v-btn color=\"teal\" style=\"color: #EEEEEE\" :ripple=\"false\" tile small depressed @click=\"winMinimize\">\n                    <v-icon>mdi-minus</v-icon>\n                </v-btn>\n            </div>\n        `,\n        methods: {\n            winMinimize: function() {\n                win.minimize()\n            },\n            winClose: function() {\n                win.close()\n            },\n        }\n    })\n\n    vue__WEBPACK_IMPORTED_MODULE_1___default.a.component('div-example', {\n        props: ['title', 'content'],\n        data: function() {\n            return {\n                xixi: 'haha',\n                heihei: 'hoho'\n            }\n        },\n        template: `\n            <div :class=\"xixi\">\n                <h1>💖{{title}}</h1>\n                <p>{{content}}</p>\n                <p>{{heihei}}</p>\n            </div>`\n    })\n    // var contentFrame = new Vue({\n    //     el: '#content-frame',\n    //     data: {\n    //         title: 'Yexo'\n    //     },\n    //     methods: {\n    //         show: function () {\n    //             console.log(123)\n    //         }\n    //     }\n    // })\n\n});\n\n//# sourceURL=webpack:///./src/js/frame.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.common.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_0__);\n\n\n/* harmony default export */ __webpack_exports__[\"default\"] = (() => {\n\n    vue__WEBPACK_IMPORTED_MODULE_0___default.a.component('div-example', {\n        props: ['title', 'content'],\n        data: function() {\n            return {\n                xixi: 'haha',\n                heihei: 'hoho'\n            }\n        },\n        template: `\n            <div :class=\"xixi\">\n                <h1>💖{{title}}</h1>\n                <p>{{content}}</p>\n                <p>{{heihei}}</p>\n            </div>`\n    })\n\n});\n\n//# sourceURL=webpack:///./src/js/frame.js?");
 
 /***/ }),
 
@@ -292,7 +364,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _fra
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init */ \"./src/js/init.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.common.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _plugins_vuetify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../plugins/vuetify */ \"./src/plugins/vuetify.js\");\n// my init\r\n\r\nObject(_init__WEBPACK_IMPORTED_MODULE_0__[\"default\"])()\r\n\r\n\r\n // path to vuetify export\r\n\r\nnew vue__WEBPACK_IMPORTED_MODULE_1___default.a({\r\n  vuetify: _plugins_vuetify__WEBPACK_IMPORTED_MODULE_2__[\"default\"],\r\n}).$mount('#app')\r\n\r\n// Global Constant\r\nprocess.env.APPNAME = 'Yexo'\r\n\n\n//# sourceURL=webpack:///./src/js/wp.main.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony import */ var _init__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./init */ \"./src/js/init.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! vue */ \"./node_modules/vue/dist/vue.common.js\");\n/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(vue__WEBPACK_IMPORTED_MODULE_1__);\n/* harmony import */ var _plugins_vuetify__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../plugins/vuetify */ \"./src/plugins/vuetify.js\");\n/* harmony import */ var component_app_frame_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! component/app-frame.vue */ \"./src/component/app-frame.vue\");\n// my init\r\n\r\nObject(_init__WEBPACK_IMPORTED_MODULE_0__[\"default\"])()\r\n\r\n\r\n // path to vuetify export\r\n\r\n\r\nnew vue__WEBPACK_IMPORTED_MODULE_1___default.a({\r\n  vuetify: _plugins_vuetify__WEBPACK_IMPORTED_MODULE_2__[\"default\"],\r\n  components: {\r\n    'app-frame': component_app_frame_vue__WEBPACK_IMPORTED_MODULE_3__[\"default\"]\r\n  }\r\n}).$mount('#app')\r\n\r\n// Global Constant\r\nprocess.env.APPNAME = 'Yexo'\r\n\n\n//# sourceURL=webpack:///./src/js/wp.main.js?");
 
 /***/ }),
 

@@ -49,7 +49,7 @@ if (!gotTheLock) {
                 },
                 {
                     action: 'script',
-                    target: '.*\.js',
+                    target: '.*\.js|.*\.vue',
                     script: 'npm run devwp'
                 },
                 {
