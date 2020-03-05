@@ -1,23 +1,21 @@
 import { remote } from 'electron'
 import Vue from 'vue'
 
-function frameInit() {
+export default () => {
     var win = remote.getGlobal('share').win
 
-    var appFrame = new Vue({
-        el: '#app-frame',
-        data: {
-            title: 'Yexo',
-            win: win
-        },
-        methods: {
-            appClose: function () {
-                this.win.close()
-            },
-            appMinimize: function () {
-                this.win.minimize()
-            }
-        }
+    Vue.component('app-frame', {
+        props: ['title'],
+        template: `
+            <div id="app-frame">
+                <div id="app-title">
+                    {{ title }}
+                </div>
+                <v-btn class="ma-2" color="primary" small text>
+                    <v-icon>mdi-checkbox-marked-circle</v-icon>
+                </v-btn>
+            </div>
+        `
     })
 
     Vue.component('div-example', {
@@ -35,20 +33,16 @@ function frameInit() {
                 <p>{{heihei}}</p>
             </div>`
     })
-    var contentFrame = new Vue({
-        el: '#content-frame',
-        data: {
-            title: 'Yexo'
-        },
-        methods: {
-            show: function () {
-                console.log(123)
-            }
-        }
-    })
+    // var contentFrame = new Vue({
+    //     el: '#content-frame',
+    //     data: {
+    //         title: 'Yexo'
+    //     },
+    //     methods: {
+    //         show: function () {
+    //             console.log(123)
+    //         }
+    //     }
+    // })
 
-}
-
-export {
-    frameInit
 }

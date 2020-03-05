@@ -1,4 +1,7 @@
-@topFrameHeight: 32px;
+html {
+  overflow: hidden !important;
+}
+@topFrameHeight: 28px;
 
 #app-title{
     display: inline-block;
@@ -31,42 +34,13 @@
   padding: 15px;
 }
 
-.app-frame-botton {
+.v-btn {
   float: right;
   -webkit-app-region: no-drag;
 
   &:focus {
     box-shadow: none !important;
   }
-}
-
-.pbtn {
-  position: relative;
-  float: left;
-  height: @topFrameHeight;
-  width: 6rem;
-  text-align: center;
-  line-height: @topFrameHeight;
-  // color: @pbtnFontColor;
-  cursor: pointer;
-  transition: all .2s !important;
-  top: 0;
-  font-size: larger;
-
-  .unselectable();
-
-  &:hover {
-    background-color: #93979b;
-  }
-
-  &:active i {
-    transform: translateY(3px);
-  }
-}
-
-.pbtnright {
-  float: right;
-  width: 2.5rem;
 }
 
 .haha {
