@@ -50,7 +50,7 @@ if (!gotTheLock) {
                 {
                     action: 'script',
                     target: '.*\.js',
-                    script: 'npm run wp'
+                    script: 'npm run devwp'
                 },
                 {
                     action: 'app.relaunch',
@@ -110,7 +110,48 @@ if (!gotTheLock) {
             })
         }
     } else {
+        createWindow = () => {
+            // Create the browser window.
+            win = new BrowserWindow({
+                width: 400,
+                height: 600,
+                webPreferences: {
+                    nodeIntegration: true,
+                },
+                autoHideMenuBar: true,
+                frame: false,
+                resizable: false,
+                x: 180,
+                y: 100,
+                show: false
+            });
 
+            // and load the index.html of the app.
+            win.loadFile(path.join(__dirname, 'index.html'));
+
+            win.on('closed', () => {
+                win = null
+            })
+            win.once('ready-to-show', () => {
+                setTimeout(() => {
+                    win.show()
+                }, 200);
+            })
+            global.share = {
+                win: win,
+                isDev: isDev,
+            }
+            globalShortcut.register('CommandOrControl+O', () => {
+                if (win.webContents.isDevToolsOpened()) {
+                    win.webContents.closeDevTools()
+                } else {
+                    win.webContents.openDevTools()
+                }
+            })
+            globalShortcut.register('CommandOrControl+Shift+C', () => {
+                app.quit()
+            })
+        }
     }
 
     app.on('ready', createWindow)

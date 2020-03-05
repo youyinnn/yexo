@@ -1,4 +1,6 @@
-import { remote } from 'electron'
+import {
+    remote
+} from 'electron'
 import Vue from 'vue'
 
 export default () => {
@@ -7,20 +9,31 @@ export default () => {
     Vue.component('app-frame', {
         props: ['title'],
         template: `
-            <div id="app-frame">
+            <div id="app-frame" class="teal">
                 <div id="app-title">
                     {{ title }}
                 </div>
-                <v-btn class="ma-2" color="primary" small text>
-                    <v-icon>mdi-checkbox-marked-circle</v-icon>
+                <v-btn :ripple="false" tile small text @click="winClose">
+                    <v-icon>mdi-close</v-icon>
+                </v-btn>                
+                <v-btn :ripple="false" tile small text @click="winMinimize">
+                    <v-icon>mdi-minus</v-icon>
                 </v-btn>
             </div>
-        `
+        `,
+        methods: {
+            winMinimize: function() {
+                win.minimize()
+            },
+            winClose: function() {
+                win.close()
+            },
+        }
     })
 
     Vue.component('div-example', {
         props: ['title', 'content'],
-        data: function () {
+        data: function() {
             return {
                 xixi: 'haha',
                 heihei: 'hoho'

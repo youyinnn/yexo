@@ -11,13 +11,25 @@
 <body>
 
     <div id="app">
-        <app-frame title="Yexo"></app-frame>
-    
-        <div id="content-frame">
-            <div-example title="Hello World" content="Welcome to here."></div-example>
-            <hr>
-            <div-example title="Hello World" content="Welcome to here."></div-example>
-        </div>
+        <!-- 必须包在v-app里 不然vuetify会没有颜色 -->
+        <v-app>
+            <app-frame title="Yexo"></app-frame>
+
+            <div id="content-frame">
+                <div-example title="Hello World" content="Welcome to here."></div-example>
+                <hr>
+                <div-example title="Hello World" content="Welcome to here."></div-example>
+                <div class="text-center">
+                    <v-btn class="ma-2" tile color="indigo" dark>Tile Button</v-btn>
+                    <v-btn class="ma-2" tile outlined color="success">
+                        <v-icon left>mdi-pencil</v-icon> Edit
+                    </v-btn>
+                    <v-btn class="ma-2" tile large color="teal" icon>
+                        <v-icon>mdi-vuetify</v-icon>
+                    </v-btn>
+                </div>
+            </div>
+        </v-app>
     </div>
 
     <script src="./js/bundle.js"></script>
