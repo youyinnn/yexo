@@ -14,7 +14,7 @@ html {
 html {
   overflow: hidden !important;
 }
-#app-title {
+#app-frame-title {
   display: inline-block;
   height: 28px;
   line-height: 28px;
@@ -31,6 +31,16 @@ html {
 #app-frame .pbtn {
   -webkit-app-region: no-drag;
 }
+.frame-btn {
+  float: right;
+  -webkit-app-region: no-drag;
+}
+.frame-btn:focus {
+  box-shadow: none !important;
+}
+#app-side-drawer {
+  z-index: 100;
+}
 #content-frame {
   position: absolute;
   top: 28px;
@@ -39,13 +49,23 @@ html {
   right: 0;
   margin: auto;
 }
-.v-btn {
-  float: right;
-  -webkit-app-region: no-drag;
+#app-main-window {
+  left: 56px;
+  position: absolute;
+  right: 0;
+  margin: 0;
+  overflow: auto;
+  height: 100%;
 }
-.v-btn:focus {
-  box-shadow: none !important;
+.main-window {
+  position: absolute;
+  right: 0;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 0;
 }
-.haha {
-  background-color: whitesmoke;
+.show {
+  z-index: 10;
 }

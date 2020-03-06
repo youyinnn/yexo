@@ -1,13 +1,14 @@
 html {
   overflow: hidden !important;
 }
+
 @topFrameHeight: 28px;
 
-#app-title{
-    display: inline-block;
-    height: @topFrameHeight;
-    line-height: @topFrameHeight;
-    padding: 0 10px;
+#app-frame-title {
+  display: inline-block;
+  height: @topFrameHeight;
+  line-height: @topFrameHeight;
+  padding: 0 10px;
 }
 
 #app-frame {
@@ -24,24 +25,11 @@ html {
   }
 }
 
-#content-frame {
-  position: absolute;
-  top: @topFrameHeight;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  margin: auto;
-}
-
-.v-btn {
+.frame-btn {
   float: right;
   -webkit-app-region: no-drag;
 
   &:focus {
     box-shadow: none !important;
   }
-}
-
-.haha {
-  background-color: whitesmoke;
 }

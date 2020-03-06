@@ -1,8 +1,8 @@
 <template>
-    <v-navigation-drawer class="deep-purple" width="170" absolute dark permanent expand-on-hover>
+    <v-navigation-drawer id="app-side-drawer" class="deep-purple" width="170" absolute dark permanent expand-on-hover>
         <v-list>
             <v-list-item-group v-model="selected" mandatory>
-                <v-list-item v-for="item in items" :key="item.title" @click="item.action" link>
+                <v-list-item v-for="item in items" :key="item.title" @click="action(item.title)" link>
                     <v-list-item-icon>
                         <v-icon>{{ item.icon }}</v-icon>
                     </v-list-item-icon>
@@ -17,9 +17,13 @@
 
 <script>
     import {
-        mdiGithubBox,
+        mdiFileOutline,
         mdiGithubFace,
-        mdiGithubCircle
+        mdiGithubCircle,
+        mdiClipboardListOutline,
+        mdiScriptTextOutline,
+        mdiFolderHomeOutline,
+        mdiDotsVerticalCircleOutline
     } from '@mdi/js'
 
     export default {
@@ -27,26 +31,31 @@
             selected: 0,
             items: [{
                     title: 'Articles',
-                    icon: mdiGithubBox,
-                    action: () => {
-                        console.log(123)
-                    }
+                    icon: mdiFileOutline,
                 },
                 {
-                    title: 'Account',
-                    icon: mdiGithubFace,
-                    action: () => {
-                        console.log(456)
-                    }
+                    title: 'Scripts',
+                    icon: mdiScriptTextOutline,
+                },
+                {
+                    title: 'Todos',
+                    icon: mdiClipboardListOutline,
                 },
                 {
                     title: 'Github',
                     icon: mdiGithubCircle,
-                    action: () => {
-                        console.log(789)
-                    }
                 },
+                {
+                    title: 'Setting',
+                    icon: mdiDotsVerticalCircleOutline,
+                }
             ],
-        })
+        }),
+        methods: {
+            action: function(str) {
+                this.$store.commit('switchWindow',
+                    'window' + '-' + str.toLowerCase())
+            }
+        }
     }
 </script>

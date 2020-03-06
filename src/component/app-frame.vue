@@ -1,12 +1,12 @@
 <template>
     <div id="app-frame" class="red lighten-1">
-        <div id="app-title" style="color: #EEEEEE">
+        <div id="app-frame-title" style="color: #EEEEEE">
             {{ title }}
         </div>
-        <v-btn color="blue darken-1" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winClose">
+        <v-btn class="frame-btn" color="blue darken-1" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winClose">
             <v-icon>{{close}}</v-icon>
         </v-btn>
-        <v-btn color="grey darken-3" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winMinimize">
+        <v-btn class="frame-btn" color="grey darken-3" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winMinimize">
             <v-icon>{{minus}}</v-icon>
         </v-btn>
     </div>
