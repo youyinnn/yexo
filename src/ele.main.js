@@ -108,6 +108,7 @@ if (!gotTheLock) {
             globalShortcut.register('CommandOrControl+Shift+C', () => {
                 app.quit()
             })
+            BrowserWindow.addDevToolsExtension(path.join(process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0',))
         }
     } else {
         createWindow = () => {
