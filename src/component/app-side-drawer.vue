@@ -18,12 +18,12 @@
 <script>
     import {
         mdiFileOutline,
-        mdiGithubFace,
-        mdiGithubCircle,
-        mdiClipboardListOutline,
         mdiScriptTextOutline,
-        mdiFolderHomeOutline,
-        mdiDotsVerticalCircleOutline
+        mdiClipboardListOutline,
+        mdiAccountSupervisor,
+        mdiAccountBadge,
+        mdiGoogleDownasaur,
+        mdiSettings
     } from '@mdi/js'
 
     export default {
@@ -42,12 +42,20 @@
                     icon: mdiClipboardListOutline,
                 },
                 {
-                    title: 'Github',
-                    icon: mdiGithubCircle,
+                    title: 'Friends',
+                    icon: mdiAccountSupervisor,
+                },                
+                {
+                    title: 'Resumes',
+                    icon: mdiAccountBadge,
+                },                
+                {
+                    title: 'About',
+                    icon: mdiGoogleDownasaur,
                 },
                 {
-                    title: 'Setting',
-                    icon: mdiDotsVerticalCircleOutline,
+                    title: 'Settings',
+                    icon: mdiSettings,
                 }
             ],
         }),

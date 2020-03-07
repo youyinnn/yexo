@@ -4,8 +4,10 @@
         <window id="window-articles"></window>
         <window id="window-scripts"></window>
         <window id="window-todos"></window>
-        <window id="window-github"></window>
-        <window id="window-setting"></window>
+        <window id="window-friends"></window>
+        <window id="window-resumes"></window>
+        <window id="window-about"></window>
+        <window id="window-settings"></window>
     </div>
 </template>
 
@@ -23,11 +25,13 @@
             }
         },
         computed: {
+            // 多用一个switch变量 用于在 currentWindow 变化的同时 也变化switch
             switch: function() {
                 return this.$store.state.currentWindow
             }
         },
         watch: {
+            // 通过watch来检测switch变化 然后改变show
             switch: function(nv, ov) {
                 if (nv === this.id) {
                     setTimeout(() => {
