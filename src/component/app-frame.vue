@@ -4,10 +4,10 @@
             {{ title }}
         </div>
         <v-btn class="frame-btn" color="blue darken-1" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winClose">
-            <v-icon>{{close}}</v-icon>
+            <v-icon>{{closeIcon}}</v-icon>
         </v-btn>
         <v-btn class="frame-btn" color="grey darken-3" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winMinimize">
-            <v-icon>{{minus}}</v-icon>
+            <v-icon>{{minusIcon}}</v-icon>
         </v-btn>
     </div>
 </template>
@@ -35,8 +35,8 @@
             },
         },
         data: () => ({
-            close: mdiClose,
-            minus: mdiMinus
+            closeIcon: mdiClose,
+            minusIcon: mdiMinus
         })
     }
 </script>

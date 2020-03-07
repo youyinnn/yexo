@@ -7,7 +7,9 @@
         <window id="window-friends"></window>
         <window id="window-resumes"></window>
         <window id="window-about"></window>
-        <window id="window-settings"></window>
+        <window id="window-settings">
+            <window-settings></window-settings>
+        </window>
     </div>
 </template>
 
@@ -16,7 +18,7 @@
         props: ['id'],
         template: `
             <div :id="id" :class="show" class="main-window">
-                {{ id }}
+                <slot></slot>
             </div>
         `,
         data: function() {
@@ -43,9 +45,11 @@
             }
         }
     }
+    import windowSettings from './window-settings.vue'
     export default {
         components: {
-            'window': window
+            'window': window,
+            'window-settings': windowSettings
         }
     }
 </script>

@@ -7,6 +7,7 @@ import vuetify from '../plugins/vuetify' // path to vuetify export
 import appFrame from 'component/app-frame.vue'
 import appSideDrawer from 'component/app-side-drawer.vue'
 import appMainWindowBox from 'component/app-main-window-box.vue'
+import statusBar from 'component/status-bar.vue'
 
 import Vuex from 'vuex'
 
@@ -27,7 +28,8 @@ new Vue({
   components: {
     'app-frame': appFrame,
     'app-side-drawer': appSideDrawer,
-    'app-main-window-box': appMainWindowBox
+    'app-main-window-box': appMainWindowBox,
+    'status-bar': statusBar
   }
 }).$mount('#app')
 
