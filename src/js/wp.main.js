@@ -12,25 +12,38 @@ import statusBar from 'component/status-bar.vue'
 import Vuex from 'vuex'
 
 const store = new Vuex.Store({
-  state: {
-    currentWindow: 'window-articles'
-  },
-  mutations: {
-    switchWindow (state, winStr) {
-      state.currentWindow = winStr
+    state: {
+        currentWindow: 'window-articles'
+    },
+    mutations: {
+        switchWindow(state, winStr) {
+            state.currentWindow = winStr
+        }
     }
-  }
+})
+
+const vueMap = new Map()
+
+Vue.mixin({
+    data: function () {
+      return {
+        __map: vueMap
+      }
+    },
+    mounted: function() {
+        this.$data.__map.set(this.$el.id, this)
+    }
 })
 
 new Vue({
-  vuetify,
-  store,
-  components: {
-    'app-frame': appFrame,
-    'app-side-drawer': appSideDrawer,
-    'app-main-window-box': appMainWindowBox,
-    'status-bar': statusBar
-  }
+    vuetify,
+    store,
+    components: {
+        'app-frame': appFrame,
+        'app-side-drawer': appSideDrawer,
+        'app-main-window-box': appMainWindowBox,
+        'status-bar': statusBar
+    }
 }).$mount('#app')
 
 

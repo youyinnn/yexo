@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer id="app-side-drawer" dark width="170" absolute permanent :expand-on-hover="expandOnHover" @transitionend="transitionend">
+    <v-navigation-drawer id="app-side-drawer" dark width="150" :mini-variant="mini" absolute permanent>
         <v-list>
             <v-list-item-group v-model="selected" mandatory>
                 <v-list-item v-for="item in items" :key="item.title" @click="switchWindow(item.title)" link>
@@ -18,9 +18,9 @@
                     <v-icon>{{ actionIcon }}</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                    <v-menu top nudge-top="35">
+                    <v-menu top nudge-top="55" z-index="100">
                         <template v-slot:activator="{ on }">
-                            <v-btn small v-on="on" @focus="actionsBtnFocus" @blur="actionsBtnBlur">Actions</v-btn>
+                            <v-btn small v-on="on" @click="actionsBtnClick" @blur="actionsBtnBlur">Actions</v-btn>
                         </template>
                         <v-list dark dense color="blue-grey darken-3">
                             <v-divider></v-divider>
@@ -60,7 +60,7 @@
 
     export default {
         data: () => ({
-            expandOnHover: true,
+            mini: true,
             selected: 0,
             items: [{
                     title: 'Articles',
@@ -120,17 +120,29 @@
                 this.$store.commit('switchWindow',
                     'window' + '-' + str.toLowerCase())
             },
-            actionsBtnFocus() {
-                console.log('focus')
-                this.$data.expandOnHover = false
+            actionsBtnClick() {
+                this.removeMouseLeaveEvent()
             },
             actionsBtnBlur() {
-                console.log('blur')
-                this.$data.expandOnHover = true
+                this.fold()
+                this.addMouseLeaveEvent()
             },
-            transitionend() {
-                console.log('transitionend')
+            expand() {
+                this.$data.mini = false
+            },
+            fold() {
+                this.$data.mini = true
+            },
+            addMouseLeaveEvent() {
+                this.$el.addEventListener('mouseleave', this.fold, true)
+            },
+            removeMouseLeaveEvent() {
+                this.$el.removeEventListener('mouseleave', this.fold, true)
             }
+        },
+        mounted: function() {
+            this.$el.addEventListener('mouseover', this.expand, true)
+            this.addMouseLeaveEvent()
         }
     }
 </script>
