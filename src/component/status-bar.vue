@@ -1,5 +1,5 @@
 <template>
-    <div id="status-bar" :class="color" class="darken-3 white--text text-center" style="text-align: right;">
+    <div id="status-bar" :class="color" class="darken-3 white--text text-right" style="text-align: right;">
         {{ text }}
     </div>
 </template>
@@ -9,7 +9,7 @@
     export default {
         data: function() {
             return {
-                color: 'blue',
+                color: 'grey',
                 text: 'Blue'
             }
         }

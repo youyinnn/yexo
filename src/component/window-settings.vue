@@ -1,25 +1,24 @@
 <template>
-    <div>
+    <div id="window-settings-innerWindow">
         <v-card class="mx-auto">
             <v-card-subtitle class="unselectable font-weight-black">
-                Github Setting
+                Local Base Setting
             </v-card-subtitle>
             <v-divider></v-divider>
             <v-card-text>
-                <v-row dense>
+                <v-row v-for="set in settings" :key="set.label" dense>
                     <v-col cols="10">
-                        <v-text-field :value="localBasePath" label="Local Base Path"></v-text-field>
+                        <v-text-field readonly hide-details v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
                     </v-col>
-                    <v-col cols="2" align-self="center">
-                        <v-btn small color="primary" @click="selectBasePath">
+                    <v-col cols="2" style="align-self:flex-end">
+                        <v-btn class="btn" tile depressed small @click="set.action(set)">
                             <v-icon>{{pathSelectIcon}}</v-icon>
                         </v-btn>
                     </v-col>
                 </v-row>
-                <v-text-field label="Blog's Repo Name"></v-text-field>
             </v-card-text>
             <v-card-actions style="display: block; text-align: right">
-                <v-btn depressed color="cyan accent-4" dark @click="saveGithubSettings">
+                <v-btn small tile depressed color="cyan accent-4" dark @click="saveGithubSettings">
                     Save
                 </v-btn>
             </v-card-actions>
@@ -36,6 +35,8 @@
     import {
         mdiFolderTextOutline
     } from '@mdi/js'
+
+    import path from 'path'
 
     import git from 'simple-git'
 
@@ -55,23 +56,69 @@
     export default {
         data: function() {
             return {
-                localBasePath: localStorage.getItem('localBasePath') !== null ? localStorage.getItem('localBasePath') : '',
-                pathSelectIcon: mdiFolderTextOutline
+                pathSelectIcon: mdiFolderTextOutline,
+                settings: [{
+                        key: 'localRepoBasePath',
+                        label: 'Local Repo Base Path',
+                        value: this.getPathForShow(localStorage.getItem('localRepoBasePath')),
+                        action: this.selectFolder,
+                        dialogTitle: 'Select Your Local Base Path',
+                        path: localStorage.getItem('localRepoBasePath') === null ? 'Not Set' : localStorage.getItem('localRepoBasePath')
+                    },
+                    {
+                        key: 'articlesFolderPath',
+                        label: 'Local Articles\' Folder Path',
+                        value: this.getPathForShow(localStorage.getItem('articlesFolderPath')),
+                        action: this.selectFolder,
+                        dialogTitle: 'Select Your Articles\' Folder Path',
+                        path: localStorage.getItem('articlesFolderPath') === null ? 'Not Set' : localStorage.getItem('articlesFolderPath')
+                    }
+                ],
             }
         },
+
         methods: {
-            selectBasePath() {
-                let path = dialog.showOpenDialogSync({
-                    title: 'Select Your Blog Repo Path',
-                    properties: ['openDirectory']
+            getPathForShow(p) {
+                if (p !== undefined && p !== null) {
+                    return '..' + path.sep + path.basename(p)
+                } else {
+                    return ''
+                }
+            },
+            findSet(key) {
+                return this.$data.settings.find((set) => {
+                    return set.key === key
                 })
-                if (path !== undefined && path !== null)
-                    this.$data.localBasePath = path[0]
+            },
+            selectFolder(set) {
+                let pth = dialog.showOpenDialogSync({
+                    title: set.dialogTitle,
+                    properties: ['openDirectory'],
+                })
+                if (pth !== undefined) {
+                    pth = pth[0]
+                    set.value = this.getPathForShow(pth)
+                    set.path = pth
+                }
+            },
+            showFullPath(set) {
+                set.value = set.path
+            },            
+            showShortPath(set) {
+                set.value = this.getPathForShow(set.path)
             },
             saveGithubSettings() {
-                localStorage.setItem('localBasePath', this.$data.localBasePath)
-                status(this.$data.localBasePath).then(status => console.log(status));
+                localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
+                localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
+                status(this.$data.localRepoBasePath).then(status => console.log(status));
             }
         }
     }
 </script>
+
+<style scoped>
+    #window-settings-innerWindow>>>.btn {
+        width: 100%;
+        min-width: initial;
+    }
+</style>

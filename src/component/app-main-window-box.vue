@@ -1,12 +1,11 @@
 <template>
     <div id="app-main-window">
-        <!-- <div id="window-todo" class="main-window cyan"></div> -->
         <window id="window-articles"></window>
         <window id="window-scripts"></window>
         <window id="window-todos"></window>
         <window id="window-friends"></window>
-        <window id="window-resumes"></window>
-        <window id="window-about"></window>
+        <!-- <window id="window-resumes"></window>
+        <window id="window-about"></window> -->
         <window id="window-settings">
             <window-settings></window-settings>
         </window>

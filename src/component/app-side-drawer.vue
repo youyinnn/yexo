@@ -12,6 +12,16 @@
                 </v-list-item>
             </v-list-item-group>
         </v-list>
+        <template v-slot:append>
+            <v-list-item class="action" style="margin-bottom: 8px;">
+                <v-list-item-icon>
+                    <v-icon>{{ actionIcon }}</v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                    <v-btn small>Actions</v-btn>
+                </v-list-item-content>
+            </v-list-item>
+        </template>
     </v-navigation-drawer>
 </template>
 
@@ -23,7 +33,8 @@
         mdiAccountSupervisor,
         mdiAccountBadge,
         mdiGoogleDownasaur,
-        mdiSettings
+        mdiSettings,
+        mdiArrowUpBoldHexagonOutline
     } from '@mdi/js'
 
     export default {
@@ -44,20 +55,21 @@
                 {
                     title: 'Friends',
                     icon: mdiAccountSupervisor,
-                },                
-                {
-                    title: 'Resumes',
-                    icon: mdiAccountBadge,
-                },                
-                {
-                    title: 'About',
-                    icon: mdiGoogleDownasaur,
                 },
+                // {
+                //     title: 'Resumes',
+                //     icon: mdiAccountBadge,
+                // },                
+                // {
+                //     title: 'About',
+                //     icon: mdiGoogleDownasaur,
+                // },
                 {
                     title: 'Settings',
                     icon: mdiSettings,
                 }
             ],
+            actionIcon: mdiArrowUpBoldHexagonOutline
         }),
         methods: {
             action: function(str) {
@@ -67,3 +79,9 @@
         }
     }
 </script>
+
+<style scoped>
+    #app-side-drawer >>> .v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+        margin-right: 16px;
+    }
+</style>
