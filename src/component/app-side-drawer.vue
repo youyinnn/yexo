@@ -59,62 +59,58 @@
     } from '@mdi/js'
 
     export default {
-        data: () => ({
-            mini: true,
-            selected: 0,
-            items: [{
-                    title: 'Articles',
-                    icon: mdiFileOutline,
-                },
-                {
-                    title: 'Scripts',
-                    icon: mdiScriptTextOutline,
-                },
-                {
-                    title: 'Todos',
-                    icon: mdiClipboardListOutline,
-                },
-                {
-                    title: 'Friends',
-                    icon: mdiAccountSupervisor,
-                },
-                // {
-                //     title: 'Resumes',
-                //     icon: mdiAccountBadge,
-                // },                
-                // {
-                //     title: 'About',
-                //     icon: mdiGoogleDownasaur,
-                // },
-                {
-                    title: 'Settings',
-                    icon: mdiSettings,
-                }
-            ],
-            actionIcon: mdiArrowUpBoldHexagonOutline,
-            actionMenu: [{
-                    title: 'Push',
-                    func() {
-                        console.log(1)
+        data: function() {
+            return {
+                mini: true,
+                selected: 0,
+                items: [{
+                        title: 'Articles',
+                        icon: mdiFileOutline,
                     },
-                    icon: mdiCloudUploadOutline
-                },
-                {
-                    title: 'To Markdown',
-                    func() {
-                        console.log(2)
+                    {
+                        title: 'Scripts',
+                        icon: mdiScriptTextOutline,
                     },
-                    icon: mdiFileSyncOutline
-                },
-                {
-                    title: 'Check Settings',
-                    func() {
-                        console.log(3)
+                    {
+                        title: 'Todos',
+                        icon: mdiClipboardListOutline,
                     },
-                    icon: mdiHammer
-                },
-            ]
-        }),
+                    {
+                        title: 'Friends',
+                        icon: mdiAccountSupervisor,
+                    },
+                    // {
+                    //     title: 'Resumes',
+                    //     icon: mdiAccountBadge,
+                    // },                
+                    // {
+                    //     title: 'About',
+                    //     icon: mdiGoogleDownasaur,
+                    // },
+                    {
+                        title: 'Settings',
+                        icon: mdiSettings,
+                    }
+                ],
+                actionIcon: mdiArrowUpBoldHexagonOutline,
+                actionMenu: [{
+                        title: 'Deploy GitPages',
+                        func: this.push,
+                        icon: mdiCloudUploadOutline
+                    },
+                    {
+                        title: 'Build Markdown',
+                        func: this.build,
+                        icon: mdiHammer
+                    },
+                    {
+                        title: 'Check Settings',
+                        func: this.checkSettings,
+                        icon: mdiFileSyncOutline
+                    },
+                ]
+            }
+        },
         methods: {
             switchWindow(str) {
                 this.$store.commit('switchWindow',
@@ -138,6 +134,15 @@
             },
             removeMouseLeaveEvent() {
                 this.$el.removeEventListener('mouseleave', this.fold, true)
+            },
+            push() {
+
+            },
+            build() {
+
+            },
+            checkSettings() {
+
             }
         },
         mounted: function() {

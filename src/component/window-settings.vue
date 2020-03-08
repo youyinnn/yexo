@@ -110,7 +110,7 @@
             saveGithubSettings() {
                 localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
                 localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
-                status(this.$data.localRepoBasePath).then(status => console.log(status));
+                status(this.findSet('articlesFolderPath').path).then(status => console.log(status));
             }
         }
     }
