@@ -18,7 +18,7 @@
                     <v-icon>{{ actionIcon }}</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                    <v-menu top nudge-top="55" z-index="100">
+                    <v-menu id="actionsMenu" fixed top right nudge-top="50" nudge-right="40" z-index="100">
                         <template v-slot:activator="{ on }">
                             <v-btn small v-on="on" @click="actionsBtnClick" @blur="actionsBtnBlur">Actions</v-btn>
                         </template>
@@ -117,7 +117,11 @@
                     'window' + '-' + str.toLowerCase())
             },
             actionsBtnClick() {
-                this.removeMouseLeaveEvent()
+                if (this.$data.__map.get('actionsMenu').$data.isActive) {
+                    this.actionsBtnBlur()
+                } else {
+                    this.removeMouseLeaveEvent()
+                }
             },
             actionsBtnBlur() {
                 this.fold()
