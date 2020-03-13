@@ -27,11 +27,13 @@ const vueMap = new Map()
 Vue.mixin({
     data: function () {
       return {
-        __map: vueMap
+        vueMap: vueMap,
+        mapKey: ''
       }
     },
     mounted: function() {
-        this.$data.__map.set(this.$el.id, this)
+        this.$data.vueMap.set(this.$el.id, this)
+        this.$data.mapKey = this.$el.id
     }
 })
 
@@ -43,6 +45,20 @@ new Vue({
         'app-side-drawer': appSideDrawer,
         'app-main-window-box': appMainWindowBox,
         'status-bar': statusBar
+    },
+    data: function () {
+        return {
+            snackbar: false,
+            text: '',
+            timeout: 9999999
+        }
+    },
+    method: {
+        snack(text, timeout) {
+            if (timeout !== undefined) {
+                this.timeout = timeout
+            }
+        }
     }
 }).$mount('#app')
 

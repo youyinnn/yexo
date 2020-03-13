@@ -19,6 +19,12 @@
                 <app-side-drawer></app-side-drawer>
                 <app-main-window-box></app-main-window-box>
             </div>
+            <v-snackbar v-model="snackbar" :timeout="timeout">
+                {{ text }}
+                <v-btn color="pink" text @click="snackbar = false">
+                    Close
+                </v-btn>
+            </v-snackbar>
         </v-app>
     </div>
 

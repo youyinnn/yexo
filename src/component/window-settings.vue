@@ -79,14 +79,14 @@
 
         methods: {
             getPathForShow(p) {
-                if (p !== undefined && p !== null) {
+                if (p !== undefined && p !== null && p !== 'Not Set') {
                     return '..' + path.sep + path.basename(p)
                 } else {
                     return ''
                 }
             },
             findSet(key) {
-                return this.$data.settings.find((set) => {
+                return this.settings.find((set) => {
                     return set.key === key
                 })
             },
@@ -108,9 +108,14 @@
                 set.value = this.getPathForShow(set.path)
             },
             saveGithubSettings() {
-                localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
-                localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
-                status(this.findSet('articlesFolderPath').path).then(status => console.log(status));
+                if (this.findSet('localRepoBasePath').path !== 'Not Set') {
+                    localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
+                }
+                if (this.findSet('articlesFolderPath').path !== 'Not Set') {
+                    localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
+                    this.vueMap.get('window-articles-innerWindow').articlesFolderPathSet = true
+                }
+                status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
             }
         }
     }

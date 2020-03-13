@@ -1,6 +1,8 @@
 <template>
     <div id="app-main-window">
-        <window id="window-articles"></window>
+        <window id="window-articles">
+            <window-articles></window-articles>
+        </window>
         <window id="window-scripts"></window>
         <window id="window-todos"></window>
         <window id="window-friends"></window>
@@ -36,19 +38,21 @@
             switch: function(nv, ov) {
                 if (nv === this.id) {
                     setTimeout(() => {
-                        this.$data.show = 'show'
+                        this.show = 'show'
                     }, 100);
                 } else {
-                    this.$data.show = ''
+                    this.show = ''
                 }
             }
         }
     }
     import windowSettings from './window-settings.vue'
+    import windowArticles from './window-articles.vue'
     export default {
         components: {
             'window': window,
-            'window-settings': windowSettings
+            'window-settings': windowSettings,
+            'window-articles': windowArticles,
         }
     }
 </script>

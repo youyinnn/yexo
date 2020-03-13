@@ -18,11 +18,11 @@
                     <v-icon>{{ actionIcon }}</v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
-                    <v-menu id="actionsMenu" fixed top right nudge-top="50" nudge-right="40" z-index="100">
+                    <v-menu id="actionsMenu" fixed top right nudge-top="50" nudge-right="40" z-index="100" content-class="actionsMenuClass">
                         <template v-slot:activator="{ on }">
-                            <v-btn small v-on="on" @click="actionsBtnClick" @blur="actionsBtnBlur">Actions</v-btn>
+                            <v-btn tile small v-on="on" @click="actionsBtnClick" @blur="actionsBtnBlur">Actions</v-btn>
                         </template>
-                        <v-list dark dense color="blue-grey darken-3">
+                        <v-list tile dark dense color="blue-grey darken-3">
                             <v-divider></v-divider>
                             <template v-for="(act, index) in actionMenu">
                                 <v-list-item :key="index" @click="act.func" dense>
@@ -115,9 +115,16 @@
             switchWindow(str) {
                 this.$store.commit('switchWindow',
                     'window' + '-' + str.toLowerCase())
+                for (let i = 0; i < this.items.length; i++) {
+                    let it = this.items[i]
+                    if (it.title.toLowerCase() === str.toLowerCase()) {
+                        this.selected = i
+                        break
+                    }
+                }
             },
             actionsBtnClick() {
-                if (this.$data.__map.get('actionsMenu').$data.isActive) {
+                if (this.vueMap.get('actionsMenu').isActive) {
                     this.actionsBtnBlur()
                 } else {
                     this.removeMouseLeaveEvent()
@@ -128,10 +135,10 @@
                 this.addMouseLeaveEvent()
             },
             expand() {
-                this.$data.mini = false
+                this.mini = false
             },
             fold() {
-                this.$data.mini = true
+                this.mini = true
             },
             addMouseLeaveEvent() {
                 this.$el.addEventListener('mouseleave', this.fold, true)
@@ -160,5 +167,9 @@
     #app-side-drawer>>>.v-application--is-ltr .v-list-item__action:first-child,
     .v-application--is-ltr .v-list-item__icon:first-child {
         margin-right: 16px;
+    }
+    .actionsMenuClass,
+    .actionsMenuClass .v-list{
+        border-radius: 0 !important;
     }
 </style>
