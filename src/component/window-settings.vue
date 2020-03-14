@@ -116,15 +116,27 @@
                     windowArticlesInnerWindow.articles = fs.readdirSync(this.findSet('articlesFolderPath').path, {
                         encoding: 'utf-8'
                     })
+                    this.$toasted.info('Articles\' Folder Path Has Been Updated.', {
+                        position: 'bottom-right',
+                        duration: 3000,
+                        keepOnHover: true,
+                        className: 'my-toast',
+                        containerClass: 'my-toast-container',
+                        action: {
+                            text: 'CLOSE',
+                            onClick: (e, toastObject) => {
+                                toastObject.goAway(200);
+                            }
+                        },
+                    })
                 }
                 // status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
-
             }
         }
     }
 </script>
 
-<style scoped>
+<style>
     #window-settings-innerWindow>>>.btn {
         width: 100%;
         min-width: initial;
@@ -132,5 +144,16 @@
 
     #window-settings-innerWindow {
         padding: 10px;
+    }
+
+    .my-toast-container {
+        width: 344px;
+        min-width: initial !important;
+        z-index: 300 !important;
+        padding: 10px;
+    }
+
+    .my-toast {
+        z-index: 300 !important;
     }
 </style>

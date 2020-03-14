@@ -9,6 +9,10 @@ import appSideDrawer from 'component/app-side-drawer.vue'
 import appMainWindowBox from 'component/app-main-window-box.vue'
 
 import Vuex from 'vuex'
+import Toasted from 'vue-toasted';
+
+Vue.use(Vuex)
+Vue.use(Toasted)
 
 const store = new Vuex.Store({
     state: {
