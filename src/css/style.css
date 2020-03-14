@@ -1,3 +1,4 @@
+@import "../../node_modules/vue2-scrollbar/dist/style/vue2-scrollbar.css";
 * {
   margin: 0;
   padding: 0;
@@ -36,6 +37,7 @@ html {
   width: 100%;
   background-color: #adb5bd;
   -webkit-app-region: drag;
+  user-select: none;
 }
 #app-frame .pbtn {
   -webkit-app-region: no-drag;
@@ -63,7 +65,6 @@ html {
   position: absolute;
   right: 0;
   margin: 0;
-  overflow: auto;
   overflow: hidden;
   top: 0;
   bottom: 0;
@@ -80,8 +81,6 @@ html {
   z-index: 0;
   opacity: 0;
   transform: translateX(10%);
-  padding: 10px;
-  overflow: auto;
 }
 .show {
   opacity: 1;
