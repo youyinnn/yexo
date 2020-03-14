@@ -1,60 +1,76 @@
 <template>
     <div id="window-articles-innerWindow">
-        <vue-scrollbar classes="my-scrollbar" ref="Scrollbar" :speed=200>
-            <div id="noArticlesFoldersPathSetShow" class="scroll-me" v-if="!articlesFolderPathSet">
-                <div id="c1" class="text-center">
-                    Please Set Articles' Folder Path First!
-                    <div class="my-2">
-                        <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
-                    </div>
+        <div id="noArticlesFoldersPathSetShow" v-if="!articlesFolderPathSet">
+            <div id="c1" class="text-center">
+                Please Set Articles' Folder Path First!
+                <div class="my-2">
+                    <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
             </div>
-            <div id="articlesFoldersPathSetShow" class="scroll-me" v-else>
-                <div id="c1" class="text-center">
-                    <v-list>
-                        <v-list-item v-for="article in articles" :key="article.name" two-line>
-                            <v-list-item-content>
-                                <v-list-item-title class="text-left">{{ article }}</v-list-item-title>
-                                <v-list-item-subtitle>
-
-                                </v-list-item-subtitle>
-                            </v-list-item-content>
-                        </v-list-item>
-                    </v-list>
-                </div>
+        </div>
+        <div id="articlesFoldersPathSetShow" v-else>
+            <div id="c1" class="text-center">
+                <v-list height="574">
+                    <v-list-item dense v-for="article in filteredArticles" :key="article" two-line>
+                        <v-card class="mx-auto article-card">
+                            <v-card-text class="text-left">
+                                {{ article }}
+                            </v-card-text>
+                            <v-card-actions style="display: block; text-align: right">
+                                <v-btn small dark tile color="cyan">
+                                    Open
+                                </v-btn>
+                            </v-card-actions>
+                        </v-card>
+                    </v-list-item>
+                </v-list>
             </div>
-        </vue-scrollbar>
+        </div>
     </div>
 </template>
 
 <script>
-    import VueScrollbar from 'vue2-scrollbar';
     import fs from 'fs'
 
     export default {
         data: function() {
             return {
                 articlesFolderPathSet: localStorage.getItem('articlesFolderPath') !== null,
+                filteredArticles: []
             }
         },
         computed: {
-            articles: function() {
-                let atcs = []
-                if (this.articlesFolderPathSet) {
-                    atcs = fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
-                        encoding: 'utf-8'
-                    })
+            articles: {
+                get() {
+                    if (this.articlesFolderPathSet) {
+                        return this.filterMd(fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
+                            encoding: 'utf-8'
+                        }))
+                    } else {
+                        return []
+                    }
+                },
+                set(dirfs) {
+                    this.filteredArticles = this.filterMd(dirfs)
                 }
-                return atcs
             }
         },
         methods: {
+            filterMd(dirfs) {
+                let atcs = []
+                dirfs.forEach(file => {
+                    if (file.endsWith('.md')) {
+                        atcs.push(file)
+                    }
+                })
+                return atcs
+            },
             jumpToWindowSettings() {
                 this.vueMap.get('app-side-drawer').switchWindow('settings')
             }
         },
-        components: {
-            VueScrollbar
+        mounted: function () {
+            this.filteredArticles = this.articles
         }
     }
 </script>
@@ -80,13 +96,8 @@
         align-self: center;
     }
 
-    .my-scrollbar {
-        min-width: 334px;
-        max-height: 574px;
-        transition: none !important;
-    }
-
-    .scroll-me {
-        min-width: 324px;
+    .article-card {
+        width: 100%;
+        margin-bottom: 1rem;
     }
 </style>

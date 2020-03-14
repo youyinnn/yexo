@@ -30,15 +30,13 @@
     import {
         remote
     } from 'electron'
-
     const dialog = remote.dialog
     import {
         mdiFolderTextOutline
     } from '@mdi/js'
-
     import path from 'path'
-
     import git from 'simple-git'
+    import fs from 'fs'
 
     async function status(workingDir) {
         const git = require('simple-git/promise');
@@ -103,19 +101,24 @@
             },
             showFullPath(set) {
                 set.value = set.path
-            },            
+            },
             showShortPath(set) {
                 set.value = this.getPathForShow(set.path)
             },
             saveGithubSettings() {
-                if (this.findSet('localRepoBasePath').path !== 'Not Set') {
+                if (this.findSet('localRepoBasePath').path !== 'Not Set' && this.findSet('localRepoBasePath').path !== localStorage.getItem('localRepoBasePath')) {
                     localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
                 }
-                if (this.findSet('articlesFolderPath').path !== 'Not Set') {
+                if (this.findSet('articlesFolderPath').path !== 'Not Set' && this.findSet('articlesFolderPath').path !== localStorage.getItem('articlesFolderPath')) {
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
-                    this.vueMap.get('window-articles-innerWindow').articlesFolderPathSet = true
+                    let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
+                    windowArticlesInnerWindow.articlesFolderPathSet = true
+                    windowArticlesInnerWindow.articles = fs.readdirSync(this.findSet('articlesFolderPath').path, {
+                        encoding: 'utf-8'
+                    })
                 }
-                status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
+                // status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
+
             }
         }
     }
@@ -125,5 +128,9 @@
     #window-settings-innerWindow>>>.btn {
         width: 100%;
         min-width: initial;
+    }
+
+    #window-settings-innerWindow {
+        padding: 10px;
     }
 </style>

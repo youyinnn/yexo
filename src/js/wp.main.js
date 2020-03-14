@@ -7,7 +7,6 @@ import vuetify from '../plugins/vuetify' // path to vuetify export
 import appFrame from 'component/app-frame.vue'
 import appSideDrawer from 'component/app-side-drawer.vue'
 import appMainWindowBox from 'component/app-main-window-box.vue'
-import statusBar from 'component/status-bar.vue'
 
 import Vuex from 'vuex'
 
@@ -32,8 +31,8 @@ Vue.mixin({
       }
     },
     mounted: function() {
-        this.$data.vueMap.set(this.$el.id, this)
-        this.$data.mapKey = this.$el.id
+        this.vueMap.set(this.$el.id, this)
+        this.mapKey = this.$el.id
     }
 })
 
@@ -44,21 +43,6 @@ new Vue({
         'app-frame': appFrame,
         'app-side-drawer': appSideDrawer,
         'app-main-window-box': appMainWindowBox,
-        'status-bar': statusBar
-    },
-    data: function () {
-        return {
-            snackbar: false,
-            text: '',
-            timeout: 9999999
-        }
-    },
-    method: {
-        snack(text, timeout) {
-            if (timeout !== undefined) {
-                this.timeout = timeout
-            }
-        }
     }
 }).$mount('#app')
 
