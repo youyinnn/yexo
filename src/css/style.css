@@ -48,13 +48,6 @@ html {
 .frame-btn:focus {
   box-shadow: none !important;
 }
-.v-snack {
-  width: 344px;
-  padding: 10px;
-  left: initial !important;
-  right: 0 !important;
-  bottom: 0 !important;
-}
 #app-side-drawer {
   z-index: 100;
 }
@@ -88,6 +81,7 @@ html {
   opacity: 0;
   transform: translateX(10%);
   overflow: auto;
+  transition: all 0.3s;
 }
 .show {
   opacity: 1;
@@ -98,4 +92,14 @@ html {
 .v-card__text,
 .v-card__title {
   padding: 10px !important;
+}
+.my-toast-container {
+  max-width: 500px;
+  min-width: initial !important;
+  z-index: 300 !important;
+  right: 10px !important;
+  bottom: 10px !important;
+}
+.my-toast {
+  z-index: 300 !important;
 }

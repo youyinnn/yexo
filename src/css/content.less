@@ -34,6 +34,7 @@
   opacity: 0;
   transform: translateX(10%);
   overflow: auto;
+  transition: all .3s;
 }
 
 .show {
@@ -44,4 +45,16 @@
 
 .v-card__subtitle, .v-card__text, .v-card__title {
   padding: 10px !important;
+}
+
+.my-toast-container {
+  max-width: 500px;
+  min-width: initial !important;
+  z-index: 300 !important;
+  right: 10px !important;
+  bottom: 10px !important;
+}
+
+.my-toast {
+  z-index: 300 !important;
 }

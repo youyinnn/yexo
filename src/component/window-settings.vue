@@ -10,7 +10,7 @@
                     <v-col cols="10">
                         <v-text-field readonly hide-details v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
                     </v-col>
-                    <v-col cols="2" style="align-self:flex-end">
+                    <v-col cols="2" style="align-self:flex-end;">
                         <v-btn class="btn" tile depressed small @click="set.action(set)">
                             <v-icon>{{pathSelectIcon}}</v-icon>
                         </v-btn>
@@ -136,7 +136,7 @@
     }
 </script>
 
-<style>
+<style scoped>
     #window-settings-innerWindow>>>.btn {
         width: 100%;
         min-width: initial;
@@ -144,16 +144,5 @@
 
     #window-settings-innerWindow {
         padding: 10px;
-    }
-
-    .my-toast-container {
-        width: 344px;
-        min-width: initial !important;
-        z-index: 300 !important;
-        padding: 10px;
-    }
-
-    .my-toast {
-        z-index: 300 !important;
     }
 </style>
