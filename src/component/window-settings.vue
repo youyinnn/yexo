@@ -68,8 +68,16 @@
                         label: 'Local Articles\' Folder Path',
                         value: this.getPathForShow(localStorage.getItem('articlesFolderPath')),
                         action: this.selectFolder,
-                        dialogTitle: 'Select Your Articles\' Folder Path',
+                        dialogTitle: 'Select Your Local Articles\' Folder Path',
                         path: localStorage.getItem('articlesFolderPath') === null ? 'Not Set' : localStorage.getItem('articlesFolderPath')
+                    },
+                    {
+                        key: 'webResourcesFolderPath',
+                        label: 'WebResources\' Folder Path',
+                        value: this.getPathForShow(localStorage.getItem('webResourcesFolderPath')),
+                        action: this.selectFolder,
+                        dialogTitle: 'Select Your WebResources\' Folder Path',
+                        path: localStorage.getItem('webResourcesFolderPath') === null ? 'Not Set' : localStorage.getItem('webResourcesFolderPath')
                     }
                 ],
             }
@@ -99,6 +107,17 @@
                     set.path = pth
                 }
             },
+            selectFile(set) {
+                let pth = dialog.showOpenDialogSync({
+                    title: set.dialogTitle,
+                    properties: ['openFile'],
+                })
+                if (pth !== undefined) {
+                    pth = pth[0]
+                    set.value = this.getPathForShow(pth)
+                    set.path = pth
+                }
+            },
             showFullPath(set) {
                 set.value = set.path
             },
@@ -108,6 +127,9 @@
             saveGithubSettings() {
                 if (this.findSet('localRepoBasePath').path !== 'Not Set' && this.findSet('localRepoBasePath').path !== localStorage.getItem('localRepoBasePath')) {
                     localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
+                }
+                if (this.findSet('webResourcesFolderPath').path !== 'Not Set' && this.findSet('webResourcesFolderPath').path !== localStorage.getItem('webResourcesFolderPath')) {
+                    localStorage.setItem('webResourcesFolderPath', this.findSet('webResourcesFolderPath').path)
                 }
                 if (this.findSet('articlesFolderPath').path !== 'Not Set' && this.findSet('articlesFolderPath').path !== localStorage.getItem('articlesFolderPath')) {
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)

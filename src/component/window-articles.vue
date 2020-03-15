@@ -1,13 +1,13 @@
 <template>
     <div id="window-articles-innerWindow">
-        <div id="noArticlesFoldersPathSetShow" v-if="!articlesFolderPathSet || filteredArticles.length === 0">
-            <div class="c1 text-center" v-if="!articlesFolderPathSet && filteredArticles.length > 0">
+        <div id="noArticlesFoldersPathSetShow" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
+            <div class="c1 text-center" v-if="!articlesFolderPathSet">
                 Please Set Articles' Folder Path First!
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
             </div>
-            <div class="c1 text-center" v-else>
+            <div class="c1 text-center" v-else-if="filteredArticles.length === 0">
                 No Markdown File In Here!
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Choose Another Folder.</v-btn>
@@ -16,7 +16,19 @@
         </div>
         <div id="articlesFoldersPathSetShow" v-else>
             <div class="c1 text-center">
-                <v-list height="574">
+                <v-text-field 
+                    class="articleSearchBar" 
+                    v-model="searchText" 
+                    label="Search Articles" 
+                    :prepend-icon="search" 
+                    hide-details 
+                    outlined 
+                    dense 
+                    clearable
+                    @focus="() => { searching = true}"
+                    @blur="() => { searching = false}"
+                ></v-text-field>
+                <v-list>
                     <v-list-item dense v-for="article in filteredArticles" :key="article" two-line>
                         <v-card class="mx-auto article-card">
                             <v-card-text class="text-left">
@@ -39,12 +51,18 @@
     import fs from 'fs'
     import path from 'path'
     import execa from 'execa'
+    import {
+        mdiFileDocumentBoxSearchOutline
+    } from '@mdi/js'
 
     export default {
         data: function() {
             return {
                 articlesFolderPathSet: localStorage.getItem('articlesFolderPath') !== null,
-                filteredArticles: []
+                filteredArticles: [],
+                search: mdiFileDocumentBoxSearchOutline,
+                searchText:'',
+                searching: false
             }
         },
         computed: {
@@ -60,6 +78,17 @@
                 },
                 set(dirfs) {
                     this.filteredArticles = this.filterMd(dirfs)
+                }
+            }
+        },
+        watch: {
+            searchText (nv, ov) {
+                if (nv !== '') {
+                    this.filteredArticles = this.articles.filter(article => {
+                        return article.toLowerCase().search(nv.toLowerCase()) > 0
+                    })
+                } else {
+                    this.filteredArticles = this.articles
                 }
             }
         },
@@ -81,13 +110,17 @@
                 execa(mdpath)
             }
         },
-        mounted: function () {
+        mounted: function() {
             this.filteredArticles = this.articles
         }
     }
 </script>
 
 <style scoped>
+    #window-articles-innerWindow {
+        height: 100%;
+        background-color: white;
+    }
     #noArticlesFoldersPathSetShow {
         position: absolute;
         margin: auto;
@@ -111,5 +144,19 @@
     .article-card {
         width: 100%;
         margin-bottom: 1rem;
+        transition: all .3s;
+    }
+    
+    .article-card:hover{
+        background-color: whitesmoke;
+    }
+    .article-card:hover .v-card__text{
+        color: rgb(59, 144, 255);
+    }
+
+    .articleSearchBar {
+        background-color: white;
+        width: 100%;
+        padding: 10px;
     }
 </style>
