@@ -1,6 +1,6 @@
 <template>
     <div id="window-articles-innerWindow">
-        <div id="noArticlesFoldersPathSetShow" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
+        <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
             <div class="c1 text-center" v-if="!articlesFolderPathSet">
                 Please Set Articles' Folder Path First!
                 <div class="my-2">
@@ -14,33 +14,24 @@
                 </div>
             </div>
         </div>
-        <div id="articlesFoldersPathSetShow" v-else>
+        <div id="articles-folders-path-set-show" v-else>
             <div class="c1 text-center">
-                <v-text-field 
-                    class="articleSearchBar" 
-                    v-model="searchText" 
-                    label="Search Articles" 
-                    :prepend-icon="search" 
-                    hide-details 
-                    outlined 
-                    dense 
-                    clearable
-                    @focus="() => { searching = true}"
-                    @blur="() => { searching = false}"
-                ></v-text-field>
+                <v-text-field class="articles-search-bar" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
                 <v-list>
-                    <v-list-item dense v-for="article in filteredArticles" :key="article" two-line>
-                        <v-card class="mx-auto article-card">
-                            <v-card-text class="text-left">
-                                {{ article }}
-                            </v-card-text>
-                            <v-card-actions style="display: block; text-align: right">
-                                <v-btn small dark tile color="cyan" @click="openMd(article)">
-                                    Open
-                                </v-btn>
-                            </v-card-actions>
-                        </v-card>
-                    </v-list-item>
+                    <transition-group name="article-list-transit">
+                        <v-list-item dense v-for="article in filteredArticles" :key="article.metadata.title" two-line>
+                            <v-card class="mx-auto article-card">
+                                <v-card-text class="text-left">
+                                    {{ article.metadata.title }}
+                                </v-card-text>
+                                <v-card-actions style="display: block; text-align: right">
+                                    <v-btn small dark tile color="cyan" @click="openMd(article.metadata.title + '.md')">
+                                        Open
+                                    </v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-list-item>
+                    </transition-group>
                 </v-list>
             </div>
         </div>
@@ -54,7 +45,9 @@
     import {
         mdiFileDocumentBoxSearchOutline
     } from '@mdi/js'
-    import metadataExtractor from '../plugins/artricles-data-extract'
+    import metadataExtractor, {
+        extract
+    } from '../plugins/artricles-data-extract'
 
     export default {
         data: function() {
@@ -62,7 +55,7 @@
                 articlesFolderPathSet: localStorage.getItem('articlesFolderPath') !== null,
                 filteredArticles: [],
                 search: mdiFileDocumentBoxSearchOutline,
-                searchText:'',
+                searchText: '',
                 searching: false,
                 cacheUpdate: 0
             }
@@ -73,12 +66,21 @@
                     if (this.articlesFolderPathSet) {
                         // add reactive dependence factor
                         (this.cacheUpdate);
-                        let mdFiles = fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
+                        let mdFiles = []
+                        fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
                             encoding: 'utf-8'
-                        }).filter(fileName => {
-                            return fileName.endsWith('.md')
+                        }).forEach(function(fileName, index, arr) {
+                            if (fileName.endsWith('.md')) {
+                                let mdText = fs.readFileSync(path.join(localStorage.getItem('articlesFolderPath'), fileName), {
+                                    encoding: 'utf-8'
+                                })
+                                let extractRs = metadataExtractor.extract(mdText)
+                                mdFiles.push(extractRs)
+                            }
                         })
-                        return mdFiles
+                        return mdFiles.sort((a, b) => {
+                            return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
+                        })
                     } else {
                         return []
                     }
@@ -91,10 +93,10 @@
             }
         },
         watch: {
-            searchText (nv, ov) {
+            searchText(nv, ov) {
                 if (nv !== '') {
-                    this.filteredArticles = this.articlesCache.filter(article => {
-                        return article.toLowerCase().search(nv.toLowerCase()) >= 0
+                    this.filteredArticles = this.articlesCache.filter(cache => {
+                        return cache.metadata.title.toLowerCase().search(nv.toLowerCase()) >= 0
                     })
                 } else {
                     this.resetFilteredArticles()
@@ -128,7 +130,8 @@
         height: 100%;
         background-color: white;
     }
-    #noArticlesFoldersPathSetShow {
+
+    #no-articles-folders-path-set-show {
         position: absolute;
         margin: auto;
         top: 0;
@@ -139,7 +142,7 @@
         user-select: none;
     }
 
-    #articlesFoldersPathSetShow {
+    #articles-folders-path-set-show {
         user-select: none;
     }
 
@@ -153,17 +156,34 @@
         margin-bottom: 1rem;
         transition: all .3s;
     }
-    
-    .article-card:hover{
+
+    .article-card:hover {
         background-color: whitesmoke;
     }
-    .article-card:hover .v-card__text{
+
+    .article-card:hover .v-card__text {
         color: rgb(59, 144, 255);
     }
 
-    .articleSearchBar {
+    .articles-search-bar {
         background-color: white;
         width: 100%;
         padding: 10px;
     }
+
+    .article-list-transit-enter-active {
+        transition: all .8s;
+        opacity: 0;
+    }
+
+    .article-list-transit-enter-to {
+        transition: all .8s;
+        opacity: 1;
+    } 
+
+    .article-list-transit-leave-active {
+        transition: all .3s;
+        opacity: 0;
+    }
+
 </style>
