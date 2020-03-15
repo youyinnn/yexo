@@ -54,6 +54,7 @@
     import {
         mdiFileDocumentBoxSearchOutline
     } from '@mdi/js'
+    import metadataExtractor from '../plugins/artricles-data-extract'
 
     export default {
         data: function() {
@@ -62,56 +63,62 @@
                 filteredArticles: [],
                 search: mdiFileDocumentBoxSearchOutline,
                 searchText:'',
-                searching: false
+                searching: false,
+                cacheUpdate: 0
             }
         },
         computed: {
-            articles: {
+            articlesCache: {
                 get() {
                     if (this.articlesFolderPathSet) {
-                        return this.filterMd(fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
+                        // add reactive dependence factor
+                        (this.cacheUpdate);
+                        let mdFiles = fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
                             encoding: 'utf-8'
-                        }))
+                        }).filter(fileName => {
+                            return fileName.endsWith('.md')
+                        })
+                        return mdFiles
                     } else {
                         return []
                     }
                 },
                 set(dirfs) {
-                    this.filteredArticles = this.filterMd(dirfs)
+                    this.filteredArticles = dirfs.filter(fileName => {
+                        return fileName.endsWith('.md')
+                    })
                 }
             }
         },
         watch: {
             searchText (nv, ov) {
                 if (nv !== '') {
-                    this.filteredArticles = this.articles.filter(article => {
-                        return article.toLowerCase().search(nv.toLowerCase()) > 0
+                    this.filteredArticles = this.articlesCache.filter(article => {
+                        return article.toLowerCase().search(nv.toLowerCase()) >= 0
                     })
                 } else {
-                    this.filteredArticles = this.articles
+                    this.resetFilteredArticles()
                 }
             }
         },
         methods: {
-            filterMd(dirfs) {
-                let atcs = []
-                dirfs.forEach(file => {
-                    if (file.endsWith('.md')) {
-                        atcs.push(file)
-                    }
-                })
-                return atcs
-            },
             jumpToWindowSettings() {
                 this.vueMap.get('app-side-drawer').switchWindow('settings')
             },
-            openMd(filename) {
-                let mdpath = path.join(localStorage.getItem('articlesFolderPath'), filename)
+            openMd(fileName) {
+                let mdpath = path.join(localStorage.getItem('articlesFolderPath'), fileName)
                 execa(mdpath)
+            },
+            updateCache() {
+                // trigger articlesCache's recomputation
+                this.cacheUpdate++
+            },
+            resetFilteredArticles() {
+                this.filteredArticles = this.articlesCache
             }
         },
         mounted: function() {
-            this.filteredArticles = this.articles
+            this.resetFilteredArticles()
         }
     }
 </script>
