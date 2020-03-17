@@ -36,17 +36,17 @@
             </div>
             <v-dialog content-class="articleDialog" v-model="dialog">
                 <v-card>
-                    <v-card-title class="headline">Update Article's Metadata</v-card-title>
+                    <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
-                        <combobox-chips myLabel="Categories" forCates="true" v-bind:originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips myLabel="Tags" forCates="false" v-bind:originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips v-bind:reset="resetDialog" myLabel="Categories" forCates="true" v-bind:originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips v-bind:reset="resetDialog" myLabel="Tags" forCates="false" v-bind:originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" tile dark @click="dialog = false">
+                        <v-btn color="grey" small tile dark @click="dialog = false; resetDialog++">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" tile dark @click="dialog = false">
+                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -80,6 +80,7 @@
                 editingArticleCates: null,
                 editingArticleTags: null,
                 editingArticleTitle: null,
+                resetDialog: 0
             }
         },
         computed: {
@@ -215,5 +216,4 @@
         transition: all .3s;
         opacity: 0;
     }
-
 </style>

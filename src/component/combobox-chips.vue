@@ -10,7 +10,7 @@
                     </v-list-item-content>
                 </v-list-item>
             </template>
-            <template v-slot:item="{ item }">
+            <template v-slot:item="{ item }" >
                 <v-chip dark label small>
                     {{ item }}
                 </v-chip>
@@ -27,7 +27,7 @@
     } from '../plugins/artricles-data-extract'
 
     export default {
-        props: ['myLabel', 'originalValues', 'forCates'],
+        props: ['myLabel', 'originalValues', 'forCates', 'reset'],
         data: () => ({
             search: null,
             allCates: catesTree,
@@ -50,6 +50,9 @@
                 } else {
                     this.itemsForSelect = tags
                 }
+            },
+            reset(nv) {
+                this.inputValues = this.originalValues
             }
         },
         mounted() {
