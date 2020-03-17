@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <v-combobox v-model="inputValues" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 200}">
+        <v-combobox v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 200}">
             <template v-slot:no-data>
                 <v-list-item dense>
                     <v-list-item-content>
@@ -27,7 +27,7 @@
     } from '../plugins/artricles-data-extract'
 
     export default {
-        props: ['myLabel', 'originalValues', 'forCates', 'reset'],
+        props: ['myLabel', 'originalValues', 'forCates', 'reset','readonly'],
         data: () => ({
             search: null,
             allCates: catesTree,

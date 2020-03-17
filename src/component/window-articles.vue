@@ -38,15 +38,15 @@
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
-                        <combobox-chips v-bind:reset="resetDialog" myLabel="Categories" forCates="true" v-bind:originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips v-bind:reset="resetDialog" myLabel="Tags" forCates="false" v-bind:originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="grey" small tile dark @click="dialog = false; resetDialog++">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false">
+                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false;">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -80,7 +80,8 @@
                 editingArticleCates: null,
                 editingArticleTags: null,
                 editingArticleTitle: null,
-                resetDialog: 0
+                resetDialog: 0,
+                dialogReadonly: true
             }
         },
         computed: {
@@ -129,6 +130,9 @@
                 this.editingArticleCates = nv.metadata.categories
                 this.editingArticleTags = nv.metadata.tags
                 this.editingArticleTitle = nv.metadata.title
+            },
+            dialog(nv) {
+                this.dialogReadonly = !nv
             }
         },
         methods: {
