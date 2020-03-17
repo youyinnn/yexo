@@ -1,12 +1,63 @@
 const yaml = require('js-yaml')
 
 let shortMsgLine = 10
+
+var catesTree = []
+
+// node = {
+//     name
+//     childNodes
+//     parentNode
+// }
+
+function findNode(cateNodeName) {
+    return catesTree.find((value) => {
+        return value.name === cateNodeName
+    })
+}
+
+var tags = []
+
 function syncreihandle2metadata(text) {
     let endIndex = text.indexOf('---', 3) + 3
     let metadata = text.substring(4, endIndex - 3)
     metadata = yaml.load(metadata)
     let body = text.substring(endIndex, text.length)
     metadata.char_count = body.length
+
+    // handle cates tree
+    for (let i = 0; i < metadata.categories.length; i++) {
+        let cateNodeName = metadata.categories[i]
+        let newNode = findNode(cateNodeName) === undefined
+        if (i === 0 && newNode) {
+            catesTree.push({
+                name: cateNodeName,
+                childNodes: [],
+                parentNode: null
+            })
+        }
+        if (i > 0 && newNode) {
+            let parentNode = findNode(metadata.categories[i - 1])
+            newNode = {
+                name: cateNodeName,
+                childNodes: [],
+                parentNode: parentNode
+            }
+            catesTree.push(newNode)
+            parentNode.childNodes.push(newNode)
+        }
+    }
+
+    for(let i = 0; metadata.tags !== undefined && i < metadata.tags.length; i++) {
+        let tagName = metadata.tags[i]
+        if (tags.find((t) => {
+            return t === tagName
+        }) === undefined) {
+            tags.push(tagName)
+        }
+    }
+
+    // handle short_content
     let short = new Array()
     body = body.split(/\n/)
     for (let i = 0; i < shortMsgLine; i++) {
@@ -61,3 +112,6 @@ function extract(sourceMdStr) {
 }
 
 module.exports.extract = extract
+module.exports.catesTree = catesTree
+module.exports.findNode = findNode
+module.exports.tags = tags

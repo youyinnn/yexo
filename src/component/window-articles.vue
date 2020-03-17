@@ -20,12 +20,12 @@
                 <v-list>
                     <transition-group name="article-list-transit">
                         <v-list-item dense v-for="article in filteredArticles" :key="article.metadata.title" two-line>
-                            <v-card class="mx-auto article-card">
+                            <v-card class="mx-auto article-card" @click.stop="dialog = true; editingArticle = article">
                                 <v-card-text class="text-left">
                                     {{ article.metadata.title }}
                                 </v-card-text>
                                 <v-card-actions style="display: block; text-align: right">
-                                    <v-btn small dark tile color="cyan" @click="openMd(article.metadata.title + '.md')">
+                                    <v-btn small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
                                         Open
                                     </v-btn>
                                 </v-card-actions>
@@ -34,6 +34,24 @@
                     </transition-group>
                 </v-list>
             </div>
+            <v-dialog content-class="articleDialog" v-model="dialog">
+                <v-card>
+                    <v-card-title class="headline">Update Article's Metadata</v-card-title>
+                    <v-card-text>
+                        <combobox-chips myLabel="Categories" forCates="true" v-bind:originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips myLabel="Tags" forCates="false" v-bind:originalValues="editingArticleTags"></combobox-chips>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" tile dark @click="dialog = false">
+                            Cancel
+                        </v-btn>
+                        <v-btn color="blue lighten-1" tile dark @click="dialog = false">
+                            Confirm
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
         </div>
     </div>
 </template>
@@ -45,9 +63,8 @@
     import {
         mdiFileDocumentBoxSearchOutline
     } from '@mdi/js'
-    import metadataExtractor, {
-        extract
-    } from '../plugins/artricles-data-extract'
+    import metadataExtractor from '../plugins/artricles-data-extract'
+    import comboboxChips from './combobox-chips.vue'
 
     export default {
         data: function() {
@@ -57,7 +74,12 @@
                 search: mdiFileDocumentBoxSearchOutline,
                 searchText: '',
                 searching: false,
-                cacheUpdate: 0
+                cacheUpdate: 0,
+                dialog: false,
+                editingArticle: null,
+                editingArticleCates: null,
+                editingArticleTags: null,
+                editingArticleTitle: null,
             }
         },
         computed: {
@@ -101,6 +123,11 @@
                 } else {
                     this.resetFilteredArticles()
                 }
+            },
+            editingArticle(nv) {
+                this.editingArticleCates = nv.metadata.categories
+                this.editingArticleTags = nv.metadata.tags
+                this.editingArticleTitle = nv.metadata.title
             }
         },
         methods: {
@@ -121,6 +148,9 @@
         },
         mounted: function() {
             this.resetFilteredArticles()
+        },
+        components: {
+            'combobox-chips': comboboxChips
         }
     }
 </script>
@@ -179,7 +209,7 @@
     .article-list-transit-enter-to {
         transition: all .8s;
         opacity: 1;
-    } 
+    }
 
     .article-list-transit-leave-active {
         transition: all .3s;
