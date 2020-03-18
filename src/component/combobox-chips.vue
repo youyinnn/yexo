@@ -42,15 +42,25 @@
             inputValues: function(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
                     if (this.isForCates) {
-                        let lastCatesNode = findNode(nv[nv.length - 1])
                         let catesList = []
-                        for (let i = 0; i < lastCatesNode.childNodes.length; i++) {
-                            catesList.push(lastCatesNode.childNodes[i].name)
+                        if (nv.length === 0) {
+                            catesTree.forEach((cateNode) => {
+                                if (cateNode.parentNode === null) {
+                                    catesList.push(cateNode.name)
+                                }
+                            })
+                        } else {
+                            let lastCatesNode = findNode(nv[nv.length - 1])
+                            if (lastCatesNode !== undefined) {
+                                for (let i = 0; i < lastCatesNode.childNodes.length; i++) {
+                                    catesList.push(lastCatesNode.childNodes[i].name)
+                                }
+                            }
+                            if (ov.length > 0) {
+                                this.dataCollector.set('newArticleCates', nv)
+                            }
                         }
                         this.itemsForSelect = catesList
-                        if (ov.length > 0) {
-                            this.dataCollector.set('newArticleCates', nv)
-                        }
                     } else {
                         this.itemsForSelect = tags
                         if (ov.length > 0) {

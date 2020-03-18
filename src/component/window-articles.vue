@@ -34,7 +34,7 @@
                     </transition-group>
                 </v-list>
             </div>
-            <v-dialog content-class="articleDialog" v-model="dialog">
+            <v-dialog content-class="articleDialog" v-model="dialog" persistent>
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
@@ -165,16 +165,23 @@
                 this.filteredArticles = this.articlesCache
             },
             dialogOpen(article) {
-                this.dialog = true; 
+                this.dialog = true;
                 this.editingArticle = article
             },
             updateMetadata() {
-                if (
-                    this.metadataUpdateCollector.get('newArticleCates').toString() !== this.editingArticleCates.toString() ||
-                    this.metadataUpdateCollector.get('newArticleTags').sort().toString() !== this.editingArticleTags.sort().toString() ||
-                    this.editingArticle.metadata.title !== this.editingArticleTitle
-                ) {
-                    metadataUpdater.updateTitle(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), this.editingArticleTitle)
+                let newArticleCates = this.metadataUpdateCollector.get('newArticleCates')
+                let newArticleTags = this.metadataUpdateCollector.get('newArticleTags')
+                let newArticleTitle = this.editingArticleTitle
+                let isTitleChanged = newArticleTitle !== this.editingArticle.metadata.title
+                let isCatesChanged = newArticleCates !== undefined && newArticleCates.toString() !== this.editingArticle.metadata.categories.toString() 
+                let isTagsChanged = newArticleTags !== undefined && newArticleTags.toString() !== this.editingArticle.metadata.tags.toString() 
+                if (isTitleChanged || isCatesChanged || isTagsChanged) {
+                    let data = {
+                        newArticleCates: newArticleCates,
+                        newArticleTags: newArticleTags,
+                        newArticleTitle: newArticleTitle,
+                    }
+                    metadataUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
                 } else {
                     this.$toasted.info('Nothing change.', {
                         position: 'bottom-right',
