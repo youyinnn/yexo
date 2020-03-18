@@ -20,7 +20,7 @@
                 <v-list>
                     <transition-group name="article-list-transit">
                         <v-list-item dense v-for="article in filteredArticles" :key="article.metadata.title" two-line>
-                            <v-card class="mx-auto article-card" @click.stop="dialog = true; editingArticle = article">
+                            <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
                                 <v-card-text class="text-left">
                                     {{ article.metadata.title }}
                                 </v-card-text>
@@ -38,15 +38,16 @@
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
-                        <combobox-chips :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="width: 556px; position: relative; margin: auto;margin-bottom: 10px;"></v-text-field>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small tile dark @click="dialog = false; resetDialog++">
+                        <v-btn color="grey" small tile dark @click="dialog = false; cancelUpdatingMetadata()">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false;">
+                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false; updateMetadata()">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -65,6 +66,7 @@
     } from '@mdi/js'
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
+    import metadataUpdater from '../plugins/metadata-updater'
 
     export default {
         data: function() {
@@ -81,7 +83,8 @@
                 editingArticleTags: null,
                 editingArticleTitle: null,
                 resetDialog: 0,
-                dialogReadonly: true
+                dialogReadonly: true,
+                metadataUpdateCollector: new Map()
             }
         },
         computed: {
@@ -127,12 +130,23 @@
                 }
             },
             editingArticle(nv) {
-                this.editingArticleCates = nv.metadata.categories
-                this.editingArticleTags = nv.metadata.tags
-                this.editingArticleTitle = nv.metadata.title
+                if (nv !== undefined && nv !== null) {
+                    this.editingArticleCates = nv.metadata.categories
+                    this.editingArticleTags = nv.metadata.tags
+                    this.editingArticleTitle = nv.metadata.title
+                } else {
+                    this.editingArticleCates = null
+                    this.editingArticleTags = null
+                    this.editingArticleTitle = null
+                }
             },
             dialog(nv) {
                 this.dialogReadonly = !nv
+            },
+            resetDialog(nv) {
+                let cache = this.editingArticle
+                this.editingArticle = null
+                this.editingArticle = cache
             }
         },
         methods: {
@@ -149,6 +163,32 @@
             },
             resetFilteredArticles() {
                 this.filteredArticles = this.articlesCache
+            },
+            dialogOpen(article) {
+                this.dialog = true; 
+                this.editingArticle = article
+            },
+            updateMetadata() {
+                if (
+                    this.metadataUpdateCollector.get('newArticleCates').toString() !== this.editingArticleCates.toString() ||
+                    this.metadataUpdateCollector.get('newArticleTags').sort().toString() !== this.editingArticleTags.sort().toString() ||
+                    this.editingArticle.metadata.title !== this.editingArticleTitle
+                ) {
+                    metadataUpdater.updateTitle(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), this.editingArticleTitle)
+                } else {
+                    this.$toasted.info('Nothing change.', {
+                        position: 'bottom-right',
+                        duration: 3000,
+                        keepOnHover: true,
+                        className: 'my-toast',
+                        containerClass: 'my-toast-container'
+                    })
+                }
+            },
+            cancelUpdatingMetadata() {
+                this.resetDialog++
+                this.metadataUpdateCollector.clear()
+                this.editingArticle = null
             }
         },
         mounted: function() {
