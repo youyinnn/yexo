@@ -182,6 +182,15 @@
                         newArticleTitle: newArticleTitle,
                     }
                     metadataUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
+                    this.updateCache()
+                    this.resetFilteredArticles()
+                    this.$toasted.info(`Article "${this.editingArticleTitle}" has been updated`, {
+                        position: 'bottom-right',
+                        duration: 3000,
+                        keepOnHover: true,
+                        className: 'my-toast',
+                        containerClass: 'my-toast-container'
+                    })
                 } else {
                     this.$toasted.info('Nothing change.', {
                         position: 'bottom-right',

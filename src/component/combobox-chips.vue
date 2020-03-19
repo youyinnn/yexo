@@ -10,8 +10,13 @@
                     </v-list-item-content>
                 </v-list-item>
             </template>
+            <template v-slot:selection="{ item }">
+                <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small>
+                    {{ item }}
+                </v-chip>
+            </template>
             <template v-slot:item="{ item }">
-                <v-chip dark label small>
+                <v-chip :color="`${getColor(item)} darken-1`" text-color="white" label small>
                     {{ item }}
                 </v-chip>
             </template>
@@ -33,11 +38,9 @@
             allCates: catesTree,
             inputValues: [],
             itemsForSelect: [],
-            isForCates: false
+            isForCates: false,
+            colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange']
         }),
-        computed: {
-
-        },
         watch: {
             inputValues: function(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
@@ -81,7 +84,13 @@
             this.isForCates = this.forCates === 'true'
         },
         methods: {
-
+            getColor(name) {
+                let number = 0
+                for (let i = 0; i < name.length; i++) {
+                    number += name.codePointAt(i)
+                }
+                return this.colors[number % this.colors.length]
+            }
         }
     }
 </script>
