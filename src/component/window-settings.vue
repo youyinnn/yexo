@@ -37,6 +37,7 @@
     import path from 'path'
     import git from 'simple-git'
     import fs from 'fs'
+    import metadataExtractor from '../plugins/artricles-data-extract'
 
     async function status(workingDir) {
         const git = require('simple-git/promise');
@@ -135,8 +136,24 @@
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
-                    windowArticlesInnerWindow.articles = fs.readdirSync(this.findSet('articlesFolderPath').path, {
+                    fs.readdir(this.findSet('articlesFolderPath').path, {
                         encoding: 'utf-8'
+                    }, function(err, files) {
+                        let mdFiles = []
+                        files.forEach(function(whatever, index, arr) {
+                            if (String(whatever).endsWith('.md')) {
+                                let mdText = fs.readFileSync(path.join(localStorage.getItem('articlesFolderPath'), String(whatever)), {
+                                    encoding: 'utf-8'
+                                })
+                                let extractRs = metadataExtractor.extract(mdText)
+                                if (extractRs !== undefined) {
+                                    mdFiles.push(extractRs)
+                                }
+                            }
+                        })
+                        windowArticlesInnerWindow.articlesCache = mdFiles.sort((a, b) => {
+                            return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
+                        })
                     })
                     this.$toasted.info('Articles\' Folder Path Has Been Updated.', {
                         position: 'bottom-right',

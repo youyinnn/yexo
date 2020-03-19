@@ -21,7 +21,7 @@ var tags = []
 function syncreihandle2metadata(text) {
     let endIndex = text.indexOf('---', 3) + 3
     let metadata = text.substring(4, endIndex - 3)
-    metadata = yaml.load(metadata)
+    metadata = yaml.safeLoad(metadata)
     let body = text.substring(endIndex, text.length)
     metadata.char_count = body.length
 
@@ -102,7 +102,12 @@ function syncreihandle2metadata(text) {
 }
 
 function extract(sourceMdStr) {
-    let metadata = syncreihandle2metadata(sourceMdStr)
+    let metadata
+    try {
+        metadata = syncreihandle2metadata(sourceMdStr)
+    } catch (error) {
+        return
+    }
     let endIndex = sourceMdStr.indexOf('---', 3) + 3
     let body = sourceMdStr.substring(endIndex, sourceMdStr.length)
     return {
