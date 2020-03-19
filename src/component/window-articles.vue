@@ -18,20 +18,24 @@
             <div class="c1 text-center">
                 <v-text-field class="articles-search-bar" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
                 <v-list>
-                    <transition-group name="article-list-transit">
-                        <v-list-item dense v-for="article in filteredArticles" :key="article.metadata.title" two-line>
-                            <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
-                                <v-card-text class="text-left">
-                                    {{ article.metadata.title }}
-                                </v-card-text>
-                                <v-card-actions style="display: block; text-align: right">
-                                    <v-btn small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
-                                        Open
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-list-item>
-                    </transition-group>
+                    <!-- <v-timeline dense align-top> -->
+                        <transition-group name="article-list-transit">
+                            <!-- <v-timeline-item v-for="article in filteredArticles" :key="article.metadata.title" right small> -->
+                                <v-list-item v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
+                                    <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
+                                        <v-card-text class="text-left" style="height: 30px">
+                                            <span class="article-title-span">{{ article.metadata.title }}</span> <span class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</span>
+                                        </v-card-text>
+                                        <v-card-actions style="display: block; text-align: right">
+                                            <v-btn x-small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
+                                                Open
+                                            </v-btn>
+                                        </v-card-actions>
+                                    </v-card>
+                                </v-list-item>
+                            <!-- </v-timeline-item> -->
+                        </transition-group>
+                    <!-- </v-timeline> -->
                 </v-list>
             </div>
             <v-dialog content-class="articleDialog" v-model="dialog" persistent>
@@ -67,6 +71,10 @@
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
     import metadataUpdater from '../plugins/metadata-updater'
+    import utc from 'dayjs/plugin/utc'
+    import dayjs from 'dayjs'
+
+    dayjs.extend(utc)
 
     export default {
         data: function() {
@@ -84,7 +92,8 @@
                 editingArticleTitle: null,
                 resetDialog: 0,
                 dialogReadonly: true,
-                metadataUpdateCollector: new Map()
+                metadataUpdateCollector: new Map(),
+                dayjs: dayjs
             }
         },
         computed: {
@@ -173,8 +182,8 @@
                 let newArticleTags = this.metadataUpdateCollector.get('newArticleTags')
                 let newArticleTitle = this.editingArticleTitle
                 let isTitleChanged = newArticleTitle !== this.editingArticle.metadata.title
-                let isCatesChanged = newArticleCates !== undefined && newArticleCates.toString() !== this.editingArticle.metadata.categories.toString() 
-                let isTagsChanged = newArticleTags !== undefined && newArticleTags.toString() !== this.editingArticle.metadata.tags.toString() 
+                let isCatesChanged = newArticleCates !== undefined && newArticleCates.toString() !== this.editingArticle.metadata.categories.toString()
+                let isTagsChanged = newArticleTags !== undefined && newArticleTags.toString() !== this.editingArticle.metadata.tags.toString()
                 if (isTitleChanged || isCatesChanged || isTagsChanged) {
                     let data = {
                         newArticleCates: newArticleCates,
@@ -260,6 +269,17 @@
         background-color: white;
         width: 100%;
         padding: 10px;
+    }
+
+    .article-date-span {
+        color: #4db18f;
+        font-weight: bold;
+        float: left;
+    }
+
+    .article-title-span {
+        font-weight: bold;
+        float: right;
     }
 
     .article-list-transit-enter-active {

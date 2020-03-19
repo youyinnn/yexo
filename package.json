@@ -51,6 +51,7 @@
   },
   "dependencies": {
     "config": "^3.3.0",
+    "dayjs": "^1.8.23",
     "electron-squirrel-startup": "^1.0.0",
     "execa": "^4.0.0",
     "js-yaml": "^3.13.1",
