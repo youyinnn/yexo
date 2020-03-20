@@ -1,6 +1,6 @@
 <template>
     <v-container fluid>
-        <v-combobox v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 200}">
+        <v-combobox v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 200}" @focus="setSelectingList(inputValues)">
             <template v-slot:no-data>
                 <v-list-item dense>
                     <v-list-item-content>
@@ -44,32 +44,12 @@
         watch: {
             inputValues: function(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
-                    if (this.isForCates) {
-                        let catesList = []
-                        if (nv.length === 0) {
-                            catesTree.forEach((cateNode) => {
-                                if (cateNode.parentNode === null) {
-                                    catesList.push(cateNode.name)
-                                }
-                            })
-                        } else {
-                            let lastCatesNode = findNode(nv[nv.length - 1])
-                            if (lastCatesNode !== undefined) {
-                                for (let i = 0; i < lastCatesNode.childNodes.length; i++) {
-                                    catesList.push(lastCatesNode.childNodes[i].name)
-                                }
-                            }
-                            if (ov.length > 0) {
-                                this.dataCollector.set('newArticleCates', nv)
-                            }
-                        }
-                        this.itemsForSelect = catesList
-                    } else {
-                        this.itemsForSelect = tags
-                        if (ov.length > 0) {
-                            this.dataCollector.set('newArticleTags', nv)
-                        }
+                    if (this.isForCates && nv.length !== 0 && ov.length > 0) {
+                        this.dataCollector.set('newArticleCates', nv)
+                    } else if (ov.length > 0) {
+                        this.dataCollector.set('newArticleTags', nv)
                     }
+                    this.setSelectingList(nv)
                 }
             },
             reset(nv) {
@@ -77,7 +57,7 @@
             },
             originalValues(nv) {
                 this.inputValues = this.originalValues
-            }
+            },
         },
         mounted() {
             this.inputValues = this.originalValues
@@ -90,6 +70,28 @@
                     number += name.codePointAt(i)
                 }
                 return this.colors[number % this.colors.length]
+            },
+            setSelectingList(nv) {
+                if (this.isForCates) {
+                    let catesList = []
+                    if (nv.length === 0) {
+                        catesTree.forEach((cateNode) => {
+                            if (cateNode.parentNode === null) {
+                                catesList.push(cateNode.name)
+                            }
+                        })
+                    } else {
+                        let lastCatesNode = findNode(nv[nv.length - 1])
+                        if (lastCatesNode !== undefined) {
+                            for (let i = 0; i < lastCatesNode.childNodes.length; i++) {
+                                catesList.push(lastCatesNode.childNodes[i].name)
+                            }
+                        }
+                    }
+                    this.itemsForSelect = catesList
+                } else {
+                    this.itemsForSelect = tags
+                }
             }
         }
     }
