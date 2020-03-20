@@ -8,7 +8,7 @@
                 </div>
             </div>
             <div class="c1 text-center" v-else-if="filteredArticles.length === 0">
-                No Markdown File In Here!
+                No Articles In Here!
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Choose Another Folder.</v-btn>
                 </div>
@@ -152,6 +152,11 @@
                 let cache = this.editingArticle
                 this.editingArticle = null
                 this.editingArticle = cache
+            },
+            filteredArticles(nv) {
+                if (nv.length === 0) {
+                    this.aToast('No articles in this folder.')
+                }
             }
         },
         methods: {
@@ -189,21 +194,9 @@
                     metadataUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
                     this.updateCache()
                     this.resetFilteredArticles()
-                    this.$toasted.info(`Article "${this.editingArticleTitle}" has been updated`, {
-                        position: 'bottom-right',
-                        duration: 3000,
-                        keepOnHover: true,
-                        className: 'my-toast',
-                        containerClass: 'my-toast-container'
-                    })
+                    this.aToast(`Article "${this.editingArticleTitle}" has been updated`)
                 } else {
-                    this.$toasted.info('Nothing change.', {
-                        position: 'bottom-right',
-                        duration: 3000,
-                        keepOnHover: true,
-                        className: 'my-toast',
-                        containerClass: 'my-toast-container'
-                    })
+                    this.aToast('Nothing change.')
                 }
             },
             cancelUpdatingMetadata() {

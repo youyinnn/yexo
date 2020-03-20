@@ -28,15 +28,32 @@ const store = new Vuex.Store({
 const vueMap = new Map()
 
 Vue.mixin({
-    data: function () {
-      return {
-        vueMap: vueMap,
-        mapKey: ''
-      }
+    data: function() {
+        return {
+            vueMap: vueMap,
+            mapKey: ''
+        }
     },
     mounted: function() {
         this.vueMap.set(this.$el.id, this)
         this.mapKey = this.$el.id
+    },
+    methods: {
+        aToast(text, duration, closeable) {
+            this.$toasted.info(text, {
+                position: 'bottom-right',
+                duration: duration === undefined ? 6000 : duration,
+                keepOnHover: true,
+                className: 'my-toast',
+                containerClass: 'my-toast-container',
+                action: closeable === undefined || closeable ? null : {
+                    text: 'CLOSE',
+                    onClick: (e, toastObject) => {
+                        toastObject.goAway(200);
+                    }
+                },
+            })
+        }
     }
 })
 

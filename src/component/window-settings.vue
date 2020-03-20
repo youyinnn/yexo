@@ -136,6 +136,8 @@
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
+                    this.aToast('Articles\' Folder Path Has Been Updated.')
+                    let tz = this
                     fs.readdir(this.findSet('articlesFolderPath').path, {
                         encoding: 'utf-8'
                     }, function(err, files) {
@@ -154,19 +156,7 @@
                         windowArticlesInnerWindow.articlesCache = mdFiles.sort((a, b) => {
                             return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
                         })
-                    })
-                    this.$toasted.info('Articles\' Folder Path Has Been Updated.', {
-                        position: 'bottom-right',
-                        duration: 3000,
-                        keepOnHover: true,
-                        className: 'my-toast',
-                        containerClass: 'my-toast-container',
-                        action: {
-                            text: 'CLOSE',
-                            onClick: (e, toastObject) => {
-                                toastObject.goAway(200);
-                            }
-                        },
+                        tz.aToast(`${mdFiles.length} Articles Has Been Loaded.`)
                     })
                 }
                 // status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
