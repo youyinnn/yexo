@@ -35,22 +35,8 @@
         mdiFolderTextOutline
     } from '@mdi/js'
     import path from 'path'
-    import git from 'simple-git'
     import fs from 'fs'
     import metadataExtractor from '../plugins/artricles-data-extract'
-
-    async function status(workingDir) {
-        const git = require('simple-git/promise');
-
-        let statusSummary = null;
-        try {
-            statusSummary = await git(workingDir).status();
-        } catch (e) {
-            // handle the error
-        }
-
-        return statusSummary;
-    }
 
     export default {
         data: function() {
@@ -148,6 +134,11 @@
                                     encoding: 'utf-8'
                                 })
                                 let extractRs = metadataExtractor.extract(mdText)
+                                extractRs.gitStatus = {
+                                    icon: null,
+                                    class: null,
+                                    text: null
+                                }
                                 if (extractRs !== undefined) {
                                     mdFiles.push(extractRs)
                                 }
@@ -159,7 +150,6 @@
                         tz.aToast(`${mdFiles.length} Articles Has Been Loaded.`)
                     })
                 }
-                // status(this.findSet('articlesFolderPath').path).then(status => console.log(status))
             }
         }
     }

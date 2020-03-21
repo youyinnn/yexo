@@ -8,14 +8,14 @@ function update(mdFilePath, data) {
         newText = newText.replace(/title: ?.*[\n|\r|\r\n]/, `title: ${data.newArticleTitle}\r`)
     }
     if (data.newArticleCates !== undefined) {
-        let newArticleCatesText = 'categories: \r'
+        let newArticleCatesText = 'categories:\r'
         data.newArticleCates.forEach((c) => {
             newArticleCatesText += `  - ${c}\r`
         })
         newText = newText.replace(/categories:\s*[\n|\r|\r\n](\s\s\-\s*.*[\n|\r|\r\n])*/, newArticleCatesText)
     }
     if (data.newArticleTags !== undefined) {
-        let newArticleTagsText = 'tags: \r'
+        let newArticleTagsText = 'tags:\r'
         data.newArticleTags.forEach((c) => {
             newArticleTagsText += `  - ${c}\r`
         })

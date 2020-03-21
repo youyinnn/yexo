@@ -21,11 +21,14 @@
                     <transition-group name="article-list-transit">
                         <v-list-item v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
                             <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
-                                <v-card-text class="text-left" style="height: 30px">
+                                <v-card-text class="text-left" style="height: 42px">
                                     <span class="article-title-span">{{ article.metadata.title }}</span> <span class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</span>
                                 </v-card-text>
-                                <v-card-actions style="display: block; text-align: right">
-                                    <v-btn x-small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
+                                <v-card-actions style="display: flex; height: 40px; padding: 0 10px 10px 10px">
+                                    <v-btn v-if="article.gitStatus.icon !== null" x-small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
+                                        <v-icon v-if="article.gitStatus.icon !== null" left> {{ article.gitStatus.icon }}</v-icon> {{ article.gitStatus.text }}
+                                    </v-btn>
+                                    <v-btn style="position: absolute; right: 10px;" x-small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
                                         Open
                                     </v-btn>
                                 </v-card-actions>
@@ -62,15 +65,30 @@
     import path from 'path'
     import execa from 'execa'
     import {
-        mdiFileDocumentBoxSearchOutline
+        mdiFileDocumentBoxSearchOutline,
+        mdiNewBox,
+        mdiCircleEditOutline,
+        mdiCreation
     } from '@mdi/js'
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
     import metadataUpdater from '../plugins/metadata-updater'
     import utc from 'dayjs/plugin/utc'
     import dayjs from 'dayjs'
-
     dayjs.extend(utc)
+
+    import git from 'simple-git'
+    async function status(workingDir) {
+        const git = require('simple-git/promise');
+
+        let statusSummary = null;
+        try {
+            statusSummary = await git(workingDir).status();
+        } catch (e) {
+            // handle the error
+        }
+        return statusSummary;
+    }
 
     export default {
         data: function() {
@@ -89,7 +107,7 @@
                 resetDialog: 0,
                 dialogReadonly: true,
                 metadataUpdateCollector: new Map(),
-                dayjs: dayjs
+                dayjs: dayjs,
             }
         },
         computed: {
@@ -107,6 +125,11 @@
                                     encoding: 'utf-8'
                                 })
                                 let extractRs = metadataExtractor.extract(mdText)
+                                extractRs.gitStatus = {
+                                    icon: null,
+                                    class: null,
+                                    text: null
+                                }
                                 if (extractRs !== undefined) {
                                     mdFiles.push(extractRs)
                                 }
@@ -156,6 +179,8 @@
             filteredArticles(nv) {
                 if (nv.length === 0) {
                     this.aToast('No articles in this folder.')
+                } else {
+                    this.setGitStatusCache()
                 }
             }
         },
@@ -203,6 +228,46 @@
                 this.resetDialog++
                 this.metadataUpdateCollector.clear()
                 this.editingArticle = null
+            },
+            setGitStatusCache() {
+                let tz = this
+                status(localStorage.getItem('articlesFolderPath')).then(status => {
+                    tz.filteredArticles.forEach(atcs => {
+                        atcs.gitStatus = tz.checkGitStatusForClass(status, atcs.metadata.title + '.md')
+                    })
+                })
+            },
+            checkGitStatusForClass(status, fileName) {
+                if (status.modified.find(mo => {
+                        return mo.endsWith(fileName)
+                    })) {
+                    return {
+                        icon: mdiCircleEditOutline,
+                        class: 'green',
+                        text: 'modified'
+                    }
+                } else if (status.created.find(cre => {
+                        return cre.endsWith(fileName)
+                    })) {
+                    return {
+                        icon: mdiCreation,
+                        class: 'cyan darken-1',
+                        text: 'created'
+                    }
+                } else if (status.not_added.find(noa => {
+                        return noa.endsWith(fileName)
+                    })) {
+                    return {
+                        icon: mdiNewBox,
+                        class: 'deep-orange',
+                        text: 'not-added'
+                    }
+                }
+                return {
+                    icon: null,
+                    class: null,
+                    text: null
+                }
             }
         },
         mounted: function() {
@@ -284,5 +349,10 @@
     .article-list-transit-leave-active {
         transition: all .3s;
         opacity: 0;
+    }
+
+    .git-status-btn{
+        position: absolute;
+        left: 0;
     }
 </style>
