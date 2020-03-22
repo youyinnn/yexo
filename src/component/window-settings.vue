@@ -134,13 +134,15 @@
                                     encoding: 'utf-8'
                                 })
                                 let extractRs = metadataExtractor.extract(mdText)
-                                extractRs.gitStatus = {
-                                    icon: null,
-                                    class: null,
-                                    text: null
-                                }
                                 if (extractRs !== undefined) {
-                                    mdFiles.push(extractRs)
+                                    extractRs.gitStatus = {
+                                        icon: null,
+                                        class: null,
+                                        text: null
+                                    }
+                                    if (extractRs !== undefined) {
+                                        mdFiles.push(extractRs)
+                                    }
                                 }
                             }
                         })

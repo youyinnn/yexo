@@ -59,45 +59,47 @@ function syncreihandle2metadata(text) {
 
     // handle short_content
     let short = new Array()
-    body = body.split(/\n/)
-    for (let i = 0; i < shortMsgLine; i++) {
-        short.push(body[i])
-    }
-    while (short[0] === '\n') {
-        short.shift()
-    }
-    let shortContent = ''
-    let codePareCount = 0
-    let startPreIndex = -1
-    let endPreIndex = -1
-    for (let j = 0; j < short.length; j++) {
-        if (short[j].search('```') === 0) {
-            codePareCount++
+    if (body.trim().length > 0) {
+        body = body.split(/\n/)
+        for (let i = 0; i < shortMsgLine; i++) {
+            short.push(body[i])
         }
-        let presi = short[j].search('<pre')
-        let preei = short[j].search('</pre')
-        startPreIndex = presi !== -1 ? presi : startPreIndex
-        endPreIndex = preei !== -1 ? preei : endPreIndex
-        shortContent += short[j]
-        shortContent += '\n'
-    }
-    if (codePareCount % 2 !== 0) {
-        shortContent += '```'
-        shortContent += '\n'
-    }
-    if (startPreIndex !== -1 && endPreIndex < startPreIndex) {
-        for (let i = shortMsgLine; endPreIndex < startPreIndex; i++) {
-            if (i == 35) {
-                shortContent += '</pre>'
-                shortContent += '\n'
-                break
+        while (short[0] === '\n') {
+            short.shift()
+        }
+        let shortContent = ''
+        let codePareCount = 0
+        let startPreIndex = -1
+        let endPreIndex = -1
+        for (let j = 0; j < short.length; j++) {
+            if (short[j].search('```') === 0) {
+                codePareCount++
             }
-            endPreIndex = body[i].search('</pre')
-            shortContent += body[i]
+            let presi = short[j].search('<pre')
+            let preei = short[j].search('</pre')
+            startPreIndex = presi !== -1 ? presi : startPreIndex
+            endPreIndex = preei !== -1 ? preei : endPreIndex
+            shortContent += short[j]
             shortContent += '\n'
         }
+        if (codePareCount % 2 !== 0) {
+            shortContent += '```'
+            shortContent += '\n'
+        }
+        if (startPreIndex !== -1 && endPreIndex < startPreIndex) {
+            for (let i = shortMsgLine; endPreIndex < startPreIndex; i++) {
+                if (i == 35) {
+                    shortContent += '</pre>'
+                    shortContent += '\n'
+                    break
+                }
+                endPreIndex = body[i].search('</pre')
+                shortContent += body[i]
+                shortContent += '\n'
+            }
+        }
+        metadata.short_content = shortContent.replace(/!\[.*\]\(.*\)/gm, '')
     }
-    metadata.short_content = shortContent.replace(/!\[.*\]\(.*\)/gm, '')
     return metadata
 }
 

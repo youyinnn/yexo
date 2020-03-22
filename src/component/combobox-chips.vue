@@ -74,7 +74,7 @@
             setSelectingList(nv) {
                 if (this.isForCates) {
                     let catesList = []
-                    if (nv.length === 0) {
+                    if (nv === null || nv.length === 0) {
                         catesTree.forEach((cateNode) => {
                             if (cateNode.parentNode === null) {
                                 catesList.push(cateNode.name)

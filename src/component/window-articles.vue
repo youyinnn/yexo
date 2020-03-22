@@ -25,7 +25,7 @@
                                     <span class="article-title-span">{{ article.metadata.title }}</span> <span class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</span>
                                 </v-card-text>
                                 <v-card-actions style="display: flex; height: 40px; padding: 0 10px 10px 10px">
-                                    <v-btn v-if="article.gitStatus.icon !== null" x-small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
+                                    <v-btn v-if="article.gitStatus.icon !== null" small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
                                         <v-icon v-if="article.gitStatus.icon !== null" left> {{ article.gitStatus.icon }}</v-icon> {{ article.gitStatus.text }}
                                     </v-btn>
                                     <v-btn style="position: absolute; right: 10px;" x-small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
@@ -40,10 +40,10 @@
             <v-btn fixed dark fab small right color="blue" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
                 <v-icon> {{ refreshBtnIcon }}</v-icon>
             </v-btn>
-            <v-btn fixed dark fab bottom small right color="green">
+            <v-btn fixed dark fab bottom small right color="green" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="dialog" persistent>
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent>
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
@@ -53,10 +53,29 @@
                     </v-card-text>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small tile dark @click="dialog = false; cancelUpdatingMetadata()">
+                        <v-btn color="grey" small tile dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" small tile dark @click="dialog = false; updateMetadata()">
+                        <v-btn color="blue lighten-1" small tile dark @click="metadataUpdateDialog = false; updateMetadata()">
+                            Confirm
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-dialog>
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent>
+                <v-card>
+                    <v-card-title>Create a new article</v-card-title>
+                    <v-card-text>
+                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="width: 556px; position: relative; margin: auto;margin-bottom: 10px;"></v-text-field>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                    </v-card-text>
+                    <v-card-actions>
+                        <v-spacer></v-spacer>
+                        <v-btn color="grey" small tile dark @click="createArticleDialog = false; resetCreateArticleDialog();">
+                            Cancel
+                        </v-btn>
+                        <v-btn color="blue lighten-1" small tile dark @click="createArticleDialog = false; createArticle()">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -80,7 +99,7 @@
     } from '@mdi/js'
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
-    import metadataUpdater from '../plugins/metadata-updater'
+    import articleUpdater from '../plugins/article-updater'
     import utc from 'dayjs/plugin/utc'
     import dayjs from 'dayjs'
     dayjs.extend(utc)
@@ -107,17 +126,18 @@
                 searchText: '',
                 searching: false,
                 cacheUpdate: 0,
-                dialog: false,
+                metadataUpdateDialog: false,
                 editingArticle: null,
-                editingArticleCates: null,
-                editingArticleTags: null,
-                editingArticleTitle: null,
+                editingArticleCates: [],
+                editingArticleTags: [],
+                editingArticleTitle: '',
                 resetDialog: 0,
                 dialogReadonly: true,
                 metadataUpdateCollector: new Map(),
                 dayjs: dayjs,
                 refreshBtnIcon: mdiRefresh,
-                addBtnIcon: mdiPencilPlusOutline
+                addBtnIcon: mdiPencilPlusOutline,
+                createArticleDialog: false
             }
         },
         computed: {
@@ -135,13 +155,17 @@
                                     encoding: 'utf-8'
                                 })
                                 let extractRs = metadataExtractor.extract(mdText)
-                                extractRs.gitStatus = {
-                                    icon: null,
-                                    class: null,
-                                    text: null
-                                }
                                 if (extractRs !== undefined) {
-                                    mdFiles.push(extractRs)
+                                    extractRs.gitStatus = {
+                                        icon: null,
+                                        class: null,
+                                        text: null
+                                    }
+                                    if (extractRs !== undefined) {
+                                        mdFiles.push(extractRs)
+                                    }
+                                } else {
+                                    this.myToast(`File ${String(whatever)}.md can not extract the metadata.`)
                                 }
                             }
                         })
@@ -173,12 +197,15 @@
                     this.editingArticleTags = nv.metadata.tags
                     this.editingArticleTitle = nv.metadata.title
                 } else {
-                    this.editingArticleCates = null
-                    this.editingArticleTags = null
-                    this.editingArticleTitle = null
+                    this.editingArticleCates = []
+                    this.editingArticleTags = []
+                    this.editingArticleTitle = ''
                 }
             },
-            dialog(nv) {
+            metadataUpdateDialog(nv) {
+                this.dialogReadonly = !nv
+            },
+            createArticleDialog(nv) {
                 this.dialogReadonly = !nv
             },
             resetDialog(nv) {
@@ -213,7 +240,7 @@
                 }
             },
             dialogOpen(article) {
-                this.dialog = true;
+                this.metadataUpdateDialog = true;
                 this.editingArticle = article
             },
             updateMetadata() {
@@ -229,7 +256,7 @@
                         newArticleTags: newArticleTags,
                         newArticleTitle: newArticleTitle,
                     }
-                    metadataUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
+                    articleUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
                     this.updateCache()
                     this.resetFilteredArticles()
                     this.aToast(`Article "${this.editingArticleTitle}" has been updated`)
@@ -240,7 +267,6 @@
             cancelUpdatingMetadata() {
                 this.resetDialog++
                 this.metadataUpdateCollector.clear()
-                this.editingArticle = null
             },
             setGitStatusCache() {
                 let tz = this
@@ -281,6 +307,29 @@
                     class: null,
                     text: null
                 }
+            },
+            openCreateArticleDialog() {
+                this.createArticleDialog = true
+                this.resetCreateArticleDialog()
+            },
+            resetCreateArticleDialog() {
+                this.editingArticle = {
+                    metadata: {
+                        title: '',
+                        categories: [],
+                        tags: []
+                    }
+                }
+            },
+            createArticle() {
+                let data = {
+                    title: this.editingArticleTitle,
+                    categories: this.editingArticleCates,
+                    tags: this.editingArticleTags
+                }
+                articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
+                this.updateCache()
+                this.resetFilteredArticles(true)
             }
         },
         mounted: function() {
