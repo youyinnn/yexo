@@ -168,8 +168,9 @@
     .v-application--is-ltr .v-list-item__icon:first-child {
         margin-right: 16px;
     }
+
     .actionsMenuClass,
-    .actionsMenuClass .v-list{
+    .actionsMenuClass .v-list {
         border-radius: 0 !important;
     }
 </style>

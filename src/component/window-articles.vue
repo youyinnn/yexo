@@ -37,6 +37,12 @@
                     </transition-group>
                 </v-list>
             </div>
+            <v-btn fixed dark fab small right color="blue" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
+                <v-icon> {{ refreshBtnIcon }}</v-icon>
+            </v-btn>
+            <v-btn fixed dark fab bottom small right color="green">
+                <v-icon> {{ addBtnIcon }}</v-icon>
+            </v-btn>
             <v-dialog content-class="articleDialog" v-model="dialog" persistent>
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
@@ -68,7 +74,9 @@
         mdiFileDocumentBoxSearchOutline,
         mdiNewBox,
         mdiCircleEditOutline,
-        mdiCreation
+        mdiCreation,
+        mdiRefresh,
+        mdiPencilPlusOutline
     } from '@mdi/js'
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
@@ -108,6 +116,8 @@
                 dialogReadonly: true,
                 metadataUpdateCollector: new Map(),
                 dayjs: dayjs,
+                refreshBtnIcon: mdiRefresh,
+                addBtnIcon: mdiPencilPlusOutline
             }
         },
         computed: {
@@ -196,8 +206,11 @@
                 // trigger articlesCache's recomputation
                 this.cacheUpdate++
             },
-            resetFilteredArticles() {
+            resetFilteredArticles(clearSearchText) {
                 this.filteredArticles = this.articlesCache
+                if (clearSearchText !== undefined && clearSearchText) {
+                    this.searchText = ''
+                }
             },
             dialogOpen(article) {
                 this.dialog = true;
@@ -283,6 +296,7 @@
     #window-articles-innerWindow {
         height: 100%;
         background-color: white;
+        overflow: auto;
     }
 
     #no-articles-folders-path-set-show {
@@ -351,7 +365,7 @@
         opacity: 0;
     }
 
-    .git-status-btn{
+    .git-status-btn {
         position: absolute;
         left: 0;
     }
