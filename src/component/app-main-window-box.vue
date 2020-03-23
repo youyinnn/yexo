@@ -3,7 +3,9 @@
         <window id="window-articles">
             <window-articles></window-articles>
         </window>
-        <window id="window-scripts"></window>
+        <window id="window-scripts">
+            <window-scripts></window-scripts>
+        </window>
         <window id="window-todos"></window>
         <window id="window-friends"></window>
         <!-- <window id="window-resumes"></window>
@@ -48,11 +50,13 @@
     }
     import windowSettings from './window-settings.vue'
     import windowArticles from './window-articles.vue'
+    import windowScripts from './window-scripts.vue'
     export default {
         components: {
             'window': window,
             'window-settings': windowSettings,
             'window-articles': windowArticles,
+            'window-scripts': windowScripts,
         }
     }
 </script>

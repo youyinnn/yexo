@@ -85,7 +85,13 @@ if (!gotTheLock) {
             win.loadFile(path.join(__dirname, 'index.html'));
 
             // Open the DevTools.
-            win.webContents.openDevTools();
+            // https://github.com/SimulatedGREG/electron-vue/issues/389
+            win.webContents.on("did-frame-finish-load", () => {
+                win.webContents.once("devtools-opened", () => {
+                    win.focus()
+                })
+                win.webContents.openDevTools()
+            })
             win.on('closed', () => {
                 win = null
             })
@@ -108,7 +114,7 @@ if (!gotTheLock) {
             globalShortcut.register('CommandOrControl+Shift+C', () => {
                 app.quit()
             })
-            BrowserWindow.addDevToolsExtension(path.join(process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0',))
+            BrowserWindow.addDevToolsExtension(path.join(process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0', ))
         }
     } else {
         createWindow = () => {

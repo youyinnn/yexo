@@ -2,7 +2,7 @@
     <div id="window-articles-innerWindow">
         <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
             <div class="c1 text-center" v-if="!articlesFolderPathSet">
-                Please Set Articles' Folder Path First!
+                Please Set <v-chip color="orange" small label>Articles' Folder Path</v-chip> First!
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div id="articles-folders-path-set-show" v-else>
-            <div class="c1 text-center">
+            <div>
                 <v-text-field class="articles-search-bar" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
                 <v-list>
                     <transition-group name="article-list-transit">

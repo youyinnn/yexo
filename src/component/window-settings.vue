@@ -117,6 +117,8 @@
                 }
                 if (this.findSet('webResourcesFolderPath').path !== 'Not Set' && this.findSet('webResourcesFolderPath').path !== localStorage.getItem('webResourcesFolderPath')) {
                     localStorage.setItem('webResourcesFolderPath', this.findSet('webResourcesFolderPath').path)
+                    let windowScriptsInnerWindow = this.vueMap.get('window-scripts-innerWindow')
+                    windowScriptsInnerWindow.webResourcesFolderPathSet = true
                 }
                 if (this.findSet('articlesFolderPath').path !== 'Not Set' && this.findSet('articlesFolderPath').path !== localStorage.getItem('articlesFolderPath')) {
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
