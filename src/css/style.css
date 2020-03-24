@@ -10,6 +10,9 @@ body,
 html {
   backface-visibility: hidden;
 }
+textarea::-webkit-scrollbar {
+  width: 6px;
+}
 ::-webkit-scrollbar {
   width: 12px;
 }

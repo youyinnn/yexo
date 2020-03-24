@@ -10,12 +10,17 @@
         </div>
         <div id="web-resources-folder-path-set-show" v-else>
             <transition-group name="cselect-ctext-transit">
-                <v-select v-if="cselect" dense class="headCategorySelect" key="cselect" :items="headCategory" hide-details label="Select A Head Category To Add The Script" solo item-text="label" item-value="value"></v-select>
-                <v-text-field v-else dense class="headCategorySelect" key="ctext" label="Add A New Head Category For The Script" solo hide-details></v-text-field>
+                <v-select v-if="cselect" v-model="select" dense class="head-category-select" key="cselect" :items="headCategory" hide-details label="Head Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
+                <v-text-field v-else class="head-category-select" key="ctext" label="New Head Category" placeholder=" " hide-details></v-text-field>
             </transition-group>
-            <v-btn fab dark small color="pink" class="changeBtn" @click="cselect = !cselect">
+            <v-text-field placeholder=" " class="sub-category-select" key="sctext" label="Sub Category" hide-details></v-text-field>
+            <v-btn fab dark small color="success" class="add-btn">
+                <v-icon>{{ plus }}</v-icon>
+            </v-btn>
+            <v-btn fab dark small color="blue" class="change-btn" @click="cselect = !cselect">
                 <v-icon>{{ upArrow }}</v-icon>
             </v-btn>
+            <v-textarea placeholder="  " class="script-textarea" outlined label="Script" row-height="20" rows="21" hide-details auto-grow no-resize></v-textarea>
         </div>
     </div>
 </template>
@@ -24,7 +29,8 @@
     import fs from 'fs'
     import path from 'path'
     import {
-        mdiArrowUpBoldCircle
+        mdiArrowLeft,
+        mdiPlus
     } from '@mdi/js'
 
     export default {
@@ -32,8 +38,10 @@
             return {
                 webResourcesFolderPathSet: localStorage.getItem('webResourcesFolderPath') !== null,
                 headCategory: [],
-                upArrow: mdiArrowUpBoldCircle,
-                cselect: true
+                upArrow: mdiArrowLeft,
+                plus: mdiPlus,
+                cselect: true,
+                select: null,
             }
         },
         methods: {
@@ -50,6 +58,7 @@
                         label: mc.replace('## :star:', '')
                     })
                 }
+                this.select = this.headCategory[0]
             }
         },
         mounted: function() {
@@ -64,7 +73,12 @@
     #window-scripts-innerWindow {
         height: 100%;
         background-color: white;
-        overflow: auto;
+        overflow-x: hidden;
+        overflow-y: scroll;
+    }
+
+    #window-scripts-innerWindow::-webkit-scrollbar {
+        width: 6px;
     }
 
     #no-web-resources-folder-path-set-show {
@@ -83,16 +97,37 @@
         align-self: center;
     }
 
-    .headCategorySelect {
+    .head-category-select {
         position: absolute;
         padding: 10px;
         width: 92%;
+        margin-top: 10px;
     }
 
-    .changeBtn {
+    .sub-category-select {
         position: absolute;
-        right: 10px;
+        padding: 10px;
+        width: 92%;
+        margin-top: 70px;
+    }
+
+    .script-textarea {
+        position: absolute;
+        width: 100%;
+        padding: 10px 15px 10px 10px;
+        margin-top: 120px;
+    }
+
+    .change-btn {
+        position: absolute;
+        right: 15px;
         top: 10px;
+    }
+
+    .add-btn {
+        position: absolute;
+        right: 15px;
+        top: 70px;
     }
 
     .cselect-ctext-transit-enter-active {
