@@ -10,19 +10,31 @@
         </div>
         <div id="web-resources-folder-path-set-show" v-else>
             <transition-group name="cselect-ctext-transit">
-                <v-select v-if="cselect" v-model="selectHead" dense class="head-category-select" key="cselect" :items="headCategory" hide-details label="Head Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
-                <v-text-field v-else class="head-category-select" key="ctext" label="New Head Category" placeholder=" " hide-details></v-text-field>
+                <v-select v-if="cselect" v-model="selectHead" dense class="head-category-select" key="cselect" :items="headCategories" hide-details label="Head Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }">
+                    <template v-slot:item="{ item }">
+                        <div v-if="item.subCates !== undefined">
+                            {{ item.label }}
+                        </div>
+                        <v-chip v-else :color="`grey darken-1`" text-color="white" label small>
+                            {{ item.label }}
+                        </v-chip>
+                    </template>
+                </v-select>
+                <v-text-field v-else v-model="newHead" class="head-category-select" key="ctext" label="New Head Category" placeholder=" " hide-details clearable :clear-icon="arrowLeft" @click:clear.prevent="cselect = true; scselect = true"></v-text-field>
             </transition-group>
             <transition-group name="cselect-ctext-transit">
-                <v-select v-if="scselect" v-model="selectSub" dense class="sub-category-select" key="scselect" :items="subCategory" hide-details label="Sub Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
-                <v-text-field v-else placeholder=" " class="sub-category-select" key="sctext" label="New Sub Category" hide-details></v-text-field>
+                <v-select v-if="scselect" v-model="selectSub" dense class="sub-category-select" key="scselect" :items="subCategories" hide-details label="Sub Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }">
+                    <template v-slot:item="{ item }">
+                        <div v-if="item.content !== undefined">
+                            {{ item.label }}
+                        </div>
+                        <v-chip v-else :color="`grey darken-1`" text-color="white" label small>
+                            {{ item.label }}
+                        </v-chip>
+                    </template>
+                </v-select>
+                <v-text-field v-else v-model="newSub" placeholder=" " class="sub-category-select" key="sctext" label="New Sub Category" hide-details :clearable="subClearable" :clear-icon="arrowLeft" @click:clear.prevent="scselect = true; selectSub = subCategories[1]"></v-text-field>
             </transition-group>
-            <v-btn fab dark small color="blue" class="add-btn" @click="scselect = !scselect">
-                <v-icon>{{ upArrow }}</v-icon>
-            </v-btn>
-            <v-btn fab dark small color="blue" class="change-btn" @click="cselect = !cselect">
-                <v-icon>{{ upArrow }}</v-icon>
-            </v-btn>
             <v-textarea placeholder="  " class="script-textarea" outlined label="Script" row-height="20" rows="21" hide-details auto-grow no-resize></v-textarea>
         </div>
     </div>
@@ -32,30 +44,43 @@
     import fs from 'fs'
     import path from 'path'
     import {
-        mdiArrowLeft,
-        mdiPlus
+        mdiArrowLeft
     } from '@mdi/js'
 
     export default {
         data: function() {
             return {
                 webResourcesFolderPathSet: localStorage.getItem('webResourcesFolderPath') !== null,
-                headCategory: [],
-                subCategory: [],
-                upArrow: mdiArrowLeft,
-                plus: mdiPlus,
+                headCategories: [],
+                subCategories: [],
+                arrowLeft: mdiArrowLeft,
                 cselect: true,
                 scselect: true,
                 selectHead: null,
                 selectSub: null,
+                newHead: ' ',
+                newSub: ' ',
+                subClearable: false
             }
         },
         watch: {
             selectHead(nv, ov) {
-                if (ov !== null) {
+                if (String(nv) === '_new_head_') {
+                    this.cselect = false
+                    this.scselect = false
+                    this.subClearable = false
+                    this.selectHead = this.headCategories[1]
+                } else if (ov !== null) {
                     let newSub = this.findHeadCateByValue(nv).subCates
-                    this.subCategory = newSub
-                    this.selectSub = newSub[0]
+                    this.subCategories = newSub
+                    this.selectSub = newSub[1]
+                }
+            },
+            selectSub(nv, ov) {
+                if (String(nv) === '_new_sub_') {
+                    this.scselect = false
+                    this.selectSub = this.selectHead.subCates
+                    this.subClearable = true
                 }
             }
         },
@@ -67,28 +92,39 @@
                 let scriptText = fs.readFileSync(path.join(localStorage.getItem('webResourcesFolderPath'), 'scripts.md'), {
                     encoding: 'utf-8'
                 })
-                let nowHeadCatesIndex = -1
-                for (let mc of scriptText.match(/^#{2,3}\s.*[\r|\n|\r\n]/gm)) {
-                    if (mc.startsWith('## ')) {
-                        this.headCategory.push({
-                            value: mc,
-                            label: mc.replace('## :star:', ''),
-                            subCates:[]
+                this.headCategories.push({
+                    value: '_new_head_',
+                    label: 'Add New Head Category'
+                })
+                let nowHeadCatesIndex = 0
+                for (let mc of scriptText.matchAll(/^#{2,3}\s(:star:|:speech_balloon:)?(.*)[\r|\n|\r\n]/gm)) {
+                    if (mc[1] === ':star:') {
+                        this.headCategories.push({
+                            value: mc[0],
+                            label: mc[2],
+                            subCates: [{
+                                value: '_new_sub_',
+                                label: 'Add New Sub Category'
+                            }]
                         })
                         nowHeadCatesIndex++
-                    } else {
-                        this.headCategory[nowHeadCatesIndex].subCates.push({
-                            value: mc,
-                            label: mc.replace('### :speech_balloon:', '')
+                    } else if (mc[1] === ':speech_balloon:') {
+                        this.headCategories[nowHeadCatesIndex].subCates.push({
+                            value: mc[0],
+                            label: mc[2],
+                            content: '_'
                         })
                     }
                 }
-                this.selectHead = this.headCategory[0]
-                this.selectSub = this.headCategory[0].subCates[0]
-                this.subCategory = this.headCategory[0].subCates
+                this.selectHead = this.headCategories[1]
+                this.selectSub = this.headCategories[1].subCates[1]
+                this.subCategories = this.headCategories[1].subCates
             },
             findHeadCateByValue(value) {
-                return this.headCategory.find(hc => {
+                if (value.value !== undefined) {
+                    value = value.value
+                }
+                return this.headCategories.find(hc => {
                     return hc.value === value
                 })
             }
@@ -132,14 +168,14 @@
     .head-category-select {
         position: absolute;
         padding: 10px;
-        width: 92%;
+        width: 99%;
         margin-top: 10px;
     }
 
     .sub-category-select {
         position: absolute;
         padding: 10px;
-        width: 92%;
+        width: 99%;
         margin-top: 70px;
     }
 
