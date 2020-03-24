@@ -10,12 +10,15 @@
         </div>
         <div id="web-resources-folder-path-set-show" v-else>
             <transition-group name="cselect-ctext-transit">
-                <v-select v-if="cselect" v-model="select" dense class="head-category-select" key="cselect" :items="headCategory" hide-details label="Head Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
+                <v-select v-if="cselect" v-model="selectHead" dense class="head-category-select" key="cselect" :items="headCategory" hide-details label="Head Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
                 <v-text-field v-else class="head-category-select" key="ctext" label="New Head Category" placeholder=" " hide-details></v-text-field>
             </transition-group>
-            <v-text-field placeholder=" " class="sub-category-select" key="sctext" label="Sub Category" hide-details></v-text-field>
-            <v-btn fab dark small color="success" class="add-btn">
-                <v-icon>{{ plus }}</v-icon>
+            <transition-group name="cselect-ctext-transit">
+                <v-select v-if="scselect" v-model="selectSub" dense class="sub-category-select" key="scselect" :items="subCategory" hide-details label="Sub Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }"></v-select>
+                <v-text-field v-else placeholder=" " class="sub-category-select" key="sctext" label="New Sub Category" hide-details></v-text-field>
+            </transition-group>
+            <v-btn fab dark small color="blue" class="add-btn" @click="scselect = !scselect">
+                <v-icon>{{ upArrow }}</v-icon>
             </v-btn>
             <v-btn fab dark small color="blue" class="change-btn" @click="cselect = !cselect">
                 <v-icon>{{ upArrow }}</v-icon>
@@ -38,10 +41,22 @@
             return {
                 webResourcesFolderPathSet: localStorage.getItem('webResourcesFolderPath') !== null,
                 headCategory: [],
+                subCategory: [],
                 upArrow: mdiArrowLeft,
                 plus: mdiPlus,
                 cselect: true,
-                select: null,
+                scselect: true,
+                selectHead: null,
+                selectSub: null,
+            }
+        },
+        watch: {
+            selectHead(nv, ov) {
+                if (ov !== null) {
+                    let newSub = this.findHeadCateByValue(nv).subCates
+                    this.subCategory = newSub
+                    this.selectSub = newSub[0]
+                }
             }
         },
         methods: {
@@ -52,13 +67,30 @@
                 let scriptText = fs.readFileSync(path.join(localStorage.getItem('webResourcesFolderPath'), 'scripts.md'), {
                     encoding: 'utf-8'
                 })
-                for (let mc of scriptText.match(/^##\s.*[\r|\n|\r\n]/gm)) {
-                    this.headCategory.push({
-                        value: mc,
-                        label: mc.replace('## :star:', '')
-                    })
+                let nowHeadCatesIndex = -1
+                for (let mc of scriptText.match(/^#{2,3}\s.*[\r|\n|\r\n]/gm)) {
+                    if (mc.startsWith('## ')) {
+                        this.headCategory.push({
+                            value: mc,
+                            label: mc.replace('## :star:', ''),
+                            subCates:[]
+                        })
+                        nowHeadCatesIndex++
+                    } else {
+                        this.headCategory[nowHeadCatesIndex].subCates.push({
+                            value: mc,
+                            label: mc.replace('### :speech_balloon:', '')
+                        })
+                    }
                 }
-                this.select = this.headCategory[0]
+                this.selectHead = this.headCategory[0]
+                this.selectSub = this.headCategory[0].subCates[0]
+                this.subCategory = this.headCategory[0].subCates
+            },
+            findHeadCateByValue(value) {
+                return this.headCategory.find(hc => {
+                    return hc.value === value
+                })
             }
         },
         mounted: function() {
