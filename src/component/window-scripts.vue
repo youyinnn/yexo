@@ -25,7 +25,7 @@
             <transition-group name="cselect-ctext-transit">
                 <v-select v-if="scselect" v-model="selectSub" dense class="sub-category-select" key="scselect" :items="subCategories" hide-details label="Sub Category" item-text="label" item-value="value" :menu-props="{ bottom: true, nudgeBottom: 33 }">
                     <template v-slot:item="{ item }">
-                        <div v-if="item.content !== undefined">
+                        <div v-if="!String(item.content).startsWith('undefined')">
                             {{ item.label }}
                         </div>
                         <v-chip v-else :color="`grey darken-1`" text-color="white" label small>
@@ -35,7 +35,7 @@
                 </v-select>
                 <v-text-field v-else v-model="newSub" placeholder=" " class="sub-category-select" key="sctext" label="New Sub Category" hide-details :clearable="subClearable" :clear-icon="arrowLeft" @click:clear.prevent="scselect = true; selectSub = subCategories[1]"></v-text-field>
             </transition-group>
-            <v-textarea placeholder="  " class="script-textarea" outlined label="Script" row-height="20" rows="21" hide-details auto-grow no-resize></v-textarea>
+            <v-textarea v-model="editingScript" placeholder="  " class="script-textarea" outlined label="Script" row-height="20" rows="21" hide-details auto-grow no-resize></v-textarea>
         </div>
     </div>
 </template>
@@ -60,7 +60,8 @@
                 selectSub: null,
                 newHead: ' ',
                 newSub: ' ',
-                subClearable: false
+                subClearable: false,
+                editingScript: ''
             }
         },
         watch: {
@@ -81,6 +82,8 @@
                     this.scselect = false
                     this.selectSub = this.selectHead.subCates
                     this.subClearable = true
+                } else if (ov !== null && String(ov) !== '_new_sub_') {
+                    this.editingScript = this.findSubCateByValue(nv).content.trim()
                 }
             }
         },
@@ -97,34 +100,50 @@
                     label: 'Add New Head Category'
                 })
                 let nowHeadCatesIndex = 0
-                for (let mc of scriptText.matchAll(/^#{2,3}\s(:star:|:speech_balloon:)?(.*)[\r|\n|\r\n]/gm)) {
-                    if (mc[1] === ':star:') {
+                let nowSubCatesIndex = 0
+                for (let mc of scriptText.split(/[\r|\n|\r\n]/)) {
+                    if (mc.search(/^##\s:star:(.*)/) === 0) {
+                        mc = mc.match(/^##\s:star:(.*)/)
                         this.headCategories.push({
                             value: mc[0],
-                            label: mc[2],
+                            label: mc[1],
                             subCates: [{
                                 value: '_new_sub_',
                                 label: 'Add New Sub Category'
                             }]
                         })
                         nowHeadCatesIndex++
-                    } else if (mc[1] === ':speech_balloon:') {
+                        nowSubCatesIndex = 0
+                    } else if (mc.search(/^###\s:speech_balloon:(.*)/) === 0) {
+                        mc = mc.match(/^###\s:speech_balloon:(.*)/)
                         this.headCategories[nowHeadCatesIndex].subCates.push({
                             value: mc[0],
-                            label: mc[2],
-                            content: '_'
+                            label: mc[1],
+                            content: ''
                         })
+                        nowSubCatesIndex++
+                    } else if (this.headCategories[nowHeadCatesIndex].subCates[nowSubCatesIndex] !== undefined) {
+                        this.headCategories[nowHeadCatesIndex].subCates[nowSubCatesIndex].content += mc + '\r'
                     }
                 }
                 this.selectHead = this.headCategories[1]
                 this.selectSub = this.headCategories[1].subCates[1]
                 this.subCategories = this.headCategories[1].subCates
+                this.editingScript = this.selectSub.content.trim()
             },
             findHeadCateByValue(value) {
                 if (value.value !== undefined) {
                     value = value.value
                 }
                 return this.headCategories.find(hc => {
+                    return hc.value === value
+                })
+            },
+            findSubCateByValue(value) {
+                if (value.value !== undefined) {
+                    value = value.value
+                }
+                return this.findHeadCateByValue(this.selectHead).subCates.find(hc => {
                     return hc.value === value
                 })
             }

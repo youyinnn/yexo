@@ -67,18 +67,18 @@
                         title: 'Articles',
                         icon: mdiFileOutline,
                     },
-                    {
-                        title: 'Scripts',
-                        icon: mdiScriptTextOutline,
-                    },
-                    {
-                        title: 'Todos',
-                        icon: mdiClipboardListOutline,
-                    },
-                    {
-                        title: 'Friends',
-                        icon: mdiAccountSupervisor,
-                    },
+                    // {
+                    //     title: 'Scripts',
+                    //     icon: mdiScriptTextOutline,
+                    // },
+                    // {
+                    //     title: 'Todos',
+                    //     icon: mdiClipboardListOutline,
+                    // },
+                    // {
+                    //     title: 'Friends',
+                    //     icon: mdiAccountSupervisor,
+                    // },
                     // {
                     //     title: 'Resumes',
                     //     icon: mdiAccountBadge,
