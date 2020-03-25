@@ -23,6 +23,34 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
+        <v-row>
+            <v-col v-for="rs in firstRowOfRs" :key="rs.title">
+                <v-card v-if="rs.title !== 'undefined'">
+                    <v-card-text>
+                        <div>{{ rs.title }}</div>
+                    </v-card-text>
+                    <v-card-actions style="display: block; text-align: right">
+                        <v-btn small tile dark color="purple accent-4" @click="openRs(rs.fileName)">
+                            Open
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
+        <v-row>
+            <v-col v-for="rs in secondRowOfRs" :key="rs.title">
+                <v-card v-if="rs.title !== 'undefined'">
+                    <v-card-text>
+                        <div>{{ rs.title }}</div>
+                    </v-card-text>
+                    <v-card-actions style="display: block; text-align: right">
+                        <v-btn small tile dark color="purple accent-4" @click="openRs(rs.fileName)">
+                            Open
+                        </v-btn>
+                    </v-card-actions>
+                </v-card>
+            </v-col>
+        </v-row>
     </div>
 </template>
 
@@ -37,6 +65,7 @@
     import path from 'path'
     import fs from 'fs'
     import metadataExtractor from '../plugins/artricles-data-extract'
+    import execa from 'execa'
 
     export default {
         data: function() {
@@ -67,9 +96,27 @@
                         path: localStorage.getItem('webResourcesFolderPath') === null ? 'Not Set' : localStorage.getItem('webResourcesFolderPath')
                     }
                 ],
+                firstRowOfRs: [{
+                    title: 'Scripts',
+                    fileName: 'scripts.md'
+                }, {
+                    title: 'Todos',
+                    fileName: 'todos.md'
+                }, {
+                    title: 'Resume',
+                    fileName: 'resume.md'
+                }],
+                secondRowOfRs: [{
+                    title: 'About',
+                    fileName: 'about.md'
+                }, {
+                    title: 'FriendsLink',
+                    fileName: 'friendslink.json'
+                }, {
+                    title: 'undefined'
+                }],
             }
         },
-
         methods: {
             getPathForShow(p) {
                 if (p !== undefined && p !== null && p !== 'Not Set') {
@@ -154,6 +201,14 @@
                         tz.aToast(`${mdFiles.length} Articles Has Been Loaded.`)
                     })
                 }
+            },
+            openRs(rs) {
+                let rsp = localStorage.getItem('webResourcesFolderPath')
+                if (rsp !== undefined) {
+                    execa(path.join(rsp, rs))
+                } else {
+                    tz.aToast(`No Web Resources Folder Path Or No Such File.`)
+                }
             }
         }
     }
@@ -167,5 +222,6 @@
 
     #window-settings-innerWindow {
         padding: 10px;
+        overflow: hidden;
     }
 </style>
