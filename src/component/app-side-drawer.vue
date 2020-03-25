@@ -1,26 +1,27 @@
 <template>
-    <v-navigation-drawer id="app-side-drawer" dark width="150" :mini-variant="mini" absolute permanent>
+    <v-navigation-drawer id="app-side-drawer" dark width="150" mini-variant absolute permanent>
         <v-list>
             <v-list-item-group v-model="selected" mandatory>
-                <v-list-item v-for="item in items" :key="item.title" @click="switchWindow(item.title)" link>
-                    <v-list-item-icon>
-                        <v-icon>{{ item.icon }}</v-icon>
-                    </v-list-item-icon>
-                    <v-list-item-content>
-                        <v-list-item-title>{{ item.title }}</v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
+                <v-tooltip v-for="item in items" :key="item.title" right>
+                    <span> {{ item.title }}</span>
+                    <template v-slot:activator="{ on }">
+                        <v-list-item @click="switchWindow(item.title)" link v-on="on" style="padding: 0; margin: 0">
+                            <v-list-item-icon style="margin: 16px !important;">
+                                <v-icon>{{ item.icon }}</v-icon>
+                            </v-list-item-icon>
+                        </v-list-item>
+                    </template>
+                </v-tooltip>
             </v-list-item-group>
         </v-list>
         <template v-slot:append>
             <v-list-item class="action" style="margin-bottom: 8px;">
-                <v-list-item-icon>
-                    <v-icon>{{ actionIcon }}</v-icon>
-                </v-list-item-icon>
                 <v-list-item-content>
-                    <v-menu id="actionsMenu" fixed top right nudge-top="50" nudge-right="40" z-index="100" content-class="actionsMenuClass">
+                    <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="54" z-index="100" content-class="actionsMenuClass">
                         <template v-slot:activator="{ on }">
-                            <v-btn tile small v-on="on" @click="actionsBtnClick" @blur="actionsBtnBlur">Actions</v-btn>
+                            <v-btn tile v-on="on" style="min-width: initial;">
+                                <v-icon> {{ actionIcon }} </v-icon>
+                            </v-btn>
                         </template>
                         <v-list tile dark dense color="blue-grey darken-3">
                             <v-divider></v-divider>
@@ -33,7 +34,7 @@
                                         <v-list-item-title>{{ act.title }}</v-list-item-title>
                                     </v-list-item-content>
                                 </v-list-item>
-                                <v-divider v-if="index + 1 < items.length" :key="act.title"></v-divider>
+                                <v-divider :key="act.title"></v-divider>
                             </template>
                         </v-list>
                     </v-menu>
@@ -45,14 +46,11 @@
 
 <script>
     import {
-        mdiFileOutline,
         mdiScriptTextOutline,
-        mdiClipboardListOutline,
         mdiAccountSupervisor,
         mdiAccountBadge,
         mdiGoogleDownasaur,
         mdiSettings,
-        mdiArrowUpBoldHexagonOutline,
         mdiCloudUploadOutline,
         mdiFileSyncOutline,
         mdiHammer
@@ -61,38 +59,17 @@
     export default {
         data: function() {
             return {
-                mini: true,
                 selected: 0,
                 items: [{
                         title: 'Articles',
-                        icon: mdiFileOutline,
+                        icon: mdiScriptTextOutline,
                     },
-                    // {
-                    //     title: 'Scripts',
-                    //     icon: mdiScriptTextOutline,
-                    // },
-                    // {
-                    //     title: 'Todos',
-                    //     icon: mdiClipboardListOutline,
-                    // },
-                    // {
-                    //     title: 'Friends',
-                    //     icon: mdiAccountSupervisor,
-                    // },
-                    // {
-                    //     title: 'Resumes',
-                    //     icon: mdiAccountBadge,
-                    // },                
-                    // {
-                    //     title: 'About',
-                    //     icon: mdiGoogleDownasaur,
-                    // },
                     {
                         title: 'Settings',
                         icon: mdiSettings,
                     }
                 ],
-                actionIcon: mdiArrowUpBoldHexagonOutline,
+                actionIcon: mdiGoogleDownasaur,
                 actionMenu: [{
                         title: 'Deploy GitPages',
                         func: this.push,
@@ -123,29 +100,6 @@
                     }
                 }
             },
-            actionsBtnClick() {
-                if (this.vueMap.get('actionsMenu').isActive) {
-                    this.actionsBtnBlur()
-                } else {
-                    this.removeMouseLeaveEvent()
-                }
-            },
-            actionsBtnBlur() {
-                this.fold()
-                this.addMouseLeaveEvent()
-            },
-            expand() {
-                this.mini = false
-            },
-            fold() {
-                this.mini = true
-            },
-            addMouseLeaveEvent() {
-                this.$el.addEventListener('mouseleave', this.fold, true)
-            },
-            removeMouseLeaveEvent() {
-                this.$el.removeEventListener('mouseleave', this.fold, true)
-            },
             push() {
 
             },
@@ -156,10 +110,7 @@
 
             }
         },
-        mounted: function() {
-            this.$el.addEventListener('mouseover', this.expand, true)
-            this.addMouseLeaveEvent()
-        }
+        mounted: function() {}
     }
 </script>
 
@@ -172,5 +123,9 @@
     .actionsMenuClass,
     .actionsMenuClass .v-list {
         border-radius: 0 !important;
+    }
+
+    .action {
+        padding: 0;
     }
 </style>
