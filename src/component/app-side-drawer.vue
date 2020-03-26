@@ -55,6 +55,7 @@
         mdiFileSyncOutline,
         mdiHammer
     } from '@mdi/js'
+    import execa from 'execa'
 
     export default {
         data: function() {
@@ -80,11 +81,11 @@
                         func: this.build,
                         icon: mdiHammer
                     },
-                    {
-                        title: 'Check Settings',
-                        func: this.checkSettings,
-                        icon: mdiFileSyncOutline
-                    },
+                    // {
+                    //     title: 'Check Settings',
+                    //     func: this.checkSettings,
+                    //     icon: mdiFileSyncOutline
+                    // },
                 ]
             }
         },
@@ -104,9 +105,23 @@
 
             },
             build() {
-
-            },
-            checkSettings() {
+                let localRepoBasePath = localStorage.getItem('localRepoBasePath')
+                let buildJsFilePath = localStorage.getItem('buildJsFilePath')
+                let rs
+                try {
+                    rs = execa.sync('node', [buildJsFilePath], {
+                        preferLocal: true,
+                        execPath: localRepoBasePath,
+                        localDir: localRepoBasePath,
+                    })
+                    if (rs.failed) {
+                        this.aToast(`Build Sueccess.`)
+                    } else {
+                        this.aToast(`Build Faild.`)
+                    }
+                } catch (error) {
+                        this.aToast(`Build Faild.`)
+                }
 
             }
         },

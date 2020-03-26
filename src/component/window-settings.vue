@@ -94,6 +94,14 @@
                         action: this.selectFolder,
                         dialogTitle: 'Select Your WebResources\' Folder Path',
                         path: localStorage.getItem('webResourcesFolderPath') === null ? 'Not Set' : localStorage.getItem('webResourcesFolderPath')
+                    },
+                    {
+                        key: 'buildJsFilePath',
+                        label: 'BuildJs File Path',
+                        value: this.getPathForShow(localStorage.getItem('buildJsFilePath')),
+                        action: this.selectFile,
+                        dialogTitle: 'Select Your BuildJs File Path',
+                        path: localStorage.getItem('buildJsFilePath') === null ? 'Not Set' : localStorage.getItem('buildJsFilePath')
                     }
                 ],
                 firstRowOfRs: [{
@@ -200,6 +208,9 @@
                         })
                         tz.aToast(`${mdFiles.length} Articles Has Been Loaded.`)
                     })
+                }
+                if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
+                    localStorage.setItem('buildJsFilePath', this.findSet('buildJsFilePath').path)
                 }
             },
             openRs(rs) {
