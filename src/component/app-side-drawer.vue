@@ -53,7 +53,8 @@
         mdiSettings,
         mdiCloudUploadOutline,
         mdiFileSyncOutline,
-        mdiHammer
+        mdiHammer,
+        mdiGithubFace
     } from '@mdi/js'
     import execa from 'execa'
 
@@ -64,6 +65,10 @@
                 items: [{
                         title: 'Articles',
                         icon: mdiScriptTextOutline,
+                    },
+                    {
+                        title: 'Base Git Status',
+                        icon: mdiGithubFace,
                     },
                     {
                         title: 'Settings',
@@ -91,6 +96,7 @@
         },
         methods: {
             switchWindow(str) {
+                str = str.replace(/ /g, '-')
                 this.$store.commit('switchWindow',
                     'window' + '-' + str.toLowerCase())
                 for (let i = 0; i < this.items.length; i++) {

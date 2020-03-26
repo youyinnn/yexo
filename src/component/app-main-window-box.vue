@@ -3,6 +3,9 @@
         <window id="window-articles">
             <window-articles></window-articles>
         </window>
+        <window id="window-base-git-status">
+            <window-base-git-status></window-base-git-status>
+        </window>
         <window id="window-settings">
             <window-settings></window-settings>
         </window>
@@ -43,11 +46,13 @@
     }
     import windowSettings from './window-settings.vue'
     import windowArticles from './window-articles.vue'
+    import windowBaseGitStatus from './window-base-git-status.vue'
     export default {
         components: {
             'window': window,
             'window-settings': windowSettings,
             'window-articles': windowArticles,
+            'window-base-git-status': windowBaseGitStatus,
         }
     }
 </script>
