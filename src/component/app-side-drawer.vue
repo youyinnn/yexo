@@ -121,9 +121,10 @@
                         localDir: localRepoBasePath,
                     })
                     if (rs.failed) {
-                        this.aToast(`Build Sueccess.`)
-                    } else {
                         this.aToast(`Build Faild.`)
+                    } else {
+                        this.aToast(`Build Sueccess.`)
+                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     }
                 } catch (error) {
                         this.aToast(`Build Faild.`)

@@ -3,49 +3,61 @@
         <v-card class="mb-5" v-if="notAddedFiles.length !== 0">
             <v-card-subtitle class="cyan" style="color: white !important;">Not Added</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in notAddedFiles" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in notAddedFiles" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="created.length !== 0">
             <v-card-subtitle class="indigo" style="color: white !important;">Created</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in created" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in created" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="deleted.length !== 0">
             <v-card-subtitle class="error" style="color: white !important;">Deleted</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in deleted" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in deleted" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="modified.length !== 0">
             <v-card-subtitle class="orange" style="color: white !important;">Modified</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in modified" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in modified" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="renamed.length !== 0">
             <v-card-subtitle class="blue" style="color: white !important;">Renamed</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in renamed" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in renamed" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="staged.length !== 0">
             <v-card-subtitle class="grey darken-2" style="color: white !important;">Staged</v-card-subtitle>
             <v-card-text>
-                <p v-for="n in staged" :key="n">
-                    {{ n }}
-                </p>
+                <transition-group name="git-file">
+                    <p v-for="n in staged" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
             </v-card-text>
         </v-card>
     </div>
@@ -104,20 +116,40 @@
     #window-base-git-status-innerWindow {
         padding: 10px;
     }
-    #window-base-git-status-innerWindow>>> p {
-        padding: 3px;
+
+    #window-base-git-status-innerWindow>>>p {
         margin: 0;
         color: black;
         -moz-user-select: none;
-        transition: all .3s;
+        transition: all .8s;
         font-size: 14px;
         user-select: none;
         cursor: pointer;
     }
 
-    #window-base-git-status-innerWindow>>> p:hover {
+    #window-base-git-status-innerWindow>>>p:hover {
         background-color: rgb(173, 173, 173);
-        padding: 4px;
         transform: translateX(5px);
+    }
+
+    .git-file-enter-active {
+        opacity: 0;
+        transform-origin: top;
+        transform: rotateX(90deg);
+    }
+
+    .git-file-enter-to {
+        opacity: 1;
+        transform-origin: top;
+        transform: rotateX(0deg);
+    }
+
+    .git-file-leave-active {
+        transition: all .5s;
+        opacity: 0;
+        transform-origin: top;
+        transform: rotateX(90deg);
+        height: 0;
+        padding: 0;
     }
 </style>
