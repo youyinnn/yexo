@@ -215,7 +215,7 @@
             },
             filteredArticles(nv) {
                 if (nv.length === 0) {
-                    this.aToast('No articles in this folder.')
+                    this.aToast('No articles in this folder')
                 } else {
                     this.setGitStatusCache()
                 }
@@ -261,7 +261,7 @@
                     this.resetFilteredArticles()
                     this.aToast(`Article "${this.editingArticleTitle}" has been updated`)
                 } else {
-                    this.aToast('Nothing change.')
+                    this.aToast('Nothing change')
                 }
             },
             cancelUpdatingMetadata() {

@@ -179,7 +179,7 @@
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
-                    this.aToast('Articles\' Folder Path Has Been Updated.')
+                    this.aToast('Articles\' Folder Path Has Been Updated')
                     let tz = this
                     fs.readdir(this.findSet('articlesFolderPath').path, {
                         encoding: 'utf-8'

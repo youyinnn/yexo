@@ -52,7 +52,7 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" text @click="dialog = false; confirmAction()">
+                    <v-btn color="success" text @click="confirmAction()">
                         Yes
                     </v-btn>
                     <v-btn color="error" text @click="dialog = false;">
@@ -74,10 +74,12 @@
         mdiCloudUploadOutline,
         mdiFileSyncOutline,
         mdiHammer,
-        mdiGithubFace
+        mdiGithubFace,
+        mdiUndoVariant
     } from '@mdi/js'
     import execa from 'execa'
     import git from 'simple-git'
+    import gitP from 'simple-git/promise'
     import path from 'path'
 
     export default {
@@ -108,11 +110,11 @@
                         func: this.buildConfirmDialog,
                         icon: mdiHammer
                     },
-                    // {
-                    //     title: 'Check Settings',
-                    //     func: this.checkSettings,
-                    //     icon: mdiFileSyncOutline
-                    // },
+                    {
+                        title: 'Discard Changes',
+                        func: this.discardChangesDialog,
+                        icon: mdiUndoVariant
+                    },
                 ],
                 dialog: false,
                 dialogTitle: '',
@@ -142,34 +144,17 @@
                     this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
                 })
             },
+            discardChangesDialog() {
+                this.confirmDialog('Action Confirm', 'Do you want to discard all changes?', () => {
+                    this.discard()
+                    this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
+                })
+            },
             confirmDialog(title, text, func) {
                 this.dialog = true
                 this.dialogTitle = title
                 this.dialogCardText = text
                 this.confirmAction = func
-            },
-            push() {
-                let gitS = git(localStorage.getItem('localRepoBasePath'))
-                let status = gitS.status((err, status) => {
-                    let allFiles = []
-                    let pre = status.not_added.concat(status.modified, status.renamed, status.created)
-                    pre.forEach(file => {
-                        allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
-                    })
-                    if (pre.length === 0) {
-                        this.aToast(`No Changes.`)
-                    } else {
-                        let now = new Date().toString()
-                        gitS
-                            .commit(`commit from yexo at ${now}`, () => {
-                                this.aToast(`Commit From Texo At ${now}.`)
-                            })
-                            .push(['origin', 'master'], (err, rs) => {
-                                this.aToast(`Push Success`)
-                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                            })
-                    }
-                })
             },
             build() {
                 let localRepoBasePath = localStorage.getItem('localRepoBasePath')
@@ -182,14 +167,51 @@
                         localDir: localRepoBasePath,
                     })
                     if (rs.failed) {
-                        this.aToast(`Build Faild.`)
+                        this.aToast(`Build Faild`)
                     } else {
-                        this.aToast(`Build Sueccess.`)
+                        this.aToast(`Build Sueccess`)
                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     }
+                    this.dialog = false
                 } catch (error) {
-                    this.aToast(`Build Faild.`)
+                    this.aToast(`Build Faild`)
+                    this.dialog = false
                 }
+            },
+            push() {
+                let gitS = git(localStorage.getItem('localRepoBasePath'))
+                let status = gitS.status((err, status) => {
+                    let allFiles = []
+                    let pre = status.not_added.concat(status.modified, status.renamed, status.created)
+                    pre.forEach(file => {
+                        allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
+                    })
+                    if (pre.length === 0) {
+                        this.aToast(`No Changes`)
+                        this.dialog = false
+                    } else {
+                        let now = new Date().toString()
+                        gitS
+                            .commit(`commit from yexo at ${now}`, () => {
+                                this.aToast(`Commit From Texo At ${now}`)
+                            })
+                            .push(['origin', 'master'], (err, rs) => {
+                                this.aToast(`Push Success`)
+                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                                this.dialog = false
+                            })
+                    }
+                })
+            },
+            discard() {
+                let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
+                let rs = gitSp.checkout('.').then(() => {
+                    gitSp.clean('f').then(() => {
+                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                        this.aToast(`Discard All Changes Success`)
+                        this.dialog = false
+                    })
+                })
             }
         },
         watch: {
