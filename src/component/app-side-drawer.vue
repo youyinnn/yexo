@@ -41,6 +41,26 @@
                 </v-list-item-content>
             </v-list-item>
         </template>
+        <v-dialog persistent v-model="dialog" width="400">
+            <v-card dark class="unselectable">
+                <v-card-title>
+                    {{ dialogTitle }}
+                </v-card-title>
+                <v-card-text>
+                    {{ dialogCardText }}
+                </v-card-text>
+                <v-divider></v-divider>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="success" text @click="dialog = false; confirmAction()">
+                        Yes
+                    </v-btn>
+                    <v-btn color="error" text @click="dialog = false;">
+                        Cancel
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </v-navigation-drawer>
 </template>
 
@@ -80,12 +100,12 @@
                 actionIcon: mdiGoogleDownasaur,
                 actionMenu: [{
                         title: 'Deploy GitPages',
-                        func: this.push,
+                        func: this.pushConfirmDialog,
                         icon: mdiCloudUploadOutline
                     },
                     {
                         title: 'Build Markdown',
-                        func: this.build,
+                        func: this.buildConfirmDialog,
                         icon: mdiHammer
                     },
                     // {
@@ -93,7 +113,11 @@
                     //     func: this.checkSettings,
                     //     icon: mdiFileSyncOutline
                     // },
-                ]
+                ],
+                dialog: false,
+                dialogTitle: '',
+                dialogCardText: '',
+                confirmAction: () => {}
             }
         },
         methods: {
@@ -103,11 +127,26 @@
                     'window' + '-' + str.toLowerCase())
                 for (let i = 0; i < this.items.length; i++) {
                     let it = this.items[i]
-                    if (it.title.toLowerCase() === str.toLowerCase()) {
+                    if (it.title.toLowerCase().replace(/ /g, '-') === str.toLowerCase()) {
                         this.selected = i
                         break
                     }
                 }
+            },
+            pushConfirmDialog() {
+                this.confirmDialog('Action Confirm', 'Do you want to push changes?', this.push)
+            },
+            buildConfirmDialog() {
+                this.confirmDialog('Action Confirm', 'Do you want to build a new site?', () => {
+                    this.build()
+                    this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
+                })
+            },
+            confirmDialog(title, text, func) {
+                this.dialog = true
+                this.dialogTitle = title
+                this.dialogCardText = text
+                this.confirmAction = func
             },
             push() {
                 let gitS = git(localStorage.getItem('localRepoBasePath'))
@@ -153,7 +192,13 @@
                 }
             }
         },
-        mounted: function() {}
+        watch: {
+            dialog(nv) {
+                if (!nv) {
+                    this.confirmAction = () => {}
+                }
+            }
+        }
     }
 </script>
 
