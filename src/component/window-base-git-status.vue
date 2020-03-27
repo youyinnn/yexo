@@ -1,5 +1,18 @@
 <template>
     <div id="window-base-git-status-innerWindow">
+        <div id="no-status" v-if="noChanges" style="position: absolute;height: 554px;width: 624px;line-height: 554px;text-align: center;">
+            No Changes
+        </div>
+        <v-card class="mb-5" v-if="staged.length !== 0">
+            <v-card-subtitle class="grey darken-2" style="color: white !important;">Staged</v-card-subtitle>
+            <v-card-text>
+                <transition-group name="git-file">
+                    <p v-for="n in staged" :key="n">
+                        {{ n }}
+                    </p>
+                </transition-group>
+            </v-card-text>
+        </v-card>
         <v-card class="mb-5" v-if="notAddedFiles.length !== 0">
             <v-card-subtitle class="cyan" style="color: white !important;">Not Added</v-card-subtitle>
             <v-card-text>
@@ -50,32 +63,11 @@
                 </transition-group>
             </v-card-text>
         </v-card>
-        <v-card class="mb-5" v-if="staged.length !== 0">
-            <v-card-subtitle class="grey darken-2" style="color: white !important;">Staged</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p v-for="n in staged" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
     </div>
 </template>
 
 <script>
-    import git from 'simple-git'
-    async function status(workingDir) {
-        const git = require('simple-git/promise');
-
-        let statusSummary = null;
-        try {
-            statusSummary = await git(workingDir).status();
-        } catch (e) {
-            // handle the error
-        }
-        return statusSummary;
-    }
+    import git from '../plugins/git-handler'
 
     export default {
         data() {
@@ -88,9 +80,19 @@
                 staged: [],
             }
         },
+        computed: {
+            noChanges() {
+                return this.notAddedFiles.length === 0 &&
+                    this.created.length === 0 &&
+                    this.deleted.length === 0 &&
+                    this.modified.length === 0 &&
+                    this.staged.length === 0 &&
+                    this.renamed.length === 0
+            }
+        },
         methods: {
             updateStatus() {
-                status(localStorage.getItem('articlesFolderPath')).then(status => {
+                git.status(localStorage.getItem('articlesFolderPath')).then(status => {
                     this.notAddedFiles = this.processFilesArr(status.not_added)
                     this.created = this.processFilesArr(status.created)
                     this.deleted = this.processFilesArr(status.deleted)

@@ -57,6 +57,8 @@
         mdiGithubFace
     } from '@mdi/js'
     import execa from 'execa'
+    import git from 'simple-git'
+    import path from 'path'
 
     export default {
         data: function() {
@@ -108,7 +110,27 @@
                 }
             },
             push() {
-
+                let gitS = git(localStorage.getItem('localRepoBasePath'))
+                let status = gitS.status((err, status) => {
+                    let allFiles = []
+                    let pre = status.not_added.concat(status.modified, status.renamed, status.created)
+                    pre.forEach(file => {
+                        allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
+                    })
+                    if (pre.length === 0) {
+                        this.aToast(`No Changes.`)
+                    } else {
+                        let now = new Date().toString()
+                        gitS
+                            .commit(`commit from yexo at ${now}`, () => {
+                                this.aToast(`Commit From Texo At ${now}.`)
+                            })
+                            .push(['origin', 'master'], (err, rs) => {
+                                this.aToast(`Push Success`)
+                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            })
+                    }
+                })
             },
             build() {
                 let localRepoBasePath = localStorage.getItem('localRepoBasePath')
@@ -127,9 +149,8 @@
                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     }
                 } catch (error) {
-                        this.aToast(`Build Faild.`)
+                    this.aToast(`Build Faild.`)
                 }
-
             }
         },
         mounted: function() {}
