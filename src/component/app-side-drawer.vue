@@ -186,21 +186,27 @@
                     pre.forEach(file => {
                         allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
                     })
-                    if (pre.length === 0) {
-                        this.aToast(`No Changes`)
-                        this.dialog = false
-                    } else {
-                        let now = new Date().toString()
-                        gitS
-                            .commit(`commit from yexo at ${now}`, () => {
-                                this.aToast(`Commit From Texo At ${now}`)
-                            })
-                            .push(['origin', 'master'], (err, rs) => {
-                                this.aToast(`Push Success`)
-                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                    let now = new Date().toString()
+                    gitS
+                        .outputHandler((command, stdout, stderr) => {
+                            stdout._events.data = (buffer) => {
+                                if (String(buffer).search('nothing to commit, working tree clean') > -1) {
+                                    this.aToast(String(buffer))
+                                } else {
+                                    this.aToast(`Commit From Texo At ${now}`)
+                                }
+                            }
+                            stderr._events.data = (buffer) => {
+                                if (String(buffer).search('up-to-date') === 0) {
+                                    this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                                }
+                                this.aToast(`[${command.toUpperCase()}]${String(buffer)}`)
                                 this.dialog = false
-                            })
-                    }
+                            }
+                        })
+                        .commit(`commit from yexo at ${now}`)
+                        .push(['origin', 'master'])
+                        .push(['gitee', 'master'])
                 })
             },
             discard() {
