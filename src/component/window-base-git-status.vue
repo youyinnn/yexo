@@ -92,14 +92,16 @@
         },
         methods: {
             updateStatus() {
-                git.status(localStorage.getItem('articlesFolderPath')).then(status => {
-                    this.notAddedFiles = this.processFilesArr(status.not_added)
-                    this.created = this.processFilesArr(status.created)
-                    this.deleted = this.processFilesArr(status.deleted)
-                    this.modified = this.processFilesArr(status.modified)
-                    this.renamed = this.processFilesArr(status.renamed)
-                    this.staged = this.processFilesArr(status.staged)
-                })
+                if (localStorage.getItem('articlesFolderPath') !== null) {
+                    git.status(localStorage.getItem('articlesFolderPath')).then(status => {
+                        this.notAddedFiles = this.processFilesArr(status.not_added)
+                        this.created = this.processFilesArr(status.created)
+                        this.deleted = this.processFilesArr(status.deleted)
+                        this.modified = this.processFilesArr(status.modified)
+                        this.renamed = this.processFilesArr(status.renamed)
+                        this.staged = this.processFilesArr(status.staged)
+                    })
+                }
             },
             processFilesArr(arr) {
                 for (let i = 0; i < arr.length; i++) {

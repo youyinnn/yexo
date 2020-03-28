@@ -156,70 +156,83 @@
             build() {
                 let localRepoBasePath = localStorage.getItem('localRepoBasePath')
                 let buildJsFilePath = localStorage.getItem('buildJsFilePath')
-                let rs
-                try {
-                    rs = execa.sync('node', [buildJsFilePath], {
-                        preferLocal: true,
-                        execPath: localRepoBasePath,
-                        localDir: localRepoBasePath,
-                    })
-                    if (rs.failed) {
+                if (localRepoBasePath !== null && buildJsFilePath !== null) {
+                    let rs
+                    try {
+                        rs = execa.sync('node', [buildJsFilePath], {
+                            preferLocal: true,
+                            execPath: localRepoBasePath,
+                            localDir: localRepoBasePath,
+                        })
+                        if (rs.failed) {
+                            this.errorToast(`Build Faild`)
+                        } else {
+                            this.successToast(`Build Sueccess`)
+                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                        }
+                    } catch (error) {
                         this.errorToast(`Build Faild`)
-                    } else {
-                        this.successToast(`Build Sueccess`)
-                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     }
-                    this.dialog = false
-                } catch (error) {
-                    this.errorToast(`Build Faild`)
-                    this.dialog = false
+                } else {
+                    this.errorToast(`Please Set LocalRepoBasePath And BuildJsFilePath First!`)
                 }
+                this.dialog = false
             },
             push() {
-                let gitS = git(localStorage.getItem('localRepoBasePath'))
-                let status = gitS.status((err, status) => {
-                    let allFiles = []
-                    let pre = status.not_added.concat(status.modified, status.renamed, status.created)
-                    pre.forEach(file => {
-                        allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
-                    })
-                    let now = new Date().toString()
-                    gitS
-                        .outputHandler((command, stdout, stderr) => {
-                            stdout._events.data = (buffer) => {
-                                if (String(buffer).search('nothing to commit, working tree clean') > -1) {
-                                    this.infoToast(String(buffer))
-                                } else {
-                                    this.infoToast(`Commit From Texo At ${now}`)
-                                }
-                            }
-                            stderr._events.data = (buffer) => {
-                                if (String(buffer).search('up-to-date') === 0) {
-                                    this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                                }
-                                this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
-                                this.dialog = false
-                            }
+                if (localStorage.getItem('localRepoBasePath') !== null) {
+
+                    let gitS = git(localStorage.getItem('localRepoBasePath'))
+                    let status = gitS.status((err, status) => {
+                        let allFiles = []
+                        let pre = status.not_added.concat(status.modified, status.renamed, status.created)
+                        pre.forEach(file => {
+                            allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
                         })
-                        .add(allFiles)
-                        .commit(`commit from yexo at ${now}`)
-                        .push(['origin', 'master'])
-                        .push(['gitee', 'master'])
-                    this.vueMap.get('window-articles-innerWindow').updateCache()
-                    this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
-                })
-            },
-            discard() {
-                let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
-                let rs = gitSp.checkout('.').then(() => {
-                    gitSp.clean('f').then(() => {
-                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                        this.successToast(`Discard All Changes Success`)
-                        this.dialog = false
+                        let now = new Date().toString()
+                        gitS
+                            .outputHandler((command, stdout, stderr) => {
+                                stdout._events.data = (buffer) => {
+                                    if (String(buffer).search('nothing to commit, working tree clean') > -1) {
+                                        this.infoToast(String(buffer))
+                                    } else {
+                                        this.infoToast(`Commit From Texo At ${now}`)
+                                    }
+                                }
+                                stderr._events.data = (buffer) => {
+                                    if (String(buffer).search('up-to-date') === 0) {
+                                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                                    }
+                                    this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
+                                    this.dialog = false
+                                }
+                            })
+                            .add(allFiles)
+                            .commit(`commit from yexo at ${now}`)
+                            .push(['origin', 'master'])
+                            .push(['gitee', 'master'])
                         this.vueMap.get('window-articles-innerWindow').updateCache()
                         this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
                     })
-                })
+                } else {
+                    this.errorToast(`Please Set LocalRepoBasePath First!`)
+                    this.dialog = false
+                }
+            },
+            discard() {
+                if (localStorage.getItem('localRepoBasePath') !== null) {
+                    let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
+                    let rs = gitSp.checkout('.').then(() => {
+                        gitSp.clean('f').then(() => {
+                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            this.successToast(`Discard All Changes Success`)
+                            this.vueMap.get('window-articles-innerWindow').updateCache()
+                            this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
+                        })
+                    })
+                } else {
+                    this.errorToast(`Please Set LocalRepoBasePath First!`)
+                }
+                this.dialog = false
             }
         },
         watch: {

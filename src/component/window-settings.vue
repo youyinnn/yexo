@@ -172,8 +172,6 @@
                 }
                 if (this.findSet('webResourcesFolderPath').path !== 'Not Set' && this.findSet('webResourcesFolderPath').path !== localStorage.getItem('webResourcesFolderPath')) {
                     localStorage.setItem('webResourcesFolderPath', this.findSet('webResourcesFolderPath').path)
-                    let windowScriptsInnerWindow = this.vueMap.get('window-scripts-innerWindow')
-                    windowScriptsInnerWindow.webResourcesFolderPathSet = true
                 }
                 if (this.findSet('articlesFolderPath').path !== 'Not Set' && this.findSet('articlesFolderPath').path !== localStorage.getItem('articlesFolderPath')) {
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
@@ -207,6 +205,7 @@
                             return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
                         })
                         tz.infoToast(`${mdFiles.length} Articles Has Been Loaded`)
+                        tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     })
                 }
                 if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
@@ -215,10 +214,10 @@
             },
             openRs(rs) {
                 let rsp = localStorage.getItem('webResourcesFolderPath')
-                if (rsp !== undefined) {
+                if (rsp !== null) {
                     execa(path.join(rsp, rs))
                 } else {
-                    tz.infoToast(`No Web Resources Folder Path Or No Such File`)
+                    this.errorToast(`No Web Resources Folder Path Or No Such File`)
                 }
             }
         }
