@@ -40,7 +40,7 @@ Vue.mixin({
     },
     methods: {
         toast(type, text, option) {
-            let duration = 3000, closeable = false
+            let duration = 5000, closeable = false
             if (option !== undefined) {
                 if (option.closeable !== undefined) {
                     closeable = option.closeable

@@ -1,5 +1,5 @@
 <template>
-    <v-navigation-drawer id="app-side-drawer" dark width="150" mini-variant absolute permanent>
+    <v-navigation-drawer id="app-side-drawer" color="teal lighten-1" width="150" mini-variant absolute permanent mini-variant-width="40">
         <v-list>
             <v-list-item-group v-model="selected" mandatory>
                 <v-tooltip v-for="item in items" :key="item.title" right>
@@ -17,9 +17,9 @@
         <template v-slot:append>
             <v-list-item class="action" style="margin-bottom: 8px;">
                 <v-list-item-content>
-                    <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="54" z-index="100" content-class="actionsMenuClass">
+                    <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="40" z-index="100" content-class="actionsMenuClass">
                         <template v-slot:activator="{ on }">
-                            <v-btn tile v-on="on" style="min-width: initial;">
+                            <v-btn tile dark v-on="on" style="min-width: initial; padding: 0;">
                                 <v-icon> {{ actionIcon }} </v-icon>
                             </v-btn>
                         </template>
@@ -41,11 +41,12 @@
                 </v-list-item-content>
             </v-list-item>
         </template>
-        <v-dialog persistent v-model="dialog" width="400">
+        <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.9" overlay-color="grey darken-3">
             <v-card dark class="unselectable">
                 <v-card-title>
                     {{ dialogTitle }}
                 </v-card-title>
+                <v-divider></v-divider>
                 <v-card-text>
                     <span v-html="dialogCardText"></span>
                 </v-card-text>

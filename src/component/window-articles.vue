@@ -16,8 +16,8 @@
         </div>
         <div id="articles-folders-path-set-show" v-else>
             <div>
-                <v-list style="background-color: #302f2f; padding: 8px 0 0;">
-                    <v-list-item dark>
+                <v-list style="background-color: #302f2f; padding: 8px 0 0;" dense>
+                    <v-list-item dark dense>
                         <v-text-field class="articles-search-bar theme--dark" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
                     </v-list-item>
                 </v-list>
@@ -42,20 +42,22 @@
                     </transition-group>
                 </v-list>
             </div>
-            <v-btn fixed dark fab small right color="blue" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
+            <v-btn fixed dark fab small right color="purple lighten-1" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
                 <v-icon> {{ refreshBtnIcon }}</v-icon>
             </v-btn>
             <v-btn fixed dark fab bottom small right color="green" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark>
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.9" overlay-color="grey darken-3">
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
+                    <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
+                    <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="grey" small tile dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
@@ -67,14 +69,16 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark>
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.9" overlay-color="grey darken-3">
                 <v-card>
                     <v-card-title>Create a new article</v-card-title>
+                    <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
+                    <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
                         <v-btn color="grey" small tile dark @click="createArticleDialog = false; resetCreateArticleDialog();">
@@ -383,7 +387,7 @@
     }
 
     .article-card:hover {
-        background-color: #4d4d4d;
+        background-color: #252525;
     }
 
     .article-card:hover .v-card__text {

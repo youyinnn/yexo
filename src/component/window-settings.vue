@@ -17,6 +17,7 @@
                     </v-col>
                 </v-row>
             </v-card-text>
+            <v-divider></v-divider>
             <v-card-actions style="display: block; text-align: right">
                 <v-btn small tile depressed color="cyan accent-4" dark @click="saveGithubSettings">
                     Save
@@ -29,8 +30,9 @@
                     <v-card-text>
                         <div>{{ rs.title }}</div>
                     </v-card-text>
+                    <v-divider></v-divider>
                     <v-card-actions style="display: block; text-align: right">
-                        <v-btn small tile dark color="purple accent-4" @click="openRs(rs.fileName)">
+                        <v-btn small tile dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
                             Open
                         </v-btn>
                     </v-card-actions>
@@ -43,8 +45,9 @@
                     <v-card-text>
                         <div>{{ rs.title }}</div>
                     </v-card-text>
+                    <v-divider></v-divider>
                     <v-card-actions style="display: block; text-align: right">
-                        <v-btn small tile dark color="purple accent-4" @click="openRs(rs.fileName)">
+                        <v-btn small tile dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
                             Open
                         </v-btn>
                     </v-card-actions>
