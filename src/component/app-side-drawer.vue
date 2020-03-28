@@ -145,10 +145,7 @@
                 })
             },
             discardChangesDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to discard all changes?', () => {
-                    this.discard()
-                    this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
-                })
+                this.confirmDialog('Action Confirm', 'Do you want to discard all changes?', this.discard)
             },
             confirmDialog(title, text, func) {
                 this.dialog = true
@@ -167,14 +164,14 @@
                         localDir: localRepoBasePath,
                     })
                     if (rs.failed) {
-                        this.aToast(`Build Faild`)
+                        this.errorToast(`Build Faild`)
                     } else {
-                        this.aToast(`Build Sueccess`)
+                        this.successToast(`Build Sueccess`)
                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     }
                     this.dialog = false
                 } catch (error) {
-                    this.aToast(`Build Faild`)
+                    this.errorToast(`Build Faild`)
                     this.dialog = false
                 }
             },
@@ -191,22 +188,25 @@
                         .outputHandler((command, stdout, stderr) => {
                             stdout._events.data = (buffer) => {
                                 if (String(buffer).search('nothing to commit, working tree clean') > -1) {
-                                    this.aToast(String(buffer))
+                                    this.infoToast(String(buffer))
                                 } else {
-                                    this.aToast(`Commit From Texo At ${now}`)
+                                    this.infoToast(`Commit From Texo At ${now}`)
                                 }
                             }
                             stderr._events.data = (buffer) => {
                                 if (String(buffer).search('up-to-date') === 0) {
                                     this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                                 }
-                                this.aToast(`[${command.toUpperCase()}]${String(buffer)}`)
+                                this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
                                 this.dialog = false
                             }
                         })
+                        .add(allFiles)
                         .commit(`commit from yexo at ${now}`)
                         .push(['origin', 'master'])
                         .push(['gitee', 'master'])
+                    this.vueMap.get('window-articles-innerWindow').updateCache()
+                    this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
                 })
             },
             discard() {
@@ -214,8 +214,10 @@
                 let rs = gitSp.checkout('.').then(() => {
                     gitSp.clean('f').then(() => {
                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                        this.aToast(`Discard All Changes Success`)
+                        this.successToast(`Discard All Changes Success`, {duration: 1000})
                         this.dialog = false
+                        this.vueMap.get('window-articles-innerWindow').updateCache()
+                        this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
                     })
                 })
             }

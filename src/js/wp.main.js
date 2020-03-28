@@ -39,20 +39,51 @@ Vue.mixin({
         this.mapKey = this.$el.id
     },
     methods: {
-        aToast(text, duration, closeable) {
-            this.$toasted.info(text, {
+        toast(type, text, option) {
+            let duration = 3000, closeable = false
+            if (option !== undefined) {
+                if (option.closeable !== undefined) {
+                    closeable = option.closeable
+                    if (closeable) {
+                        duration = 0
+                    }
+                } else if (option.duration !== undefined) {
+                    duration = option.duration
+                }
+            }
+            let toastOption = {
                 position: 'bottom-right',
-                duration: duration === undefined ? 6000 : duration,
+                duration: duration,
                 keepOnHover: true,
                 className: 'my-toast',
                 containerClass: 'my-toast-container',
-                action: closeable === undefined || closeable ? null : {
+                action: closeable ? {
                     text: 'CLOSE',
                     onClick: (e, toastObject) => {
                         toastObject.goAway(200);
                     }
-                },
-            })
+                } : undefined,
+            }
+            switch (type){
+                case 'info':
+                    this.$toasted.info(text, toastOption)
+                break
+                case 'success':
+                    this.$toasted.success(text, toastOption)
+                break
+                case 'error':
+                    this.$toasted.error(text, toastOption)
+                break
+            }
+        },
+        infoToast(text, option) {
+            this.toast('info', text, option)
+        },
+        successToast(text, option) {
+            this.toast('success', text, option)
+        },
+        errorToast(text, option) {
+            this.toast('error', text, option)
         }
     }
 })

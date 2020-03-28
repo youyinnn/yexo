@@ -215,7 +215,7 @@
             },
             filteredArticles(nv) {
                 if (nv.length === 0) {
-                    this.aToast('No articles in this folder')
+                    this.infoToast('No articles in this folder')
                 } else {
                     this.setGitStatusCache()
                 }
@@ -259,9 +259,10 @@
                     articleUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
                     this.updateCache()
                     this.resetFilteredArticles()
-                    this.aToast(`Article "${this.editingArticleTitle}" has been updated`)
+                    this.infoToast(`Article "${this.editingArticleTitle}" has been updated`)
+                    this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                 } else {
-                    this.aToast('Nothing change')
+                    this.infoToast('Nothing change')
                 }
             },
             cancelUpdatingMetadata() {
@@ -330,6 +331,7 @@
                 articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
                 this.updateCache()
                 this.resetFilteredArticles(true)
+                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
             }
         },
         mounted: function() {

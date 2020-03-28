@@ -179,7 +179,7 @@
                     localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
-                    this.aToast('Articles\' Folder Path Has Been Updated')
+                    this.infoToast('Articles\' Folder Path Has Been Updated')
                     let tz = this
                     fs.readdir(this.findSet('articlesFolderPath').path, {
                         encoding: 'utf-8'
@@ -206,7 +206,7 @@
                         windowArticlesInnerWindow.articlesCache = mdFiles.sort((a, b) => {
                             return new Date(b.metadata.date).getTime() - new Date(a.metadata.date).getTime()
                         })
-                        tz.aToast(`${mdFiles.length} Articles Has Been Loaded.`)
+                        tz.infoToast(`${mdFiles.length} Articles Has Been Loaded`)
                     })
                 }
                 if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
@@ -218,7 +218,7 @@
                 if (rsp !== undefined) {
                     execa(path.join(rsp, rs))
                 } else {
-                    tz.aToast(`No Web Resources Folder Path Or No Such File.`)
+                    tz.infoToast(`No Web Resources Folder Path Or No Such File`)
                 }
             }
         }
