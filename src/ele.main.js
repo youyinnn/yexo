@@ -68,7 +68,7 @@ if (!gotTheLock) {
         createWindow = () => {
             // Create the browser window.
             win = new BrowserWindow({
-                width: 700,
+                width: 400,
                 height: 600,
                 webPreferences: {
                     nodeIntegration: true,

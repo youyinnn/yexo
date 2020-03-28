@@ -1,6 +1,6 @@
 <template>
     <div id="window-settings-innerWindow">
-        <v-card class="mx-auto">
+        <v-card class="mx-auto mb-2" dark>
             <v-card-subtitle class="unselectable font-weight-black">
                 Local Base Setting
             </v-card-subtitle>
@@ -23,9 +23,9 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
-        <v-row>
+        <v-row dense>
             <v-col v-for="rs in firstRowOfRs" :key="rs.title">
-                <v-card v-if="rs.title !== 'undefined'">
+                <v-card v-if="rs.title !== 'undefined'" dark>
                     <v-card-text>
                         <div>{{ rs.title }}</div>
                     </v-card-text>
@@ -37,9 +37,9 @@
                 </v-card>
             </v-col>
         </v-row>
-        <v-row>
+        <v-row dense>
             <v-col v-for="rs in secondRowOfRs" :key="rs.title">
-                <v-card v-if="rs.title !== 'undefined'">
+                <v-card v-if="rs.title !== 'undefined'" dark>
                     <v-card-text>
                         <div>{{ rs.title }}</div>
                     </v-card-text>

@@ -1,27 +1,25 @@
 <template>
-    <v-container fluid>
-        <v-combobox v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 200}" @focus="setSelectingList(inputValues)">
-            <template v-slot:no-data>
-                <v-list-item dense>
-                    <v-list-item-content>
-                        <v-list-item-title>
-                            No sub-category "<strong>{{ search }}</strong>" in current categories. Press <kbd>enter</kbd> to create a new one
-                        </v-list-item-title>
-                    </v-list-item-content>
-                </v-list-item>
-            </template>
-            <template v-slot:selection="{ item }">
-                <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small>
-                    {{ item }}
-                </v-chip>
-            </template>
-            <template v-slot:item="{ item }">
-                <v-chip :color="`${getColor(item)} darken-1`" text-color="white" label small>
-                    {{ item }}
-                </v-chip>
-            </template>
-        </v-combobox>
-    </v-container>
+    <v-combobox dark v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 160, dark: true}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
+        <template v-slot:no-data>
+            <v-list-item dense>
+                <v-list-item-content>
+                    <v-list-item-title>
+                        No sub-category "<strong>{{ search }}</strong>" in current categories. Press <kbd>enter</kbd> to create a new one
+                    </v-list-item-title>
+                </v-list-item-content>
+            </v-list-item>
+        </template>
+        <template v-slot:selection="{ item }">
+            <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small>
+                {{ item }}
+            </v-chip>
+        </template>
+        <template v-slot:item="{ item }">
+            <v-chip :color="`${getColor(item)} darken-1`" text-color="white" label small>
+                {{ item }}
+            </v-chip>
+        </template>
+    </v-combobox>
 </template>
 
 <script>

@@ -2,7 +2,7 @@
     <div id="window-articles-innerWindow">
         <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
             <div class="c1 text-center" v-if="!articlesFolderPathSet">
-                Please Set <v-chip color="orange" small label>Articles' Folder Path</v-chip> First!
+                Please Set Articles' Folder Path First!
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
@@ -16,13 +16,18 @@
         </div>
         <div id="articles-folders-path-set-show" v-else>
             <div>
-                <v-text-field class="articles-search-bar" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
-                <v-list>
+                <v-list style="background-color: #302f2f; padding: 8px 0 0;">
+                    <v-list-item dark>
+                        <v-text-field class="articles-search-bar theme--dark" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
+                    </v-list-item>
+                </v-list>
+                <v-list style="background-color: #302f2f;">
                     <transition-group name="article-list-transit">
-                        <v-list-item v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
+                        <v-list-item dark v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
                             <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
-                                <v-card-text class="text-left" style="height: 42px">
-                                    <span class="article-title-span">{{ article.metadata.title }}</span> <span class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</span>
+                                <v-card-text class="text-left">
+                                    <div class="article-title-span text-truncate">{{ article.metadata.title }}</div>
+                                    <div class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</div>
                                 </v-card-text>
                                 <v-card-actions style="display: flex; height: 40px; padding: 0 10px 10px 10px">
                                     <v-btn v-if="article.gitStatus.icon !== null" small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
@@ -43,11 +48,11 @@
             <v-btn fixed dark fab bottom small right color="green" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent>
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark>
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-card-text>
-                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="width: 556px; position: relative; margin: auto;margin-bottom: 10px;"></v-text-field>
+                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
@@ -62,11 +67,11 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent>
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark>
                 <v-card>
                     <v-card-title>Create a new article</v-card-title>
                     <v-card-text>
-                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="width: 556px; position: relative; margin: auto;margin-bottom: 10px;"></v-text-field>
+                        <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
                         <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
@@ -346,7 +351,7 @@
 <style scoped>
     #window-articles-innerWindow {
         height: 100%;
-        background-color: white;
+        background-color: #302f2f;
         overflow: auto;
     }
 
@@ -368,6 +373,7 @@
     .c1 {
         width: 100%;
         align-self: center;
+        color: whitesmoke;
     }
 
     .article-card {
@@ -377,7 +383,7 @@
     }
 
     .article-card:hover {
-        background-color: whitesmoke;
+        background-color: #4d4d4d;
     }
 
     .article-card:hover .v-card__text {
@@ -385,7 +391,7 @@
     }
 
     .articles-search-bar {
-        background-color: white;
+        background-color: #302f2f;
         width: 100%;
         padding: 10px;
     }
@@ -393,12 +399,10 @@
     .article-date-span {
         color: #4db18f;
         font-weight: bold;
-        float: left;
     }
 
     .article-title-span {
         font-weight: bold;
-        float: right;
     }
 
     .article-list-transit-enter-active {

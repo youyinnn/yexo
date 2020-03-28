@@ -214,7 +214,7 @@
                 let rs = gitSp.checkout('.').then(() => {
                     gitSp.clean('f').then(() => {
                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                        this.successToast(`Discard All Changes Success`, {duration: 1000})
+                        this.successToast(`Discard All Changes Success`)
                         this.dialog = false
                         this.vueMap.get('window-articles-innerWindow').updateCache()
                         this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
