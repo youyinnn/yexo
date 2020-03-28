@@ -47,7 +47,7 @@
                     {{ dialogTitle }}
                 </v-card-title>
                 <v-card-text>
-                    {{ dialogCardText }}
+                    <span v-html="dialogCardText"></span>
                 </v-card-text>
                 <v-divider></v-divider>
                 <v-card-actions>
@@ -136,16 +136,16 @@
                 }
             },
             pushConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to push changes?', this.push)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> changes?', this.push)
             },
             buildConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to build a new site?', () => {
+                this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', () => {
                     this.build()
                     this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
                 })
             },
             discardChangesDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to discard all changes?', this.discard)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>discard</code> all changes?', this.discard)
             },
             confirmDialog(title, text, func) {
                 this.dialog = true
