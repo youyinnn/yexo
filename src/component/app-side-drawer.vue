@@ -2,7 +2,7 @@
     <v-navigation-drawer id="app-side-drawer" color="teal lighten-1" width="150" mini-variant absolute permanent mini-variant-width="40">
         <v-list>
             <v-list-item-group v-model="selected" mandatory>
-                <v-tooltip v-for="item in items" :key="item.title" right>
+                <v-tooltip v-for="item in items" :key="item.title" right dark>
                     <span> {{ item.title }}</span>
                     <template v-slot:activator="{ on }">
                         <v-list-item @click="switchWindow(item.title)" link v-on="on" style="padding: 0; margin: 0">

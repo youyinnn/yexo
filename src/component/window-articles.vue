@@ -33,7 +33,7 @@
                                     <v-btn v-if="article.gitStatus.icon !== null" small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
                                         <v-icon v-if="article.gitStatus.icon !== null" left> {{ article.gitStatus.icon }}</v-icon> {{ article.gitStatus.text }}
                                     </v-btn>
-                                    <v-btn style="position: absolute; right: 10px;" x-small dark tile color="cyan" @click.stop="openMd(article.metadata.title + '.md')">
+                                    <v-btn style="position: absolute; right: 10px;" x-small dark color="cyan darken-4" @click.stop="openMd(article.metadata.title + '.md')">
                                         Open
                                     </v-btn>
                                 </v-card-actions>
@@ -42,10 +42,10 @@
                     </transition-group>
                 </v-list>
             </div>
-            <v-btn fixed dark fab small right color="purple lighten-1" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
+            <v-btn fixed dark fab small right color="purple darken-2" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
                 <v-icon> {{ refreshBtnIcon }}</v-icon>
             </v-btn>
-            <v-btn fixed dark fab bottom small right color="green" @click.stop="openCreateArticleDialog">
+            <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
             <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.9" overlay-color="grey darken-3">
@@ -60,10 +60,10 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small tile dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
+                        <v-btn color="grey" small text dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" small tile dark @click="metadataUpdateDialog = false; updateMetadata()">
+                        <v-btn color="blue lighten-1" small text dark @click="metadataUpdateDialog = false; updateMetadata()">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -81,10 +81,10 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small tile dark @click="createArticleDialog = false; resetCreateArticleDialog();">
+                        <v-btn color="grey" small text dark @click="createArticleDialog = false; resetCreateArticleDialog();">
                             Cancel
                         </v-btn>
-                        <v-btn color="blue lighten-1" small tile dark @click="createArticleDialog = false; createArticle()">
+                        <v-btn color="blue lighten-1" small text dark @click="createArticleDialog = false; createArticle()">
                             Confirm
                         </v-btn>
                     </v-card-actions>
@@ -388,6 +388,11 @@
 
     .article-card:hover {
         background-color: #252525;
+        transform: scale(1.02);
+    }
+
+    .v-card__text{
+        transition: all .3s;
     }
 
     .article-card:hover .v-card__text {

@@ -1,6 +1,6 @@
 <template>
     <div id="window-base-git-status-innerWindow">
-        <div id="no-status" v-if="noChanges" style="position: absolute;height: 554px;width: 324px;line-height: 554px;text-align: center; color: whitesmoke;">
+        <div id="no-status" v-if="noChanges" style="position: absolute;height: 544px;width: 324px;line-height: 544px;text-align: center; color: whitesmoke;">
             No Changes
         </div>
         <v-card class="mb-5" v-if="staged.length !== 0">

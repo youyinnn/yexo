@@ -69,7 +69,7 @@ if (!gotTheLock) {
             // Create the browser window.
             win = new BrowserWindow({
                 width: 400,
-                height: 600,
+                height: 580,
                 webPreferences: {
                     nodeIntegration: true,
                 },

@@ -11,7 +11,7 @@
                         <v-text-field readonly hide-details v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
                     </v-col>
                     <v-col cols="2" style="align-self:flex-end;">
-                        <v-btn class="btn" tile depressed small @click="set.action(set)">
+                        <v-btn class="btn" depressed small @click="set.action(set)">
                             <v-icon>{{pathSelectIcon}}</v-icon>
                         </v-btn>
                     </v-col>
@@ -19,7 +19,7 @@
             </v-card-text>
             <v-divider></v-divider>
             <v-card-actions style="display: block; text-align: right">
-                <v-btn small tile depressed color="cyan accent-4" dark @click="saveGithubSettings">
+                <v-btn x-small depressed color="cyan accent-4" dark @click="saveGithubSettings">
                     Save
                 </v-btn>
             </v-card-actions>
@@ -32,7 +32,7 @@
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions style="display: block; text-align: right">
-                        <v-btn small tile dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
+                        <v-btn x-small dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
                             Open
                         </v-btn>
                     </v-card-actions>
@@ -47,7 +47,7 @@
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions style="display: block; text-align: right">
-                        <v-btn small tile dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
+                        <v-btn x-small dark color="blue-grey darken-1" @click="openRs(rs.fileName)">
                             Open
                         </v-btn>
                     </v-card-actions>
