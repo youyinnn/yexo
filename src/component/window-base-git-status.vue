@@ -1,13 +1,16 @@
 <template>
     <div id="window-base-git-status-innerWindow">
-        <div id="no-status" v-if="noChanges" style="position: absolute;height: 544px;width: 324px;line-height: 544px;text-align: center; color: whitesmoke;">
-            No Changes
+        <div id="no-status-show" v-if="noChanges">
+            <div>
+                <img :src="logo">
+                <p>No Changes</p>
+            </div>
         </div>
         <v-card class="mb-5" v-if="staged.length !== 0">
             <v-card-subtitle class="grey darken-2" style="color: white !important;">Staged</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in staged" :key="n">
+                    <p class="cp" v-for="n in staged" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -17,7 +20,7 @@
             <v-card-subtitle class="cyan" style="color: white !important;">Not Added</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in notAddedFiles" :key="n">
+                    <p class="cp" v-for="n in notAddedFiles" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -27,7 +30,7 @@
             <v-card-subtitle class="indigo" style="color: white !important;">Created</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in created" :key="n">
+                    <p class="cp" v-for="n in created" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -37,7 +40,7 @@
             <v-card-subtitle class="error" style="color: white !important;">Deleted</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in deleted" :key="n">
+                    <p class="cp" v-for="n in deleted" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -47,7 +50,7 @@
             <v-card-subtitle class="orange" style="color: white !important;">Modified</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in modified" :key="n">
+                    <p class="cp" v-for="n in modified" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -57,7 +60,7 @@
             <v-card-subtitle class="blue" style="color: white !important;">Renamed</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
-                    <p v-for="n in renamed" :key="n">
+                    <p class="cp" v-for="n in renamed" :key="n">
                         {{ n }}
                     </p>
                 </transition-group>
@@ -68,6 +71,7 @@
 
 <script>
     import git from '../plugins/git-handler'
+    import logo from '../img/logo2_256.png'
 
     export default {
         data() {
@@ -78,6 +82,7 @@
                 modified: [],
                 renamed: [],
                 staged: [],
+                logo: logo
             }
         },
         computed: {
@@ -117,21 +122,41 @@
 </script>
 
 <style scoped>
+    #no-status-show {
+        position: absolute;
+        text-align: center;
+        color: whitesmoke;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+    }
+
+    #no-status-show > div {
+        position: absolute;
+        left: 0;
+        right: 0;
+        height: 290px;
+        top: -48px;
+        bottom: 0;
+        margin: auto;
+    }
+
     #window-base-git-status-innerWindow {
         padding: 10px;
     }
 
-    #window-base-git-status-innerWindow>>>p {
+    .cp {
         margin: 0;
         color: black;
         -moz-user-select: none;
-        transition: all .8s;
+        transition: all .5s;
         font-size: 14px;
         user-select: none;
         cursor: pointer;
     }
 
-    #window-base-git-status-innerWindow>>>p:hover {
+    .cp:hover {
         background-color: rgb(173, 173, 173);
         transform: translateX(5px);
     }

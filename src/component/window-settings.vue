@@ -8,7 +8,7 @@
             <v-card-text>
                 <v-row v-for="set in settings" :key="set.label" dense>
                     <v-col cols="10">
-                        <v-text-field readonly hide-details v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
+                        <v-text-field readonly hide-details placeholder=" " v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
                     </v-col>
                     <v-col cols="2" style="align-self:flex-end;">
                         <v-btn class="btn" depressed small @click="set.action(set)">

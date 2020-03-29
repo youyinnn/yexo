@@ -2,13 +2,15 @@
     <div id="window-articles-innerWindow">
         <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
             <div class="c1 text-center" v-if="!articlesFolderPathSet">
-                Please Set Articles' Folder Path First!
+                <img :src="logo">
+                <p>Please Set Articles' Folder Path First!</p>
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
             </div>
             <div class="c1 text-center" v-else-if="filteredArticles.length === 0">
-                No Articles In Here!
+                <img :src="logo">
+                <p>No Articles In Here!</p>
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Choose Another Folder.</v-btn>
                 </div>
@@ -109,6 +111,7 @@
     import metadataExtractor from '../plugins/artricles-data-extract'
     import comboboxChips from './combobox-chips.vue'
     import articleUpdater from '../plugins/article-updater'
+    import logo from '../img/logo2_256.png'
     import utc from 'dayjs/plugin/utc'
     import dayjs from 'dayjs'
     dayjs.extend(utc)
@@ -146,7 +149,8 @@
                 dayjs: dayjs,
                 refreshBtnIcon: mdiRefresh,
                 addBtnIcon: mdiPencilPlusOutline,
-                createArticleDialog: false
+                createArticleDialog: false,
+                logo: logo
             }
         },
         computed: {
@@ -402,7 +406,7 @@
     .articles-search-bar {
         background-color: #302f2f;
         width: 100%;
-        padding: 10px;
+        padding: 10px 0;
     }
 
     .article-date-span {

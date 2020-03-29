@@ -39,6 +39,20 @@ if (!gotTheLock) {
         return rs
     }
 
+    var browserWindowOptions = {
+        width: 400,
+        height: 580,
+        webPreferences: {
+            nodeIntegration: true,
+        },
+        autoHideMenuBar: true,
+        frame: false,
+        resizable: false,
+        x: 180,
+        y: 100,
+        show: false
+    }
+
     if (isDev()) {
         require('electron-nice-auto-reload')({
             rootPath: path.join(process.cwd(), 'src'),
@@ -67,19 +81,7 @@ if (!gotTheLock) {
 
         createWindow = () => {
             // Create the browser window.
-            win = new BrowserWindow({
-                width: 400,
-                height: 580,
-                webPreferences: {
-                    nodeIntegration: true,
-                },
-                autoHideMenuBar: true,
-                frame: false,
-                resizable: false,
-                x: 180,
-                y: 100,
-                show: false
-            });
+            win = new BrowserWindow(browserWindowOptions);
 
             // and load the index.html of the app.
             win.loadFile(path.join(__dirname, 'index.html'));
@@ -119,19 +121,7 @@ if (!gotTheLock) {
     } else {
         createWindow = () => {
             // Create the browser window.
-            win = new BrowserWindow({
-                width: 400,
-                height: 600,
-                webPreferences: {
-                    nodeIntegration: true,
-                },
-                autoHideMenuBar: true,
-                frame: false,
-                resizable: false,
-                x: 180,
-                y: 100,
-                show: false
-            });
+            win = new BrowserWindow(browserWindowOptions);
 
             // and load the index.html of the app.
             win.loadFile(path.join(__dirname, 'index.html'));

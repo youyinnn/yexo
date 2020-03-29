@@ -51,6 +51,18 @@ module.exports = {
                         }
                     }
                 ]
+            },
+            {
+                test: /\.(png|svg|jpg|gif)$/,
+                use: {
+                    loader: 'file-loader',
+                    options: {
+                        name: '../img/[name].[ext]',
+                        // 解决css文件引用和浏览器引用的相对问题
+                        publicPath: 'src',
+                        emitFile: false
+                    }
+                }
             }
         ]
     },
