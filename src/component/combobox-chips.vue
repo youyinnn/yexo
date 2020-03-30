@@ -42,9 +42,9 @@
         watch: {
             inputValues: function(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
-                    if (this.isForCates && nv.length !== 0 && ov.length > 0) {
+                    if (this.isForCates) {
                         this.dataCollector.set('newArticleCates', nv)
-                    } else if (ov.length > 0) {
+                    } else {
                         this.dataCollector.set('newArticleTags', nv)
                     }
                     this.setSelectingList(nv)

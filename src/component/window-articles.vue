@@ -159,6 +159,7 @@
                         // add reactive dependence factor
                         (this.cacheUpdate);
                         let mdFiles = []
+                        let tz = this
                         fs.readdirSync(localStorage.getItem('articlesFolderPath'), {
                             encoding: 'utf-8'
                         }).forEach(function(whatever, index, arr) {
@@ -177,7 +178,7 @@
                                         mdFiles.push(extractRs)
                                     }
                                 } else {
-                                    this.myToast(`File ${String(whatever)}.md can not extract the metadata.`)
+                                    tz.errorToast(`File ${String(whatever)}.md can not extract the metadata.`)
                                 }
                             }
                         })
@@ -341,8 +342,8 @@
             createArticle() {
                 let data = {
                     title: this.editingArticleTitle,
-                    categories: this.editingArticleCates,
-                    tags: this.editingArticleTags
+                    categories: this.metadataUpdateCollector.get('newArticleCates'),
+                    tags: this.metadataUpdateCollector.get('newArticleTags')
                 }
                 articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
                 this.refreshStatus()

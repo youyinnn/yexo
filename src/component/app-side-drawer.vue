@@ -76,7 +76,8 @@
         mdiFileSyncOutline,
         mdiHammer,
         mdiGithubFace,
-        mdiUndoVariant
+        mdiUndoVariant,
+        mdiSourceCommit
     } from '@mdi/js'
     import execa from 'execa'
     import git from 'simple-git'
@@ -102,9 +103,14 @@
                 ],
                 actionIcon: mdiGoogleDownasaur,
                 actionMenu: [{
-                        title: 'Deploy GitPages',
+                        title: 'Push To GitPages',
                         func: this.pushConfirmDialog,
                         icon: mdiCloudUploadOutline
+                    },
+                    {
+                        title: 'Commit Changes',
+                        func: this.commitConfirmDialog,
+                        icon: mdiSourceCommit
                     },
                     {
                         title: 'Build Markdown',
@@ -138,6 +144,9 @@
             },
             pushConfirmDialog() {
                 this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> changes?', this.push)
+            },
+            commitConfirmDialog() {
+                this.confirmDialog('Action Confirm', 'Do you want to <code>commit</code> changes?', this.commit)
             },
             buildConfirmDialog() {
                 this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', this.build)
@@ -176,7 +185,7 @@
                 }
                 this.dialog = false
             },
-            push() {
+            commit() {
                 if (localStorage.getItem('localRepoBasePath') !== null) {
                     let gitS = git(localStorage.getItem('localRepoBasePath'))
                     let status = gitS.status((err, status) => {
@@ -194,6 +203,7 @@
                                     } else {
                                         this.infoToast(`Commit From Texo At ${now}`)
                                     }
+                                    this.dialog = false
                                 }
                                 stderr._events.data = (buffer) => {
                                     if (String(buffer).search('up-to-date') === 0) {
@@ -205,14 +215,36 @@
                             })
                             .add(allFiles)
                             .commit(`commit from yexo at ${now}`)
-                            .push(['origin', 'master'])
-                            .push(['gitee', 'master'])
                         this.vueMap.get('window-articles-innerWindow').refreshStatus()
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
                     this.dialog = false
                 }
+            },
+            push() {
+                let gitS = git(localStorage.getItem('localRepoBasePath'))
+                gitS
+                    .outputHandler((command, stdout, stderr) => {
+                        stdout._events.data = (buffer) => {
+                            if (String(buffer).search('nothing to commit, working tree clean') > -1) {
+                                this.infoToast(String(buffer))
+                            } else {
+                                this.infoToast(`Commit From Texo At ${now}`)
+                            }
+                            this.dialog = false
+                        }
+                        stderr._events.data = (buffer) => {
+                            if (String(buffer).search('up-to-date') === 0) {
+                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            }
+                            this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
+                            this.dialog = false
+                        }
+                    })
+                    .push(['origin', 'master'])
+                    .push(['gitee', 'master'])
+                this.vueMap.get('window-articles-innerWindow').refreshStatus()
             },
             discard() {
                 if (localStorage.getItem('localRepoBasePath') !== null) {
