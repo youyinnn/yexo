@@ -1,12 +1,12 @@
 <template>
-    <v-navigation-drawer id="app-side-drawer" color="teal lighten-1" width="150" mini-variant absolute permanent mini-variant-width="40">
-        <v-list>
+    <div id="app-side-drawer" class="teal lighten-1">
+        <v-list color="teal lighten-1">
             <v-list-item-group v-model="selected" mandatory>
-                <v-tooltip v-for="item in items" :key="item.title" right dark>
+                <v-tooltip v-for="item in items" :key="item.title" right dark style="z-index: 300; position: absolute;">
                     <span> {{ item.title }}</span>
                     <template v-slot:activator="{ on }">
                         <v-list-item @click="switchWindow(item.title)" link v-on="on" style="padding: 0; margin: 0">
-                            <v-list-item-icon style="margin: 16px !important;">
+                            <v-list-item-icon style="margin: auto">
                                 <v-icon>{{ item.icon }}</v-icon>
                             </v-list-item-icon>
                         </v-list-item>
@@ -14,8 +14,7 @@
                 </v-tooltip>
             </v-list-item-group>
         </v-list>
-        <template v-slot:append>
-            <v-list-item class="action" style="margin-bottom: 8px;">
+            <v-list-item class="action" style="position: absolute;width: 40px;bottom: 0;">
                 <v-list-item-content>
                     <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="40" z-index="100" content-class="actionsMenuClass">
                         <template v-slot:activator="{ on }">
@@ -40,7 +39,6 @@
                     </v-menu>
                 </v-list-item-content>
             </v-list-item>
-        </template>
         <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.9" overlay-color="grey darken-3">
             <v-card dark class="unselectable">
                 <v-card-title>
@@ -62,7 +60,7 @@
                 </v-card-actions>
             </v-card>
         </v-dialog>
-    </v-navigation-drawer>
+    </div>
 </template>
 
 <script>
@@ -178,6 +176,7 @@
                             this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                         }
                     } catch (error) {
+                        console.log(error)
                         this.errorToast(`Build Faild`)
                     }
                 } else {
@@ -273,9 +272,9 @@
 </script>
 
 <style scoped>
-    #app-side-drawer>>>.v-application--is-ltr .v-list-item__action:first-child,
-    .v-application--is-ltr .v-list-item__icon:first-child {
-        margin-right: 16px;
+    #app-side-drawer {
+        width: 40px;
+        height: 100%;
     }
 
     .actionsMenuClass,
