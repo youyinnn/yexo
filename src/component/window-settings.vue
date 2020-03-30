@@ -69,6 +69,7 @@
     import fs from 'fs'
     import metadataExtractor from '../plugins/artricles-data-extract'
     import execa from 'execa'
+    import chokidar from 'chokidar'
 
     export default {
         data: function() {
@@ -190,6 +191,7 @@
                         tz.infoToast(`${mdFiles.length} Articles Has Been Loaded`)
                         tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                     })
+                    this.setWatch()
                 }
                 if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
                     localStorage.setItem('buildJsFilePath', this.findSet('buildJsFilePath').path)
@@ -202,6 +204,25 @@
                 } else {
                     this.errorToast(`No Web Resources Folder Path Or No Such File`)
                 }
+            },
+            setWatch() {
+                const watcher = chokidar.watch(localStorage.getItem('localRepoBasePath'), {
+                    ignored: [/node_modules/, /(^|[\/\\])\../], // ignore dotfiles
+                    persistent: true,
+                    ignoreInitial: true
+                })
+                let tz = this
+                watcher.on('all', (event, path) => {
+                    tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                    if (path.search('_posts') > -1) {
+                        tz.vueMap.get('window-articles-innerWindow').refreshStatus()
+                    }
+                })
+            }
+        },
+        mounted() {
+            if (localStorage.getItem('localRepoBasePath') !== null) {
+                this.setWatch()
             }
         }
     }

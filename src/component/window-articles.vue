@@ -44,7 +44,7 @@
                     </transition-group>
                 </v-list>
             </div>
-            <v-btn fixed dark fab small right color="purple darken-2" style="bottom: 60px;" @click.stop="updateCache();resetFilteredArticles(true)">
+            <v-btn fixed dark fab small right color="purple darken-2" style="bottom: 60px;" @click.stop="refreshStatus()">
                 <v-icon> {{ refreshBtnIcon }}</v-icon>
             </v-btn>
             <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
@@ -241,6 +241,10 @@
                 let mdpath = path.join(localStorage.getItem('articlesFolderPath'), fileName)
                 execa(mdpath)
             },
+            refreshStatus() {
+                this.updateCache()
+                this.resetFilteredArticles(true)
+            },
             updateCache() {
                 // trigger articlesCache's recomputation
                 this.cacheUpdate++
@@ -341,8 +345,7 @@
                     tags: this.editingArticleTags
                 }
                 articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
-                this.updateCache()
-                this.resetFilteredArticles(true)
+                this.refreshStatus()
                 this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
             }
         },

@@ -140,10 +140,7 @@
                 this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> changes?', this.push)
             },
             buildConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', () => {
-                    this.build()
-                    this.vueMap.get('app-side-drawer').switchWindow('base-git-status')
-                })
+                this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', this.build)
             },
             discardChangesDialog() {
                 this.confirmDialog('Action Confirm', 'Do you want to <code>discard</code> all changes?', this.discard)
@@ -181,7 +178,6 @@
             },
             push() {
                 if (localStorage.getItem('localRepoBasePath') !== null) {
-
                     let gitS = git(localStorage.getItem('localRepoBasePath'))
                     let status = gitS.status((err, status) => {
                         let allFiles = []
@@ -211,8 +207,7 @@
                             .commit(`commit from yexo at ${now}`)
                             .push(['origin', 'master'])
                             .push(['gitee', 'master'])
-                        this.vueMap.get('window-articles-innerWindow').updateCache()
-                        this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
+                        this.vueMap.get('window-articles-innerWindow').refreshStatus()
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
@@ -226,8 +221,7 @@
                         gitSp.clean('f').then(() => {
                             this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                             this.successToast(`Discard All Changes Success`)
-                            this.vueMap.get('window-articles-innerWindow').updateCache()
-                            this.vueMap.get('window-articles-innerWindow').resetFilteredArticles(true)
+                            this.vueMap.get('window-articles-innerWindow').refreshStatus()
                         })
                     })
                 } else {
