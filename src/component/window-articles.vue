@@ -1,15 +1,15 @@
 <template>
     <div id="window-articles-innerWindow">
         <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
-            <div class="c1 text-center" v-if="!articlesFolderPathSet">
-                <img :src="logo">
+            <div class="c1 text-center unselectable" v-if="!articlesFolderPathSet">
+                <img :src="logo" ondragstart="return false;">
                 <p>Please Set Articles' Folder Path First!</p>
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
             </div>
             <div class="c1 text-center" v-else-if="filteredArticles.length === 0">
-                <img :src="logo">
+                <img :src="logo" ondragstart="return false;">
                 <p>No Articles In Here!</p>
                 <div class="my-2">
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Choose Another Folder.</v-btn>
@@ -116,9 +116,8 @@
     import dayjs from 'dayjs'
     dayjs.extend(utc)
 
-    import git from 'simple-git'
+    import git from 'simple-git/promise'
     async function status(workingDir) {
-        const git = require('simple-git/promise');
 
         let statusSummary = null;
         try {

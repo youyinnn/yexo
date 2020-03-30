@@ -27,7 +27,7 @@
         <v-row dense>
             <v-col v-for="rs in firstRowOfRs" :key="rs.title">
                 <v-card v-if="rs.title !== 'undefined'" dark>
-                    <v-card-text>
+                    <v-card-text class="unselectable">
                         <div>{{ rs.title }}</div>
                     </v-card-text>
                     <v-divider></v-divider>
@@ -42,7 +42,7 @@
         <v-row dense>
             <v-col v-for="rs in secondRowOfRs" :key="rs.title">
                 <v-card v-if="rs.title !== 'undefined'" dark>
-                    <v-card-text>
+                    <v-card-text class="unselectable">
                         <div>{{ rs.title }}</div>
                     </v-card-text>
                     <v-divider></v-divider>
@@ -81,22 +81,6 @@
                         action: this.selectFolder,
                         dialogTitle: 'Select Your Local Base Path',
                         path: localStorage.getItem('localRepoBasePath') === null ? 'Not Set' : localStorage.getItem('localRepoBasePath')
-                    },
-                    {
-                        key: 'articlesFolderPath',
-                        label: 'Local Articles\' Folder Path',
-                        value: this.getPathForShow(localStorage.getItem('articlesFolderPath')),
-                        action: this.selectFolder,
-                        dialogTitle: 'Select Your Local Articles\' Folder Path',
-                        path: localStorage.getItem('articlesFolderPath') === null ? 'Not Set' : localStorage.getItem('articlesFolderPath')
-                    },
-                    {
-                        key: 'webResourcesFolderPath',
-                        label: 'WebResources\' Folder Path',
-                        value: this.getPathForShow(localStorage.getItem('webResourcesFolderPath')),
-                        action: this.selectFolder,
-                        dialogTitle: 'Select Your WebResources\' Folder Path',
-                        path: localStorage.getItem('webResourcesFolderPath') === null ? 'Not Set' : localStorage.getItem('webResourcesFolderPath')
                     },
                     {
                         key: 'buildJsFilePath',
@@ -172,17 +156,13 @@
             saveGithubSettings() {
                 if (this.findSet('localRepoBasePath').path !== 'Not Set' && this.findSet('localRepoBasePath').path !== localStorage.getItem('localRepoBasePath')) {
                     localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
-                }
-                if (this.findSet('webResourcesFolderPath').path !== 'Not Set' && this.findSet('webResourcesFolderPath').path !== localStorage.getItem('webResourcesFolderPath')) {
-                    localStorage.setItem('webResourcesFolderPath', this.findSet('webResourcesFolderPath').path)
-                }
-                if (this.findSet('articlesFolderPath').path !== 'Not Set' && this.findSet('articlesFolderPath').path !== localStorage.getItem('articlesFolderPath')) {
-                    localStorage.setItem('articlesFolderPath', this.findSet('articlesFolderPath').path)
+                    localStorage.setItem('webResourcesFolderPath', path.join(localStorage.getItem('localRepoBasePath'), '_websrc'))
+                    localStorage.setItem('articlesFolderPath', path.join(localStorage.getItem('localRepoBasePath'), '_posts'))
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
                     this.infoToast('Articles\' Folder Path Has Been Updated')
                     let tz = this
-                    fs.readdir(this.findSet('articlesFolderPath').path, {
+                    fs.readdir(localStorage.getItem('articlesFolderPath'), {
                         encoding: 'utf-8'
                     }, function(err, files) {
                         let mdFiles = []

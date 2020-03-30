@@ -1,13 +1,13 @@
 <template>
     <div id="window-base-git-status-innerWindow">
-        <div id="no-status-show" v-if="noChanges">
+        <div id="no-status-show" v-if="noChanges" class="unselectable">
             <div>
-                <img :src="logo">
+                <img :src="logo" ondragstart="return false;">
                 <p>No Changes</p>
             </div>
         </div>
         <v-card class="mb-5" v-if="staged.length !== 0">
-            <v-card-subtitle class="grey darken-2" style="color: white !important;">Staged</v-card-subtitle>
+            <v-card-subtitle class="grey darken-2 unselectable" style="color: white !important;">Staged</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in staged" :key="n">
@@ -17,7 +17,7 @@
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="notAddedFiles.length !== 0">
-            <v-card-subtitle class="cyan" style="color: white !important;">Not Added</v-card-subtitle>
+            <v-card-subtitle class="cyan unselectable" style="color: white !important;">Not Added</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in notAddedFiles" :key="n">
@@ -27,7 +27,7 @@
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="created.length !== 0">
-            <v-card-subtitle class="indigo" style="color: white !important;">Created</v-card-subtitle>
+            <v-card-subtitle class="indigo unselectable" style="color: white !important;">Created</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in created" :key="n">
@@ -37,7 +37,7 @@
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="deleted.length !== 0">
-            <v-card-subtitle class="error" style="color: white !important;">Deleted</v-card-subtitle>
+            <v-card-subtitle class="error unselectable" style="color: white !important;">Deleted</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in deleted" :key="n">
@@ -47,7 +47,7 @@
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="modified.length !== 0">
-            <v-card-subtitle class="orange" style="color: white !important;">Modified</v-card-subtitle>
+            <v-card-subtitle class="orange unselectable" style="color: white !important;">Modified</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in modified" :key="n">
@@ -57,7 +57,7 @@
             </v-card-text>
         </v-card>
         <v-card class="mb-5" v-if="renamed.length !== 0">
-            <v-card-subtitle class="blue" style="color: white !important;">Renamed</v-card-subtitle>
+            <v-card-subtitle class="blue unselectable" style="color: white !important;">Renamed</v-card-subtitle>
             <v-card-text>
                 <transition-group name="git-file">
                     <p class="cp" v-for="n in renamed" :key="n">
@@ -70,8 +70,18 @@
 </template>
 
 <script>
-    import git from '../plugins/git-handler'
+    import git from 'simple-git/promise'
     import logo from '../img/logo2_256.png'
+
+    async function status(workingDir) {
+        let statusSummary = null;
+        try {
+            statusSummary = await git(workingDir).status();
+        } catch (e) {
+            // handle the error
+        }
+        return statusSummary;
+    }
 
     export default {
         data() {
@@ -82,7 +92,7 @@
                 modified: [],
                 renamed: [],
                 staged: [],
-                logo: logo
+                logo: logo,
             }
         },
         computed: {
@@ -98,7 +108,7 @@
         methods: {
             updateStatus() {
                 if (localStorage.getItem('articlesFolderPath') !== null) {
-                    git.status(localStorage.getItem('articlesFolderPath')).then(status => {
+                    status(localStorage.getItem('articlesFolderPath')).then(status => {
                         this.notAddedFiles = this.processFilesArr(status.not_added)
                         this.created = this.processFilesArr(status.created)
                         this.deleted = this.processFilesArr(status.deleted)
@@ -132,7 +142,7 @@
         top: 0;
     }
 
-    #no-status-show > div {
+    #no-status-show>div {
         position: absolute;
         left: 0;
         right: 0;

@@ -48,13 +48,14 @@
     .logo {
         height: 30px;
         float: left;
-        padding: 2px 0 4px;
-        margin-right: 10px;
+        padding: 4px;
+        margin: 0 5px;
     }
 
     #app-frame-title span {
         color: whitesmoke;
         font-size: 13px;
         float: left;
+        margin-left: 5px;
     }
 </style>
