@@ -219,7 +219,7 @@
                     clear = setTimeout(() => {
                         tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                         if (path.search('_posts') > -1 && path.endsWith('.md')) {
-                            tz.vueMap.get('window-articles-innerWindow').refreshStatus()
+                            tz.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                         }
                     }, 200);
                 })

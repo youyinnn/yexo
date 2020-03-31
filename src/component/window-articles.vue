@@ -44,9 +44,6 @@
                     </transition-group>
                 </v-list>
             </div>
-            <v-btn fixed dark fab small right color="purple darken-2" style="bottom: 60px;" @click.stop="refreshStatus()">
-                <v-icon> {{ refreshBtnIcon }}</v-icon>
-            </v-btn>
             <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
@@ -242,7 +239,7 @@
                 let mdpath = path.join(localStorage.getItem('articlesFolderPath'), fileName)
                 execa(mdpath)
             },
-            refreshStatus() {
+            refreshArticleGitStatus() {
                 this.updateCache()
                 this.resetFilteredArticles(true)
             },
@@ -346,8 +343,6 @@
                     tags: this.metadataUpdateCollector.get('newArticleTags')
                 }
                 articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
-                this.refreshStatus()
-                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
             }
         },
         mounted: function() {

@@ -213,7 +213,7 @@
                             })
                             .add(allFiles)
                             .commit(`commit from yexo at ${now}`)
-                        this.vueMap.get('window-articles-innerWindow').refreshStatus()
+                        this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
@@ -242,16 +242,14 @@
                     })
                     .push(['origin', 'master'])
                     .push(['gitee', 'master'])
-                this.vueMap.get('window-articles-innerWindow').refreshStatus()
+                this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
             },
             discard() {
                 if (localStorage.getItem('localRepoBasePath') !== null) {
                     let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
                     let rs = gitSp.checkout('.').then(() => {
                         gitSp.clean('f').then(() => {
-                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                             this.successToast(`Discard All Changes Success`)
-                            this.vueMap.get('window-articles-innerWindow').refreshStatus()
                         })
                     })
                 } else {

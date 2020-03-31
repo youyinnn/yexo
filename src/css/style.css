@@ -100,7 +100,7 @@ html {
   padding: 10px !important;
 }
 .my-toast-container {
-  max-width: 380px;
+  max-width: 340px;
   min-width: initial !important;
   z-index: 300 !important;
   right: 10px !important;
