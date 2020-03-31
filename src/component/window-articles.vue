@@ -46,7 +46,7 @@
             <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3">
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" transition="fade-transition">
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-divider></v-divider>
@@ -58,16 +58,16 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small text dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
-                            Cancel
-                        </v-btn>
                         <v-btn color="blue lighten-1" small text dark @click="metadataUpdateDialog = false; updateMetadata()">
                             Confirm
+                        </v-btn>
+                        <v-btn color="grey" small text dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
+                            Cancel
                         </v-btn>
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3">
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" transition="fade-transition">
                 <v-card>
                     <v-card-title>Create a new article</v-card-title>
                     <v-divider></v-divider>
@@ -79,11 +79,11 @@
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="grey" small text dark @click="createArticleDialog = false; resetCreateArticleDialog();">
-                            Cancel
-                        </v-btn>
                         <v-btn color="blue lighten-1" small text dark @click="createArticleDialog = false; createArticle()">
                             Confirm
+                        </v-btn>
+                        <v-btn color="grey" small text dark @click="createArticleDialog = false; resetCreateArticleDialog();">
+                            Cancel
                         </v-btn>
                     </v-card-actions>
                 </v-card>

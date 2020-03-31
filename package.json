@@ -6,7 +6,7 @@
   "main": "src/ele.main.js",
   "scripts": {
     "package": "electron-forge package",
-    "make": "electron-forge make",
+    "make": "electron-forge make --skip-package",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "less": "lessc src/css/index.less src/css/style.css",
@@ -34,20 +34,6 @@
           "config": {
             "name": "yexo"
           }
-        },
-        {
-          "name": "@electron-forge/maker-zip",
-          "platforms": [
-            "darwin"
-          ]
-        },
-        {
-          "name": "@electron-forge/maker-deb",
-          "config": {}
-        },
-        {
-          "name": "@electron-forge/maker-rpm",
-          "config": {}
         }
       ]
     }

@@ -7,6 +7,7 @@ import vuetify from '../plugins/vuetify' // path to vuetify export
 import appFrame from 'component/app-frame.vue'
 import appSideDrawer from 'component/app-side-drawer.vue'
 import appMainWindowBox from 'component/app-main-window-box.vue'
+import appWelcome from 'component/app-welcome.vue'
 
 import Vuex from 'vuex'
 import Toasted from 'vue-toasted';
@@ -95,7 +96,8 @@ new Vue({
         'app-frame': appFrame,
         'app-side-drawer': appSideDrawer,
         'app-main-window-box': appMainWindowBox,
-    }
+        'app-welcome': appWelcome,
+    },
 }).$mount('#app')
 
 

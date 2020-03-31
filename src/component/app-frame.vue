@@ -9,6 +9,9 @@
         <v-btn class="frame-btn" color="grey darken-3" style="color: #EEEEEE" :ripple="false" tile small depressed @click="winMinimize">
             <v-icon>{{minusIcon}}</v-icon>
         </v-btn>
+        <div id="curtain">
+            
+        </div>
     </div>
 </template>
 

@@ -39,7 +39,7 @@
                 </v-menu>
             </v-list-item-content>
         </v-list-item>
-        <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.7" overlay-color="grey darken-3">
+        <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.7" overlay-color="grey darken-3" transition="fade-transition">
             <v-card dark class="unselectable">
                 <v-card-title>
                     {{ dialogTitle }}
