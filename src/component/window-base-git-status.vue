@@ -149,7 +149,7 @@
         left: 0;
         right: 0;
         height: 290px;
-        top: -48px;
+        top: -20px;
         bottom: 0;
         margin: auto;
     }

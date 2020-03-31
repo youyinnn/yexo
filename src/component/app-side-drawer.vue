@@ -14,32 +14,32 @@
                 </v-tooltip>
             </v-list-item-group>
         </v-list>
-            <v-list-item class="action" style="position: absolute;width: 40px;bottom: 0;">
-                <v-list-item-content>
-                    <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="40" z-index="100" content-class="actionsMenuClass">
-                        <template v-slot:activator="{ on }">
-                            <v-btn tile dark v-on="on" style="min-width: initial; padding: 0;">
-                                <v-icon> {{ actionIcon }} </v-icon>
-                            </v-btn>
+        <v-list-item class="action" style="position: absolute;width: 40px;bottom: 0;" dense>
+            <v-list-item-content>
+                <v-menu id="actionsMenu" fixed top right nudge-top="-1" nudge-right="40" z-index="100" content-class="actionsMenuClass">
+                    <template v-slot:activator="{ on }">
+                        <v-btn tile dark v-on="on" style="min-width: initial; padding: 0;">
+                            <v-icon> {{ actionIcon }} </v-icon>
+                        </v-btn>
+                    </template>
+                    <v-list tile dark dense color="blue-grey darken-3">
+                        <v-divider></v-divider>
+                        <template v-for="(act, index) in actionMenu">
+                            <v-list-item :key="index" @click="act.func" dense>
+                                <v-list-item-icon style="margin-right: 16px">
+                                    <v-icon>{{ act.icon }}</v-icon>
+                                </v-list-item-icon>
+                                <v-list-item-content>
+                                    <v-list-item-title>{{ act.title }}</v-list-item-title>
+                                </v-list-item-content>
+                            </v-list-item>
+                            <v-divider :key="act.title"></v-divider>
                         </template>
-                        <v-list tile dark dense color="blue-grey darken-3">
-                            <v-divider></v-divider>
-                            <template v-for="(act, index) in actionMenu">
-                                <v-list-item :key="index" @click="act.func" dense>
-                                    <v-list-item-icon>
-                                        <v-icon>{{ act.icon }}</v-icon>
-                                    </v-list-item-icon>
-                                    <v-list-item-content>
-                                        <v-list-item-title>{{ act.title }}</v-list-item-title>
-                                    </v-list-item-content>
-                                </v-list-item>
-                                <v-divider :key="act.title"></v-divider>
-                            </template>
-                        </v-list>
-                    </v-menu>
-                </v-list-item-content>
-            </v-list-item>
-        <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.9" overlay-color="grey darken-3">
+                    </v-list>
+                </v-menu>
+            </v-list-item-content>
+        </v-list-item>
+        <v-dialog persistent v-model="dialog" width="400" overlay-opacity="0.7" overlay-color="grey darken-3">
             <v-card dark class="unselectable">
                 <v-card-title>
                     {{ dialogTitle }}

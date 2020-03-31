@@ -53,9 +53,14 @@
     }
 
     #app-frame-title span {
-        color: whitesmoke;
+        transition: all .5s;
+        color: #9e9e9e;
         font-size: 13px;
         float: left;
         margin-left: 5px;
+    }
+
+    #app-frame:hover #app-frame-title span {
+        color: whitesmoke;
     }
 </style>

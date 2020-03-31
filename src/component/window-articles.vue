@@ -1,6 +1,6 @@
 <template>
     <div id="window-articles-innerWindow">
-        <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet || (filteredArticles.length === 0 && !searching)">
+        <div id="no-articles-folders-path-set-show" v-if="!articlesFolderPathSet">
             <div class="c1 text-center unselectable" v-if="!articlesFolderPathSet">
                 <img :src="logo" ondragstart="return false;">
                 <p>Please Set Articles' Folder Path First!</p>
@@ -8,46 +8,45 @@
                     <v-btn tile small color="primary" @click="jumpToWindowSettings">Jump To Settings</v-btn>
                 </div>
             </div>
-            <div class="c1 text-center" v-else-if="filteredArticles.length === 0">
-                <img :src="logo" ondragstart="return false;">
-                <p>No Articles In Here!</p>
-                <div class="my-2">
-                    <v-btn tile small color="primary" @click="jumpToWindowSettings">Choose Another Folder.</v-btn>
-                </div>
-            </div>
         </div>
         <div id="articles-folders-path-set-show" v-else>
             <div>
                 <v-list style="background-color: #302f2f; padding: 8px 0 0;" dense>
                     <v-list-item dark dense>
-                        <v-text-field class="articles-search-bar theme--dark" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable @focus="() => { searching = true}" @blur="() => { searching = false}"></v-text-field>
+                        <v-text-field class="articles-search-bar theme--dark" v-model="searchText" label="Search Articles" :prepend-icon="search" hide-details outlined dense clearable></v-text-field>
                     </v-list-item>
                 </v-list>
-                <v-list style="background-color: #302f2f;">
-                    <transition-group name="article-list-transit">
-                        <v-list-item dark v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
-                            <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
-                                <v-card-text class="text-left">
-                                    <div class="article-title-span text-truncate">{{ article.metadata.title }}</div>
-                                    <div class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</div>
-                                </v-card-text>
-                                <v-card-actions style="display: flex; height: 40px; padding: 0 10px 10px 10px">
-                                    <v-btn v-if="article.gitStatus.icon !== null" small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
-                                        <v-icon v-if="article.gitStatus.icon !== null" left> {{ article.gitStatus.icon }}</v-icon> {{ article.gitStatus.text }}
-                                    </v-btn>
-                                    <v-btn style="position: absolute; right: 10px;" x-small dark color="cyan darken-4" @click.stop="openMd(article.metadata.title + '.md')">
-                                        Open
-                                    </v-btn>
-                                </v-card-actions>
-                            </v-card>
-                        </v-list-item>
-                    </transition-group>
-                </v-list>
+                <transition-group name="article-list-transit">
+                    <v-list v-if="filteredArticles.length > 0" style="background-color: #302f2f;" key="article-list">
+                        <transition-group name="article-list-transit">
+                            <v-list-item dark v-for="article in filteredArticles" :key="article.metadata.title" dense two-line>
+                                <v-card class="mx-auto article-card" @click.stop="dialogOpen(article)">
+                                    <v-card-text class="text-left">
+                                        <div class="article-title-span text-truncate">{{ article.metadata.title }}</div>
+                                        <div class="article-date-span">{{ dayjs.utc(article.metadata.date).format('YYYY-MM-DD HH:mm') }}</div>
+                                    </v-card-text>
+                                    <v-card-actions style="display: flex; height: 40px; padding: 0 10px 10px 10px">
+                                        <v-btn v-if="article.gitStatus.icon !== null" small dark tile class="float-left git-status-btn" :class="article.gitStatus.class" @click.stop>
+                                            <v-icon v-if="article.gitStatus.icon !== null" left> {{ article.gitStatus.icon }}</v-icon> {{ article.gitStatus.text }}
+                                        </v-btn>
+                                        <v-btn style="position: absolute; right: 10px;" x-small dark color="cyan darken-4" @click.stop="openMd(article.metadata.title + '.md')">
+                                            Open
+                                        </v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-list-item>
+                        </transition-group>
+                    </v-list>
+                    <div class="c1 text-center" v-else-if="ready && filteredArticles.length === 0" key="no-article-for-search">
+                        <img :src="logo" ondragstart="return false;">
+                        <p>No Articles for “{{ searchText }}”</p>
+                    </div>
+                </transition-group>
             </div>
             <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.9" overlay-color="grey darken-3">
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3">
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-divider></v-divider>
@@ -68,7 +67,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.9" overlay-color="grey darken-3">
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3">
                 <v-card>
                     <v-card-title>Create a new article</v-card-title>
                     <v-divider></v-divider>
@@ -130,9 +129,9 @@
             return {
                 articlesFolderPathSet: localStorage.getItem('articlesFolderPath') !== null,
                 filteredArticles: [],
+                ready: false,
                 search: mdiFileDocumentBoxSearchOutline,
                 searchText: '',
-                searching: false,
                 cacheUpdate: 0,
                 metadataUpdateDialog: false,
                 editingArticle: null,
@@ -224,11 +223,8 @@
                 this.editingArticle = cache
             },
             filteredArticles(nv) {
-                if (nv.length === 0) {
-                    this.infoToast('No articles in this folder')
-                } else {
-                    this.setGitStatusCache()
-                }
+                this.setGitStatusCache()
+                this.ready = true
             }
         },
         methods: {
@@ -358,7 +354,8 @@
     #window-articles-innerWindow {
         height: 100%;
         background-color: #302f2f;
-        overflow: auto;
+        overflow-y: scroll;
+        overflow-x: hidden;
     }
 
     #no-articles-folders-path-set-show {
@@ -380,6 +377,8 @@
         width: 100%;
         align-self: center;
         color: whitesmoke;
+        position: fixed;
+        top: 120px;
     }
 
     .article-card {
@@ -393,7 +392,7 @@
         transform: scale(1.02);
     }
 
-    .v-card__text{
+    .v-card__text {
         transition: all .3s;
     }
 

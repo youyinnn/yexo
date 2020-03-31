@@ -17,7 +17,6 @@
                     </v-col>
                 </v-row>
             </v-card-text>
-            <v-divider></v-divider>
             <v-card-actions style="display: block; text-align: right">
                 <v-btn x-small depressed color="cyan accent-4" dark @click="saveGithubSettings">
                     Save
@@ -54,6 +53,9 @@
                 </v-card>
             </v-col>
         </v-row>
+        <div id="footer">
+            {{ version }}
+        </div>
     </div>
 </template>
 
@@ -70,6 +72,7 @@
     import metadataExtractor from '../plugins/artricles-data-extract'
     import execa from 'execa'
     import chokidar from 'chokidar'
+    import packageJson from '../../package.json'
 
     var clear
 
@@ -113,6 +116,7 @@
                 }, {
                     title: 'undefined'
                 }],
+                version: 'Yexo ' + packageJson.version
             }
         },
         methods: {
@@ -242,5 +246,13 @@
     #window-settings-innerWindow {
         padding: 10px;
         overflow: hidden;
+    }
+
+    #footer {
+        user-select: none;
+        margin-top: 10px;
+        text-align: center;
+        color: #888888;
+        font-size: 12px;
     }
 </style>
