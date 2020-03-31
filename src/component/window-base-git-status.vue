@@ -1,71 +1,73 @@
 <template>
     <div id="window-base-git-status-innerWindow">
-        <div id="no-status-show" v-if="noChanges" class="unselectable">
-            <div>
-                <img :src="logo" ondragstart="return false;">
-                <p>No Changes</p>
+        <transition-group name="cards">
+            <div id="no-status-show" v-if="noChanges" class="unselectable" key="no-status-show">
+                <div>
+                    <img :src="logo" ondragstart="return false;">
+                    <p>No Changes</p>
+                </div>
             </div>
-        </div>
-        <v-card class="mb-5" v-if="staged.length !== 0">
-            <v-card-subtitle class="grey darken-2 unselectable" style="color: white !important;">Staged</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in staged" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
-        <v-card class="mb-5" v-if="notAddedFiles.length !== 0">
-            <v-card-subtitle class="cyan unselectable" style="color: white !important;">Not Added</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in notAddedFiles" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
-        <v-card class="mb-5" v-if="created.length !== 0">
-            <v-card-subtitle class="indigo unselectable" style="color: white !important;">Created</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in created" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
-        <v-card class="mb-5" v-if="deleted.length !== 0">
-            <v-card-subtitle class="error unselectable" style="color: white !important;">Deleted</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in deleted" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
-        <v-card class="mb-5" v-if="modified.length !== 0">
-            <v-card-subtitle class="orange unselectable" style="color: white !important;">Modified</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in modified" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
-        <v-card class="mb-5" v-if="renamed.length !== 0">
-            <v-card-subtitle class="blue unselectable" style="color: white !important;">Renamed</v-card-subtitle>
-            <v-card-text>
-                <transition-group name="git-file">
-                    <p class="cp" v-for="n in renamed" :key="n">
-                        {{ n }}
-                    </p>
-                </transition-group>
-            </v-card-text>
-        </v-card>
+            <v-card class="mb-5" v-if="staged.length !== 0" key="staged-card">
+                <v-card-subtitle class="grey darken-2 unselectable" style="color: white !important;">Staged</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in staged" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+            <v-card class="mb-5" v-if="notAdded.length !== 0" key="not-added-card">
+                <v-card-subtitle class="cyan unselectable" style="color: white !important;">Not Added</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in notAdded" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+            <v-card class="mb-5" v-if="created.length !== 0" key="created-card">
+                <v-card-subtitle class="indigo unselectable" style="color: white !important;">Created</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in created" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+            <v-card class="mb-5" v-if="deleted.length !== 0" key="deleted-card">
+                <v-card-subtitle class="error unselectable" style="color: white !important;">Deleted</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in deleted" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+            <v-card class="mb-5" v-if="modified.length !== 0" key="modified-card">
+                <v-card-subtitle class="orange unselectable" style="color: white !important;">Modified</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in modified" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+            <v-card class="mb-5" v-if="renamed.length !== 0" key="renamed-card">
+                <v-card-subtitle class="blue unselectable" style="color: white !important;">Renamed</v-card-subtitle>
+                <v-card-text>
+                    <transition-group name="git-file">
+                        <p class="cp" v-for="n in renamed" :key="n">
+                            {{ n }}
+                        </p>
+                    </transition-group>
+                </v-card-text>
+            </v-card>
+        </transition-group>
     </div>
 </template>
 
@@ -86,7 +88,7 @@
     export default {
         data() {
             return {
-                notAddedFiles: [],
+                notAdded: [],
                 created: [],
                 deleted: [],
                 modified: [],
@@ -97,7 +99,7 @@
         },
         computed: {
             noChanges() {
-                return this.notAddedFiles.length === 0 &&
+                return this.notAdded.length === 0 &&
                     this.created.length === 0 &&
                     this.deleted.length === 0 &&
                     this.modified.length === 0 &&
@@ -109,7 +111,7 @@
             updateStatus() {
                 if (localStorage.getItem('articlesFolderPath') !== null) {
                     status(localStorage.getItem('articlesFolderPath')).then(status => {
-                        this.notAddedFiles = this.processFilesArr(status.not_added)
+                        this.notAdded = this.processFilesArr(status.not_added)
                         this.created = this.processFilesArr(status.created)
                         this.deleted = this.processFilesArr(status.deleted)
                         this.modified = this.processFilesArr(status.modified)
@@ -190,5 +192,20 @@
         transform: rotateX(90deg);
         height: 0;
         padding: 0;
+    }
+
+    .cards-enter-active {
+        transition: all .8s;
+        opacity: 0;
+    }
+
+    .cards-enter-to {
+        transition: all .8s;
+        opacity: 1;
+    }
+
+    .cards-leave-active {
+        transition: all .3s;
+        opacity: 0;
     }
 </style>

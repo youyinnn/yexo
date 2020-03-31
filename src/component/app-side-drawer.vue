@@ -176,7 +176,6 @@
                             this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                         }
                     } catch (error) {
-                        console.log(error)
                         this.errorToast(`Build Faild`)
                     }
                 } else {

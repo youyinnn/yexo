@@ -71,6 +71,8 @@
     import execa from 'execa'
     import chokidar from 'chokidar'
 
+    var clear
+
     export default {
         data: function() {
             return {
@@ -210,13 +212,16 @@
                     ignored: [/node_modules/, /(^|[\/\\])\../], // ignore dotfiles
                     persistent: true,
                     ignoreInitial: true
-                })  
+                })
                 let tz = this
                 watcher.on('all', (event, path) => {
-                    tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                    if (path.search('_posts') > -1 && path.endsWith('.md')) {
-                        tz.vueMap.get('window-articles-innerWindow').refreshStatus()
-                    }
+                    clearTimeout(clear)
+                    clear = setTimeout(() => {
+                        tz.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                        if (path.search('_posts') > -1 && path.endsWith('.md')) {
+                            tz.vueMap.get('window-articles-innerWindow').refreshStatus()
+                        }
+                    }, 200);
                 })
             }
         },
