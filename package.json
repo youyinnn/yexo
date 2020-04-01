@@ -26,7 +26,8 @@
     "forge": {
       "packagerConfig": {
         "icon": "./src/img/logo.ico",
-        "asar": true
+        "asar": true,
+        "ignore": ["_check"]
       },
       "makers": [
         {

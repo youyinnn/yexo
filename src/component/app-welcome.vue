@@ -25,7 +25,13 @@
             this.vueMap.get('window-articles-innerWindow').metadataUpdateDialog = true
             setTimeout(() => {
                 this.vueMap.get('window-articles-innerWindow').metadataUpdateDialog = false
-            }, 500);
+            }, 500)
+            setTimeout(() => {
+                this.vueMap.get('app-side-drawer').switchWindow('settings')
+            }, 600)
+            setTimeout(() => {
+                this.vueMap.get('app-side-drawer').switchWindow('articles')
+            }, 1000);
             setTimeout(() => {
                 document.getElementById('my-curtain').className = 'hide'
                 setTimeout(() => {
