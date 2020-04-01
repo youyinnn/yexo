@@ -51,10 +51,10 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" text @click="confirmAction()">
+                    <v-btn color="success" text @click.stop="confirmAction()" :disabled="!dialog">
                         Yes
                     </v-btn>
-                    <v-btn color="error" text @click="dialog = false;">
+                    <v-btn color="error" text @click.stop="dialog = false;" :disabled="!dialog">
                         Cancel
                     </v-btn>
                 </v-card-actions>

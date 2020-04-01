@@ -52,16 +52,16 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue lighten-1" small text dark @click="metadataUpdateDialog = false; updateMetadata()">
+                        <v-btn color="blue lighten-1" small text dark @click="metadataUpdateDialog = false; updateMetadata()" :disabled="!metadataUpdateDialog">
                             Confirm
                         </v-btn>
-                        <v-btn color="grey" small text dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()">
+                        <v-btn color="grey" small text dark @click="metadataUpdateDialog = false; cancelUpdatingMetadata()" :disabled="!metadataUpdateDialog">
                             Cancel
                         </v-btn>
                     </v-card-actions>
@@ -73,16 +73,16 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="dialogReadonly" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="blue lighten-1" small text dark @click="createArticleDialog = false; createArticle()">
+                        <v-btn color="blue lighten-1" small text dark @click="createArticleDialog = false; createArticle()" :disabled="!createArticleDialog">
                             Confirm
                         </v-btn>
-                        <v-btn color="grey" small text dark @click="createArticleDialog = false; resetCreateArticleDialog();">
+                        <v-btn color="grey" small text dark @click="createArticleDialog = false; resetCreateArticleDialog();" :disabled="!createArticleDialog">
                             Cancel
                         </v-btn>
                     </v-card-actions>
@@ -139,7 +139,6 @@
                 editingArticleTags: [],
                 editingArticleTitle: '',
                 resetDialog: 0,
-                dialogReadonly: true,
                 metadataUpdateCollector: new Map(),
                 dayjs: dayjs,
                 refreshBtnIcon: mdiRefresh,
@@ -210,12 +209,6 @@
                     this.editingArticleTags = []
                     this.editingArticleTitle = ''
                 }
-            },
-            metadataUpdateDialog(nv) {
-                this.dialogReadonly = !nv
-            },
-            createArticleDialog(nv) {
-                this.dialogReadonly = !nv
             },
             resetDialog(nv) {
                 let cache = this.editingArticle
