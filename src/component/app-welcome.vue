@@ -4,7 +4,7 @@
             <div class="my-curtain-center">
                 <img id="welcome-logo" :src="welcome" ondragstart="return false;">
                 <p> {{ welcoming }} </p>
-                <v-progress-circular indeterminate color="blue-grey"></v-progress-circular>
+                <v-progress-circular indeterminate color="blue-grey" size="40"></v-progress-circular>
             </div>
         </div>
     </transition-group>

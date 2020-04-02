@@ -43,6 +43,9 @@
             <v-card dark class="unselectable">
                 <v-card-title>
                     {{ dialogTitle }}
+                    <transition-group name="progress-transit">
+                        <v-progress-circular key="progressInConfirm" v-show="showProgressInConfirm" indeterminate color="amber" class="ml-3" size="20"></v-progress-circular>
+                    </transition-group>
                 </v-card-title>
                 <v-divider></v-divider>
                 <v-card-text>
@@ -51,10 +54,10 @@
                 <v-divider></v-divider>
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="success" text @click.stop="confirmAction()" :disabled="!dialog">
+                    <v-btn color="success" text @click.stop="confirmAction()" :disabled="disabled">
                         Yes
                     </v-btn>
-                    <v-btn color="error" text @click.stop="dialog = false;" :disabled="!dialog">
+                    <v-btn color="error" text @click.stop="dialog = false;" :disabled="disabled">
                         Cancel
                     </v-btn>
                 </v-card-actions>
@@ -124,7 +127,9 @@
                 dialog: false,
                 dialogTitle: '',
                 dialogCardText: '',
-                confirmAction: () => {}
+                confirmAction: () => {},
+                disabled: false,
+                showProgressInConfirm: false
             }
         },
         methods: {
@@ -141,16 +146,28 @@
                 }
             },
             pushConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> changes?', this.push)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> changes?', () => {
+                    this.disabled = true
+                    this.push()
+                })
             },
             commitConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to <code>commit</code> changes?', this.commit)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>commit</code> changes?', () => {
+                    this.disabled = true
+                    this.commit()
+                })
             },
             buildConfirmDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', this.build)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>build</code> a new site?', () => {
+                    this.disabled = true
+                    this.build()
+                })
             },
             discardChangesDialog() {
-                this.confirmDialog('Action Confirm', 'Do you want to <code>discard</code> all changes?', this.discard)
+                this.confirmDialog('Action Confirm', 'Do you want to <code>discard</code> all changes?', () => {
+                    this.disabled = true
+                    this.discard()
+                })
             },
             confirmDialog(title, text, func) {
                 this.dialog = true
@@ -159,36 +176,42 @@
                 this.confirmAction = func
             },
             build() {
+                this.showProgressInConfirm = true
                 let localRepoBasePath = localStorage.getItem('localRepoBasePath')
                 let buildJsFilePath = localStorage.getItem('buildJsFilePath')
                 if (localRepoBasePath !== null && buildJsFilePath !== null) {
-                    let rs
-                    try {
-                        rs = execa.sync('node', [buildJsFilePath], {
-                            preferLocal: true,
-                            execPath: localRepoBasePath,
-                            localDir: localRepoBasePath,
-                        })
-                        if (rs.failed) {
+                    (async () => {
+                        try {
+                            let rs
+                            rs = await execa('node', [buildJsFilePath], {
+                                preferLocal: true,
+                                execPath: localRepoBasePath,
+                                localDir: localRepoBasePath,
+                            })
+                            if (rs.failed) {
+                                this.errorToast(`Build Faild`)
+                            } else {
+                                this.successToast(`Build Sueccess`)
+                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            }
+                            this.dialog = false
+                        } catch (error) {
                             this.errorToast(`Build Faild`)
-                        } else {
-                            this.successToast(`Build Sueccess`)
-                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            this.dialog = false
                         }
-                    } catch (error) {
-                        this.errorToast(`Build Faild`)
-                    }
+                    })()
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath And BuildJsFilePath First!`)
+                    this.dialog = false
                 }
-                this.dialog = false
             },
             commit() {
+                this.showProgressInConfirm = true
                 if (localStorage.getItem('localRepoBasePath') !== null) {
                     let gitS = git(localStorage.getItem('localRepoBasePath'))
                     let status = gitS.status((err, status) => {
                         let allFiles = []
-                        let pre = status.not_added.concat(status.modified, status.renamed, status.created)
+                        let pre = status.not_added.concat(status.modified, status.renamed, status.created, status.deleted)
                         pre.forEach(file => {
                             allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
                         })
@@ -200,20 +223,20 @@
                                         this.infoToast(String(buffer))
                                     } else {
                                         this.infoToast(`Commit From Texo At ${now}`)
+                                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                                        this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                                     }
                                     this.dialog = false
                                 }
                                 stderr._events.data = (buffer) => {
-                                    if (String(buffer).search('up-to-date') === 0) {
-                                        this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                                    }
                                     this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
+                                    this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                                    this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                                     this.dialog = false
                                 }
                             })
                             .add(allFiles)
                             .commit(`commit from yexo at ${now}`)
-                        this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
@@ -221,6 +244,7 @@
                 }
             },
             push() {
+                this.showProgressInConfirm = true
                 let gitS = git(localStorage.getItem('localRepoBasePath'))
                 gitS
                     .outputHandler((command, stdout, stderr) => {
@@ -230,39 +254,43 @@
                             } else {
                                 this.infoToast(`Commit From Texo At ${now}`)
                             }
+                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                             this.dialog = false
                         }
                         stderr._events.data = (buffer) => {
-                            if (String(buffer).search('up-to-date') === 0) {
-                                this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
-                            }
+                            this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
+                            this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                             this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
                             this.dialog = false
                         }
                     })
                     .push(['origin', 'master'])
                     .push(['gitee', 'master'])
-                this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
             },
             discard() {
+                this.showProgressInConfirm = true
                 if (localStorage.getItem('localRepoBasePath') !== null) {
                     let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
                     let rs = gitSp.checkout('.').then(() => {
                         gitSp.clean('f').then(() => {
                             this.successToast(`Discard All Changes Success`)
+                            this.dialog = false
                         })
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
+                    this.dialog = false
                 }
-                this.dialog = false
             }
         },
         watch: {
             dialog(nv) {
                 if (!nv) {
                     this.confirmAction = () => {}
+                    this.showProgressInConfirm = false
                 }
+                this.disabled = !nv
             }
         }
     }
@@ -281,5 +309,20 @@
 
     .action {
         padding: 0;
+    }
+
+    .progress-transit-enter-active {
+        transition: all .8s;
+        opacity: 0;
+    }
+
+    .progress-transit-enter-to {
+        transition: all .8s;
+        opacity: 1;
+    }
+
+    .progress-transit-leave-active {
+        transition: all .3s;
+        opacity: 0;
     }
 </style>
