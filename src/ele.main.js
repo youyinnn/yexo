@@ -23,13 +23,6 @@ if (!gotTheLock) {
         if (win) {
             if (win.isMinimized()) win.restore()
             win.focus()
-            dialog.showMessageBoxSync(win, {
-                type: 'info',
-                title: '提示',
-                buttons: ['知道了'],
-                message: '程序已经存在',
-                detail: '请不要重复启动',
-            })
         }
     })
 
