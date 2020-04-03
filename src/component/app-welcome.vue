@@ -23,15 +23,15 @@
         },
         mounted() {
             this.vueMap.get('window-articles-innerWindow').metadataUpdateDialog = true
+            this.vueMap.get('app-side-drawer').dialog = true
+            this.vueMap.get('app-side-drawer').switchWindow('settings')
             setTimeout(() => {
                 this.vueMap.get('window-articles-innerWindow').metadataUpdateDialog = false
+                this.vueMap.get('app-side-drawer').dialog = false
             }, 500)
             setTimeout(() => {
-                this.vueMap.get('app-side-drawer').switchWindow('settings')
-            }, 600)
-            setTimeout(() => {
                 this.vueMap.get('app-side-drawer').switchWindow('articles')
-            }, 1000);
+            }, 1000)
             setTimeout(() => {
                 document.getElementById('my-curtain').className = 'hide'
                 setTimeout(() => {

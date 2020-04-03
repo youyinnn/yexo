@@ -1,7 +1,7 @@
 {
   "name": "yexo",
   "productName": "yexo",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Manage your blog articles.",
   "main": "src/ele.main.js",
   "scripts": {
@@ -27,7 +27,6 @@
       "packagerConfig": {
         "icon": "./src/img/logo.ico",
         "asar": true,
-        "ignore": ["_check"]
       },
       "makers": [
         {

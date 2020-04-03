@@ -46,7 +46,7 @@
             <v-btn fixed dark fab bottom small right color="green darken-2" @click.stop="openCreateArticleDialog">
                 <v-icon> {{ addBtnIcon }}</v-icon>
             </v-btn>
-            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" transition="fade-transition">
+            <v-dialog content-class="articleDialog" v-model="metadataUpdateDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" :transition="$store.state.dialogTransition">
                 <v-card>
                     <v-card-title>Update Article's Metadata</v-card-title>
                     <v-divider></v-divider>
@@ -67,7 +67,7 @@
                     </v-card-actions>
                 </v-card>
             </v-dialog>
-            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" transition="fade-transition">
+            <v-dialog content-class="articleDialog" v-model="createArticleDialog" persistent dark overlay-opacity="0.7" overlay-color="grey darken-3" :transition="$store.state.dialogTransition">
                 <v-card>
                     <v-card-title>Create a new article</v-card-title>
                     <v-divider></v-divider>

@@ -2,13 +2,13 @@
     <div id="window-settings-innerWindow">
         <v-card class="mx-auto mb-2" dark>
             <v-card-subtitle class="unselectable font-weight-black">
-                Local Base Setting
+                Local Base Settings
             </v-card-subtitle>
             <v-divider></v-divider>
             <v-card-text>
-                <v-row v-for="set in settings" :key="set.label" dense>
+                <v-row v-for="set in settings" :key="set.label" dense class="mt-2">
                     <v-col cols="10">
-                        <v-text-field readonly hide-details placeholder=" " v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
+                        <v-text-field dense readonly hide-details placeholder=" " v-model="set.value" :label="set.label" @focus="showFullPath(set)" @blur="showShortPath(set)"></v-text-field>
                     </v-col>
                     <v-col cols="2" style="align-self:flex-end;">
                         <v-btn class="btn" depressed small @click="set.action(set)">
@@ -19,6 +19,24 @@
             </v-card-text>
             <v-card-actions style="display: block; text-align: right">
                 <v-btn x-small depressed color="cyan accent-4" dark @click="saveGithubSettings">
+                    Save
+                </v-btn>
+            </v-card-actions>
+        </v-card>
+        <v-card class="mx-auto mb-2" dark>
+            <v-card-subtitle class="unselectable font-weight-black">
+                App Settings
+            </v-card-subtitle>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-row dense class="mt-2">
+                    <v-col cols="12">
+                        <v-select dense dark placeholder=" " hide-details v-model="dialogTransitionSelect" :items="dialogTransitionSelectList" label="Dialog Transition" :menu-props="{ maxHeight: 160, dark: true, dense: true}"></v-select>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-card-actions style="display: block; text-align: right">
+                <v-btn x-small depressed color="cyan accent-4" dark @click="saveAppSettings">
                     Save
                 </v-btn>
             </v-card-actions>
@@ -116,7 +134,9 @@
                 }, {
                     title: 'undefined'
                 }],
-                version: 'Yexo ' + packageJson.version
+                version: 'Yexo ' + packageJson.version,
+                dialogTransitionSelectList: ['fade-transition', 'scroll-x-transition',  'scroll-y-transition'],
+                dialogTransitionSelect: this.$store.state.dialogTransition
             }
         },
         methods: {
@@ -227,6 +247,10 @@
                         }
                     }, 200);
                 })
+            },
+            saveAppSettings() {
+                this.$store.commit('setDialogTransition', this.dialogTransitionSelect)
+                this.successToast('App Settings Saved')
             }
         },
         mounted() {
@@ -245,7 +269,8 @@
 
     #window-settings-innerWindow {
         padding: 10px;
-        overflow: hidden;
+        overflow: auto;
+        height: 100%;
     }
 
     #footer {

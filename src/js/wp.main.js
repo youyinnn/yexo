@@ -17,11 +17,16 @@ Vue.use(Toasted)
 
 const store = new Vuex.Store({
     state: {
-        currentWindow: 'window-articles'
+        currentWindow: 'window-articles',
+        dialogTransition: localStorage.getItem('dialogTransition') === null ? 'scroll-x-transition' : localStorage.getItem('dialogTransition')
     },
     mutations: {
         switchWindow(state, winStr) {
             state.currentWindow = winStr
+        },
+        setDialogTransition(state, set) {
+            state.dialogTransition = set
+            localStorage.setItem('dialogTransition', set)
         }
     }
 })
@@ -32,7 +37,7 @@ Vue.mixin({
     data: function() {
         return {
             vueMap: vueMap,
-            mapKey: ''
+            mapKey: '',
         }
     },
     mounted: function() {
