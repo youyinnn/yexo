@@ -52,8 +52,9 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Series" target="series" :originalValues="editingArticleSeries"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Categories" target="cates" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!metadataUpdateDialog" :reset="resetDialog" myLabel="Tags" target="tags" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
@@ -73,8 +74,9 @@
                     <v-divider></v-divider>
                     <v-card-text>
                         <v-text-field label="Title" placeholder="Title" v-model="editingArticleTitle" outlined hide-details style="margin-bottom: 10px;"></v-text-field>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Categories" forCates="true" :originalValues="editingArticleCates"></combobox-chips>
-                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Tags" forCates="false" :originalValues="editingArticleTags"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Series" target="series" :originalValues="editingArticleSeries"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Categories" target="cates" :originalValues="editingArticleCates"></combobox-chips>
+                        <combobox-chips :dataCollector="metadataUpdateCollector" :readonly="!createArticleDialog" :reset="resetDialog" myLabel="Tags" target="tags" :originalValues="editingArticleTags"></combobox-chips>
                     </v-card-text>
                     <v-divider></v-divider>
                     <v-card-actions>
@@ -137,6 +139,7 @@
                 editingArticle: null,
                 editingArticleCates: [],
                 editingArticleTags: [],
+                editingArticleSeries: [],
                 editingArticleTitle: '',
                 resetDialog: 0,
                 metadataUpdateCollector: new Map(),
@@ -144,7 +147,8 @@
                 refreshBtnIcon: mdiRefresh,
                 addBtnIcon: mdiPencilPlusOutline,
                 createArticleDialog: false,
-                logo: logo
+                logo: logo,
+                setGitStatusCacheClear: 0
             }
         },
         computed: {
@@ -204,10 +208,16 @@
                     this.editingArticleCates = nv.metadata.categories
                     this.editingArticleTags = nv.metadata.tags
                     this.editingArticleTitle = nv.metadata.title
+                    let a = []
+                    if (nv.metadata.series !== undefined) {
+                        a.push(nv.metadata.series)
+                    }
+                    this.editingArticleSeries = a
                 } else {
                     this.editingArticleCates = []
                     this.editingArticleTags = []
                     this.editingArticleTitle = ''
+                    this.editingArticleSeries = []
                 }
             },
             resetDialog(nv) {
@@ -250,18 +260,20 @@
                 let newArticleCates = this.metadataUpdateCollector.get('newArticleCates')
                 let newArticleTags = this.metadataUpdateCollector.get('newArticleTags')
                 let newArticleTitle = this.editingArticleTitle
+                let newArticleSeries = this.metadataUpdateCollector.get('newArticleSeries')
                 let isTitleChanged = newArticleTitle !== this.editingArticle.metadata.title
                 let isCatesChanged = newArticleCates !== undefined && newArticleCates.toString() !== this.editingArticle.metadata.categories.toString()
                 let isTagsChanged = newArticleTags !== undefined && newArticleTags.toString() !== this.editingArticle.metadata.tags.toString()
-                if (isTitleChanged || isCatesChanged || isTagsChanged) {
+                let isSeriesChanged = (this.editingArticle.metadata.series === undefined && newArticleTags !== undefined && newArticleSeries.length > 0) || (this.editingArticle.metadata.series !== undefined && newArticleTags !== undefined && newArticleSeries.toString() !== this.editingArticle.metadata.series.toString())
+                if (isTitleChanged || isCatesChanged || isTagsChanged || isSeriesChanged) {
                     let data = {
                         newArticleCates: newArticleCates,
                         newArticleTags: newArticleTags,
                         newArticleTitle: newArticleTitle,
+                        newArticleSeries: newArticleSeries,
                     }
                     articleUpdater.update(path.join(localStorage.getItem('articlesFolderPath'), this.editingArticle.metadata.title + '.md'), data)
                     this.updateCache()
-                    this.resetFilteredArticles()
                     this.infoToast(`Article "${this.editingArticleTitle}" has been updated`)
                     this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                 } else {
@@ -273,12 +285,15 @@
                 this.metadataUpdateCollector.clear()
             },
             setGitStatusCache() {
-                let tz = this
-                status(localStorage.getItem('articlesFolderPath')).then(status => {
-                    tz.filteredArticles.forEach(atcs => {
-                        atcs.gitStatus = tz.checkGitStatusForClass(status, atcs.metadata.title + '.md')
+                clearTimeout(this.setGitStatusCacheClear)
+                this.setGitStatusCacheClear = setTimeout(() => {
+                    let tz = this
+                    status(localStorage.getItem('articlesFolderPath')).then(status => {
+                        tz.filteredArticles.forEach(atcs => {
+                            atcs.gitStatus = tz.checkGitStatusForClass(status, atcs.metadata.title + '.md')
+                        })
                     })
-                })
+                }, 100)
             },
             checkGitStatusForClass(status, fileName) {
                 if (status.modified.find(mo => {
@@ -329,7 +344,8 @@
                 let data = {
                     title: this.editingArticleTitle,
                     categories: this.metadataUpdateCollector.get('newArticleCates'),
-                    tags: this.metadataUpdateCollector.get('newArticleTags')
+                    tags: this.metadataUpdateCollector.get('newArticleTags'),
+                    series: this.metadataUpdateCollector.get('newArticleSeries'),
                 }
                 articleUpdater.create(path.join(localStorage.getItem('articlesFolderPath'), `${data.title}.md`), data)
             }

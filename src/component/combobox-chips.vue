@@ -1,16 +1,16 @@
 <template>
-    <v-combobox dark v-model="inputValues" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 160, dark: true}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
+    <v-combobox dark v-model="inputValues" :placeholder="ph" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 160, dark: true, contentClass: 'mc'}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
         <template v-slot:no-data>
             <v-list-item dense>
                 <v-list-item-content>
                     <v-list-item-title>
-                        No sub-category "<strong>{{ search }}</strong>" in current categories. Press <kbd>enter</kbd> to create a new one
+                        Press Enter to add a new <kbd>{{ target }}</kbd> "<strong>{{ search }}</strong>".
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
         </template>
         <template v-slot:selection="{ item }">
-            <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small>
+            <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small style="max-width: 250px; display: inline-block;" class="text-truncate">
                 {{ item }}
             </v-chip>
         </template>
@@ -26,28 +26,37 @@
     import {
         catesTree,
         findNode,
-        tags
+        tags,
+        seriesMap
     } from '../plugins/artricles-data-extract'
 
+    var seriesList = []
+
     export default {
-        props: ['myLabel', 'originalValues', 'forCates', 'reset', 'readonly', 'dataCollector'],
+        props: ['myLabel', 'originalValues', 'target', 'reset', 'readonly', 'dataCollector'],
         data: () => ({
             search: null,
             allCates: catesTree,
             inputValues: [],
             itemsForSelect: [],
-            isForCates: false,
-            colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange']
+            colors: ['green', 'purple', 'indigo', 'cyan', 'teal', 'orange'],
+            ph: `nothing here`
         }),
         watch: {
             inputValues: function(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
-                    if (this.isForCates) {
+                    if (this.target === 'cates') {
                         this.dataCollector.set('newArticleCates', nv)
-                    } else {
+                    } else if (this.target === 'tags') {
                         this.dataCollector.set('newArticleTags', nv)
+                    } else if (this.target === 'series') {
+                        this.dataCollector.set('newArticleSeries', nv)
+                        if (nv.length > 1) {
+                            this.$nextTick(() => {
+                                this.inputValues.shift()
+                            })
+                        }
                     }
-                    this.setSelectingList(nv)
                 }
             },
             reset(nv) {
@@ -59,10 +68,13 @@
         },
         mounted() {
             this.inputValues = this.originalValues
-            this.isForCates = this.forCates === 'true'
+            seriesMap.forEach(function(value, key) {
+                seriesList.push(key)
+            })
         },
         methods: {
             getColor(name) {
+                name = String(name)
                 let number = 0
                 for (let i = 0; i < name.length; i++) {
                     number += name.codePointAt(i)
@@ -70,7 +82,7 @@
                 return this.colors[number % this.colors.length]
             },
             setSelectingList(nv) {
-                if (this.isForCates) {
+                if (this.target === 'cates') {
                     let catesList = []
                     if (nv === null || nv.length === 0) {
                         catesTree.forEach((cateNode) => {
@@ -87,10 +99,18 @@
                         }
                     }
                     this.itemsForSelect = catesList
-                } else {
+                } else if (this.target === 'tags') {
                     this.itemsForSelect = tags
+                } else if (this.target === 'series') {
+                    this.itemsForSelect = seriesList
                 }
             }
         }
     }
 </script>
+
+<style scoped>
+    .mc div {
+        background-color: #414141 !important;
+    }
+</style>

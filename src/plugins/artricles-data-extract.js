@@ -18,6 +18,16 @@ function findNode(cateNodeName) {
 
 var tags = []
 
+var seriesMap = new Map()
+function findSeries(title) {
+    for (const seriesName of seriesMap.keys()) {
+        for (const seriesTitle of seriesMap.get(seriesName)) {
+            if (seriesTitle === title)
+                return seriesName
+        }
+    }
+}
+
 function syncreihandle2metadata(text) {
     let endIndex = text.indexOf('---', 3) + 3
     let metadata = text.substring(4, endIndex - 3)
@@ -48,6 +58,7 @@ function syncreihandle2metadata(text) {
         }
     }
 
+    // handle tags
     for(let i = 0; metadata.tags !== undefined && i < metadata.tags.length; i++) {
         let tagName = metadata.tags[i]
         if (tags.find((t) => {
@@ -55,6 +66,16 @@ function syncreihandle2metadata(text) {
         }) === undefined) {
             tags.push(tagName)
         }
+    }
+
+    // handle series
+    if (metadata.series !== undefined) {
+        let v  = seriesMap.get(metadata.series)
+        if (v === undefined) {
+            v = []
+            seriesMap.set(metadata.series, v)
+        }
+        v.push(metadata.title)
     }
 
     // handle short_content
@@ -108,6 +129,7 @@ function extract(sourceMdStr) {
     try {
         metadata = syncreihandle2metadata(sourceMdStr)
     } catch (error) {
+        console.log(error)
         return
     }
     let endIndex = sourceMdStr.indexOf('---', 3) + 3
@@ -122,3 +144,5 @@ module.exports.extract = extract
 module.exports.catesTree = catesTree
 module.exports.findNode = findNode
 module.exports.tags = tags
+module.exports.seriesMap = seriesMap
+module.exports.findSeries = findSeries

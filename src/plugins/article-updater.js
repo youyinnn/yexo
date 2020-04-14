@@ -21,6 +21,15 @@ function update(mdFilePath, data) {
         })
         newText = newText.replace(/tags:\s*[\n|\r|\r\n](\s\s\-\s.*\s*[\n|\r|\r\n])*/, newArticleTagsText)
     }
+    if (data.newArticleSeries.length > 0) {
+        let newArticleSeriesText = `series: ${data.newArticleSeries[0]}\n`
+        if (newText.search(/series:\s*.*\s*[\n|\r|\r\n]/) > -1) {
+            newText = newText.replace(/series:\s*.*\s*[\n|\r|\r\n]/, newArticleSeriesText)
+        } else {
+            let tagIndex = newText.search(/tags:/)
+            newText = newText.substring(0, tagIndex) + newArticleSeriesText + newText.substring(tagIndex, newText.length)
+        }
+    }
     fs.writeFileSync(mdFilePath, newText, { encoding: 'utf-8'})
     if (data.newArticleTitle !== undefined) {
         fs.renameSync(mdFilePath, path.join(path.dirname(mdFilePath), data.newArticleTitle + '.md'))
@@ -45,6 +54,9 @@ function create(mdFilePath, data) {
             newArticle += `  - ${tg}\n`
         })
     }
+    if (data.series.length !== 0) {
+        newArticle += `series: ${data.series[0]}\n`
+    } 
     let now = new Date()
     newArticle += `date: ${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()} ${now.getHours()}:${now.getMinutes()}:${now.getSeconds()}\n---`
     fs.writeFileSync(mdFilePath, newArticle, {encoding:'utf-8'})
