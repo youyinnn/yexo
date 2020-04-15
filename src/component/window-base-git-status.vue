@@ -61,8 +61,10 @@
                 <v-card-subtitle class="blue unselectable" style="color: white !important;">Renamed</v-card-subtitle>
                 <v-card-text>
                     <transition-group name="git-file">
-                        <p class="cp" v-for="n in renamed" :key="n">
-                            {{ n }}
+                        <p class="cp" v-for="n in renamed" :key="n.from">
+                            <span style="text-decoration:line-through">{{ n.from }}</span>
+                            <br>
+                            {{ n.to }}
                         </p>
                     </transition-group>
                 </v-card-text>
@@ -115,7 +117,7 @@
                         this.created = this.processFilesArr(status.created)
                         this.deleted = this.processFilesArr(status.deleted)
                         this.modified = this.processFilesArr(status.modified)
-                        this.renamed = this.processFilesArr(status.renamed)
+                        this.renamed = this.processRenameFilesArr(status.renamed)
                         this.staged = this.processFilesArr(status.staged)
                     })
                 }
@@ -123,6 +125,13 @@
             processFilesArr(arr) {
                 for (let i = 0; i < arr.length; i++) {
                     arr[i] = arr[i].replace(/"|'/g, '')
+                }
+                return arr.sort()
+            },
+            processRenameFilesArr(arr) {
+                for (let i = 0; i < arr.length; i++) {
+                    arr[i].from = arr[i].from.replace(/"|'/g, '')
+                    arr[i].to = arr[i].to.replace(/"|'/g, '')
                 }
                 return arr.sort()
             }

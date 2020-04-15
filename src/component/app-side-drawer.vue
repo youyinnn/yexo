@@ -211,7 +211,7 @@
                     let gitS = git(localStorage.getItem('localRepoBasePath'))
                     let status = gitS.status((err, status) => {
                         let allFiles = []
-                        let pre = status.not_added.concat(status.modified, status.renamed, status.created, status.deleted)
+                        let pre = status.not_added.concat(status.modified, status.created, status.deleted)
                         pre.forEach(file => {
                             allFiles.push(path.join(localStorage.getItem('localRepoBasePath'), file.replace(/"|'/g, '')))
                         })
