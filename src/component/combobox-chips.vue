@@ -1,5 +1,5 @@
 <template>
-    <v-combobox dark v-model="inputValues" :placeholder="ph" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details small-chips outlined :menu-props="{ maxHeight: 160, dark: true, contentClass: 'mc'}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
+    <v-combobox dark v-model="inputValues" :placeholder="ph" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details chips small-chips outlined :menu-props="{ maxHeight: 160, dark: true, contentClass: 'mc'}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
         <template v-slot:no-data>
             <v-list-item dense>
                 <v-list-item-content>
@@ -9,8 +9,8 @@
                 </v-list-item-content>
             </v-list-item>
         </template>
-        <template v-slot:selection="{ item }">
-            <v-chip :color="`${getColor(item)} lighten-1`" text-color="white" label small style="max-width: 250px; display: inline-block;" class="text-truncate">
+        <template v-slot:selection="{ attrs, item, parent, selected }">
+            <v-chip :color="`${getColor(item)}`" text-color="white" label small style="max-width: 250px; display: inline-block;" class="text-truncate" :input-value="selected">
                 {{ item }}
             </v-chip>
         </template>
@@ -57,13 +57,14 @@
                             })
                         }
                     }
+                    this.setSelectingList(nv)
                 }
             },
             reset(nv) {
                 this.inputValues = this.originalValues
             },
             originalValues(nv) {
-                this.inputValues = this.originalValues
+                this.inputValues = nv
             },
         },
         mounted() {
@@ -104,7 +105,7 @@
                 } else if (this.target === 'series') {
                     this.itemsForSelect = seriesList
                 }
-            }
+            },
         }
     }
 </script>
