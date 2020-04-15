@@ -31,7 +31,7 @@
             <v-card-text>
                 <v-row dense class="mt-2">
                     <v-col cols="12">
-                        <v-select dense dark placeholder=" " hide-details v-model="dialogTransitionSelect" :items="dialogTransitionSelectList" label="Dialog Transition" :menu-props="{ maxHeight: 160, dark: true, dense: true}"></v-select>
+                        <v-select dense dark placeholder=" " hide-details v-model="dialogTransitionSelect" :items="dialogTransitionSelectList" label="Dialog Transition" :menu-props="{ maxHeight: 160, dark: true, dense: true, contentClass: 'mc', bottom: true, nudgeBottom: 37}"></v-select>
                     </v-col>
                 </v-row>
             </v-card-text>
@@ -135,7 +135,7 @@
                     title: 'undefined'
                 }],
                 version: 'Yexo ' + packageJson.version,
-                dialogTransitionSelectList: ['fade-transition', 'scroll-x-transition',  'scroll-y-transition'],
+                dialogTransitionSelectList: ['fade-transition', 'scroll-x-transition', 'scroll-y-transition'],
                 dialogTransitionSelect: this.$store.state.dialogTransition
             }
         },
@@ -279,5 +279,9 @@
         text-align: center;
         color: #888888;
         font-size: 12px;
+    }
+
+    .mc div {
+        background-color: #353434 !important;
     }
 </style>

@@ -1,11 +1,11 @@
 {
   "name": "yexo",
   "productName": "yexo",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Manage your blog articles.",
   "main": "src/ele.main.js",
   "scripts": {
-    "package": "electron-forge package",
+    "package": "npm run prodwp && electron-forge package",
     "make": "electron-forge make --skip-package",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",

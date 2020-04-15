@@ -1,21 +1,21 @@
 <template>
-    <v-combobox dark v-model="inputValues" :placeholder="ph" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details chips small-chips outlined :menu-props="{ maxHeight: 160, dark: true, contentClass: 'mc'}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;">
+    <v-combobox dark v-model="inputValues" :placeholder="ph" :readonly="readonly" :items="itemsForSelect" :search-input.sync="search" hide-selected :label="myLabel" multiple hide-details chips small-chips outlined :menu-props="{ maxHeight: 160, dark: true, contentClass: 'mc'}" @focus="setSelectingList(inputValues)" style="margin-bottom: 10px;" @keydown="keydownFunction">
         <template v-slot:no-data>
             <v-list-item dense>
                 <v-list-item-content>
-                    <v-list-item-title>
+                    <v-list-item-title class="unselectable">
                         Press Enter to add a new <kbd>{{ target }}</kbd> "<strong>{{ search }}</strong>".
                     </v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
         </template>
         <template v-slot:selection="{ attrs, item, parent, selected }">
-            <v-chip :color="`${getColor(item)}`" text-color="white" label small style="max-width: 250px; display: inline-block;" class="text-truncate" :input-value="selected">
+            <v-chip :color="`${getColor(item)} darken-1`" text-color="white" label small style="max-width: 250px; display: inline-block;" class="text-truncate" :input-value="selected">
                 {{ item }}
             </v-chip>
         </template>
         <template v-slot:item="{ item }">
-            <v-chip :color="`${getColor(item)} darken-1`" text-color="white" label small>
+            <v-chip :color="`${getColor(item)} darken-2`" text-color="white" label small>
                 {{ item }}
             </v-chip>
         </template>
@@ -43,7 +43,7 @@
             ph: `nothing here`
         }),
         watch: {
-            inputValues: function(nv, ov) {
+            inputValues(nv, ov) {
                 if (nv !== null && nv !== undefined && ov !== null && ov !== undefined) {
                     if (this.target === 'cates') {
                         this.dataCollector.set('newArticleCates', nv)
@@ -58,6 +58,7 @@
                         }
                     }
                     this.setSelectingList(nv)
+                    this.$children[0].selectedIndex = nv.length - 1
                 }
             },
             reset(nv) {
@@ -106,12 +107,23 @@
                     this.itemsForSelect = seriesList
                 }
             },
+            keydownFunction(e) {
+                if (e.code === 'Backspace') {
+                    if (this.target === 'cates' && this.$children[0].selectedIndex < this.inputValues.length - 1) {
+                        e.preventDefault()
+                        let nw = this.inputValues.slice(0, this.$children[0].selectedIndex)
+                        setTimeout(() => {
+                            this.inputValues = nw
+                        }, 30);
+                    }
+                }
+            }
         }
     }
 </script>
 
 <style scoped>
     .mc div {
-        background-color: #414141 !important;
+        background-color: #353434 !important;
     }
 </style>
