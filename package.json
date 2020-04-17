@@ -1,7 +1,7 @@
 {
   "name": "yexo",
   "productName": "yexo",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Manage your blog articles.",
   "main": "src/ele.main.js",
   "scripts": {

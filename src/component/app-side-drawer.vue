@@ -222,7 +222,7 @@
                                     if (String(buffer).search('nothing to commit, working tree clean') > -1) {
                                         this.infoToast(String(buffer))
                                     } else {
-                                        this.infoToast(`Commit From Texo At ${now}`)
+                                        this.infoToast(`Commit From Yexo At ${now}`)
                                         this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                                         this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                                     }
@@ -249,13 +249,9 @@
                 gitS
                     .outputHandler((command, stdout, stderr) => {
                         stdout._events.data = (buffer) => {
-                            if (String(buffer).search('nothing to commit, working tree clean') > -1) {
-                                this.infoToast(String(buffer))
-                            } else {
-                                this.infoToast(`Commit From Texo At ${now}`)
-                            }
                             this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
                             this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
+                            this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
                             this.dialog = false
                         }
                         stderr._events.data = (buffer) => {
