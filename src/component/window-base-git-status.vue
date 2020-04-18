@@ -165,6 +165,8 @@
 
     #window-base-git-status-innerWindow {
         padding: 10px;
+        overflow-y: scroll;
+        height: 100%;
     }
 
     .cp {
@@ -216,5 +218,10 @@
     .cards-leave-active {
         transition: all .3s;
         opacity: 0;
+    }
+
+    .v-card__text {
+        max-height: 300px;
+        overflow: auto;
     }
 </style>

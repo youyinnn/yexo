@@ -2,12 +2,9 @@ import fs from 'fs'
 import path from 'path'
 export default () => {
     if (process.env.APPENV !== 'DEV') {
-        try {
-            fs.readFileSync(path.join(process.cwd(), '..', '.yexo_check'))
-        } catch (error) {
-            console.log('localStorage clear')
+        if (!fs.existsSync(path.join(process.cwd(), '..', '..', '.yexo_check'))) {
             localStorage.clear()
-            fs.writeFileSync(path.join(process.cwd(), '..', '.yexo_check'), `check at ${new Date()}`);
+            fs.writeFileSync(path.join(process.cwd(), '..', '..', '.yexo_check'), `check at ${new Date()}`);
         }
     }
 }
