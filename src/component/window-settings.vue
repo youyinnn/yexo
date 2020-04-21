@@ -222,6 +222,7 @@
                 if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
                     localStorage.setItem('buildJsFilePath', this.findSet('buildJsFilePath').path)
                 }
+                this.successToast('Local Base Settings Saved')
             },
             openRs(rs) {
                 let rsp = localStorage.getItem('webResourcesFolderPath')

@@ -248,7 +248,7 @@
             },
             resetFilteredArticles(clearSearchText) {
                 this.filteredArticles = this.articlesCache
-                if (clearSearchText !== undefined && clearSearchText) {
+                if (Boolean(clearSearchText)) {
                     this.searchText = ''
                 }
             },
@@ -290,14 +290,14 @@
                     let tz = this
                     status(localStorage.getItem('articlesFolderPath')).then(status => {
                         tz.filteredArticles.forEach(atcs => {
-                            atcs.gitStatus = tz.checkGitStatusForClass(status, atcs.metadata.title + '.md')
+                            atcs.gitStatus = tz.checkGitStatusForClass(status, atcs.metadata.title)
                         })
                     })
                 }, 100)
             },
             checkGitStatusForClass(status, fileName) {
                 if (status.modified.find(mo => {
-                        return mo.endsWith(fileName)
+                        return mo.search(fileName) > -1
                     })) {
                     return {
                         icon: mdiCircleEditOutline,
@@ -305,7 +305,7 @@
                         text: 'modified'
                     }
                 } else if (status.created.find(cre => {
-                        return cre.endsWith(fileName)
+                        return cre.search(fileName) > -1
                     })) {
                     return {
                         icon: mdiCreation,
@@ -313,7 +313,7 @@
                         text: 'created'
                     }
                 } else if (status.not_added.find(noa => {
-                        return noa.endsWith(fileName)
+                        return noa.search(fileName) > -1
                     })) {
                     return {
                         icon: mdiNewBox,
