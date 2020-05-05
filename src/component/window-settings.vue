@@ -41,6 +41,24 @@
                 </v-btn>
             </v-card-actions>
         </v-card>
+        <v-card class="mx-auto mb-2" dark>
+            <v-card-subtitle class="unselectable font-weight-black">
+                Algolia Settings
+            </v-card-subtitle>
+            <v-divider></v-divider>
+            <v-card-text>
+                <v-row v-for="set in agsettings" :key="set.label" dense class="mt-2">
+                    <v-col>
+                        <v-text-field :type="set.type" dense hide-details placeholder=" " v-model="set.value" :label="set.label"></v-text-field>
+                    </v-col>
+                </v-row>
+            </v-card-text>
+            <v-card-actions style="display: block; text-align: right">
+                <v-btn x-small depressed color="cyan accent-4" dark @click="saveAlgoliaSettings">
+                    Save
+                </v-btn>
+            </v-card-actions>
+        </v-card>
         <v-row dense>
             <v-col v-for="rs in firstRowOfRs" :key="rs.title">
                 <v-card v-if="rs.title !== 'undefined'" dark>
@@ -99,21 +117,31 @@
             return {
                 pathSelectIcon: mdiFolderTextOutline,
                 settings: [{
-                        key: 'localRepoBasePath',
-                        label: 'Local Repo Base Path',
-                        value: this.getPathForShow(localStorage.getItem('localRepoBasePath')),
-                        action: this.selectFolder,
-                        dialogTitle: 'Select Your Local Base Path',
-                        path: localStorage.getItem('localRepoBasePath') === null ? 'Not Set' : localStorage.getItem('localRepoBasePath')
+                    key: 'localRepoBasePath',
+                    label: 'Local Repo Base Path',
+                    value: this.getPathForShow(localStorage.getItem('localRepoBasePath')),
+                    action: this.selectFolder,
+                    dialogTitle: 'Select Your Local Base Path',
+                    path: localStorage.getItem('localRepoBasePath') === null ? 'Not Set' : localStorage.getItem('localRepoBasePath')
+                }],
+                agsettings: [{
+                        key: 'algoliaAppId',
+                        label: 'AppID',
+                        value: localStorage.getItem('algoliaAppId'),
+                        type: 'text'
                     },
                     {
-                        key: 'buildJsFilePath',
-                        label: 'BuildJs File Path',
-                        value: this.getPathForShow(localStorage.getItem('buildJsFilePath')),
-                        action: this.selectFile,
-                        dialogTitle: 'Select Your BuildJs File Path',
-                        path: localStorage.getItem('buildJsFilePath') === null ? 'Not Set' : localStorage.getItem('buildJsFilePath')
-                    }
+                        key: 'algoliaApiAdminKey',
+                        label: 'App Admin Key',
+                        value: localStorage.getItem('algoliaApiAdminKey'),
+                        type: 'password'
+                    },
+                    {
+                        key: 'algoliaAppIndex',
+                        label: 'App Index',
+                        value: localStorage.getItem('algoliaAppIndex'),
+                        type: 'text'
+                    },
                 ],
                 firstRowOfRs: [{
                     title: 'Scripts',
@@ -147,8 +175,13 @@
                     return ''
                 }
             },
-            findSet(key) {
+            findSetFromSettings(key) {
                 return this.settings.find((set) => {
+                    return set.key === key
+                })
+            },            
+            findSetFromAlgoliaSettings(key) {
+                return this.agsettings.find((set) => {
                     return set.key === key
                 })
             },
@@ -181,10 +214,12 @@
                 set.value = this.getPathForShow(set.path)
             },
             saveGithubSettings() {
-                if (this.findSet('localRepoBasePath').path !== 'Not Set' && this.findSet('localRepoBasePath').path !== localStorage.getItem('localRepoBasePath')) {
-                    localStorage.setItem('localRepoBasePath', this.findSet('localRepoBasePath').path)
+                if (this.findSetFromSettings('localRepoBasePath').path !== 'Not Set' && this.findSetFromSettings('localRepoBasePath').path !== localStorage.getItem('localRepoBasePath')) {
+                    localStorage.setItem('localRepoBasePath', this.findSetFromSettings('localRepoBasePath').path)
                     localStorage.setItem('webResourcesFolderPath', path.join(localStorage.getItem('localRepoBasePath'), '_websrc'))
                     localStorage.setItem('articlesFolderPath', path.join(localStorage.getItem('localRepoBasePath'), '_posts'))
+                    localStorage.setItem('buildJsFilePath', path.join(localStorage.getItem('localRepoBasePath'), 'plugins', 'mdgenerator.js'))
+                    localStorage.setItem('algoliaHelperJsPath', path.join(localStorage.getItem('localRepoBasePath'), 'plugins', 'algolia.helper.js'))
                     let windowArticlesInnerWindow = this.vueMap.get('window-articles-innerWindow')
                     windowArticlesInnerWindow.articlesFolderPathSet = true
                     this.infoToast('Articles\' Folder Path Has Been Updated')
@@ -219,9 +254,6 @@
                     })
                     this.setWatch()
                 }
-                if (this.findSet('buildJsFilePath').path !== 'Not Set' && this.findSet('buildJsFilePath').path !== localStorage.getItem('buildJsFilePath')) {
-                    localStorage.setItem('buildJsFilePath', this.findSet('buildJsFilePath').path)
-                }
                 this.successToast('Local Base Settings Saved')
             },
             openRs(rs) {
@@ -252,6 +284,12 @@
             saveAppSettings() {
                 this.$store.commit('setDialogTransition', this.dialogTransitionSelect)
                 this.successToast('App Settings Saved')
+            },
+            saveAlgoliaSettings() {
+                localStorage.setItem('algoliaAppId', this.findSetFromAlgoliaSettings('algoliaAppId').value)
+                localStorage.setItem('algoliaApiAdminKey', this.findSetFromAlgoliaSettings('algoliaApiAdminKey').value)
+                localStorage.setItem('algoliaAppIndex', this.findSetFromAlgoliaSettings('algoliaAppIndex').value)
+                this.successToast('Algolia Settings Saved')
             }
         },
         mounted() {
