@@ -123,6 +123,11 @@
                         func: this.discardChangesDialog,
                         icon: mdiUndoVariant
                     },
+                    {
+                        title: 'Push Algolia Records',
+                        func: this.pushAlgoliaRecordsDialog,
+                        icon: mdiUndoVariant
+                    },
                 ],
                 dialog: false,
                 dialogTitle: '',
@@ -169,6 +174,12 @@
                     this.discard()
                 })
             },
+            pushAlgoliaRecordsDialog() {
+                this.confirmDialog('Action Confirm', 'Do you want to <code>push</code> all articles keywords to Algolia Search?', () => {
+                    this.disabled = true
+                    this.algolia()
+                })
+            },
             confirmDialog(title, text, func) {
                 this.dialog = true
                 this.dialogTitle = title
@@ -197,6 +208,7 @@
                             this.dialog = false
                         } catch (error) {
                             this.errorToast(`Build Faild`)
+                            console.error(error)
                             this.dialog = false
                         }
                     })()
@@ -276,6 +288,48 @@
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
+                    this.dialog = false
+                }
+            },
+            algolia() {
+                let algoliaHelperJsPath = localStorage.getItem('algoliaHelperJsPath')
+                let localRepoBasePath = localStorage.getItem('localRepoBasePath')
+                if (path.isAbsolute(algoliaHelperJsPath)) {
+                    this.showProgressInConfirm = true;
+                    (async () => {
+                        try {
+                            let rs
+                            rs = await execa('node', [
+                                algoliaHelperJsPath,
+                                localStorage.getItem('algoliaAppId'),
+                                localStorage.getItem('algoliaApiAdminKey'),
+                                localStorage.getItem('algoliaAppIndex')
+                            ], {
+                                preferLocal: true,
+                                execPath: localRepoBasePath,
+                                localDir: localRepoBasePath,
+                            })
+                            if (rs.stdout === '') {
+                                this.errorToast(`Push Algolia Records Faild`)
+                                this.errorToast(JSON.parse(rs.stderr).error.name)
+                                this.errorToast(JSON.parse(rs.stderr).error.message)
+                            } else {
+                                this.successToast(`Push Algolia Records Sueccess`)
+                                this.successToast(`Push ${JSON.parse(rs.stdout).objectIDs.length} Records To Algolia`)
+                            }
+                            this.dialog = false
+                        } catch (error) {
+                            this.errorToast(`Push Algolia Records Faild`)
+                            console.log(error)
+                            this.dialog = false
+                        }
+                    })()
+                    // algoliaHelper.saveAllRecords({
+                    //     appId: localStorage.getItem('algoliaAppId'),
+                    //     apiKey: localStorage.getItem('algoliaApiAdminKey'),
+                    //     index: localStorage.getItem('algoliaAppIndex')
+                    // })
+                } else {
                     this.dialog = false
                 }
             }
