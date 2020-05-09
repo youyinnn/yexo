@@ -258,7 +258,7 @@
             push() {
                 this.showProgressInConfirm = true
                 let gitS = git(localStorage.getItem('localRepoBasePath'))
-                gitS
+                let withHandler = gitS
                     .outputHandler((command, stdout, stderr) => {
                         stdout._events.data = (buffer) => {
                             this.vueMap.get('window-base-git-status-innerWindow').updateStatus()
@@ -272,9 +272,12 @@
                             this.infoToast(`[${command.toUpperCase()}]${String(buffer)}`)
                             this.dialog = false
                         }
-                    })
-                    .push(['origin', 'master'])
-                    .push(['gitee', 'master'])
+                    });
+                
+                let remotes = localStorage.getItem('gitRemoteNames').split(',')
+                for (let i = 0; i < remotes.length; i++) {
+                    withHandler.push([remotes[i], 'master'])
+                }
             },
             discard() {
                 this.showProgressInConfirm = true
@@ -282,6 +285,7 @@
                     let gitSp = gitP(localStorage.getItem('localRepoBasePath'))
                     let rs = gitSp.checkout('.').then(() => {
                         gitSp.clean('f').then(() => {
+                            this.vueMap.get('window-articles-innerWindow').refreshArticleGitStatus()
                             this.successToast(`Discard All Changes Success`)
                             this.dialog = false
                         })
@@ -324,11 +328,6 @@
                             this.dialog = false
                         }
                     })()
-                    // algoliaHelper.saveAllRecords({
-                    //     appId: localStorage.getItem('algoliaAppId'),
-                    //     apiKey: localStorage.getItem('algoliaApiAdminKey'),
-                    //     index: localStorage.getItem('algoliaAppIndex')
-                    // })
                 } else {
                     this.dialog = false
                 }

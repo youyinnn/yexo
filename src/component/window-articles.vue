@@ -297,7 +297,7 @@
             },
             checkGitStatusForClass(status, fileName) {
                 if (status.modified.find(mo => {
-                        return mo.search(fileName) > -1
+                        return mo.includes(fileName)
                     })) {
                     return {
                         icon: mdiCircleEditOutline,
@@ -305,7 +305,7 @@
                         text: 'modified'
                     }
                 } else if (status.created.find(cre => {
-                        return cre.search(fileName) > -1
+                        return cre.includes(fileName)
                     })) {
                     return {
                         icon: mdiCreation,
@@ -313,7 +313,7 @@
                         text: 'created'
                     }
                 } else if (status.not_added.find(noa => {
-                        return noa.search(fileName) > -1
+                        return noa.includes(fileName)
                     })) {
                     return {
                         icon: mdiNewBox,

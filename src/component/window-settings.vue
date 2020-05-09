@@ -16,6 +16,11 @@
                         </v-btn>
                     </v-col>
                 </v-row>
+                <v-row dense class="mt-2">
+                    <v-col>
+                        <v-text-field dense hide-details placeholder=" " v-model="gitRemoteNamesModel" :label="gitRemoteLabel"></v-text-field>
+                    </v-col>
+                </v-row>
             </v-card-text>
             <v-card-actions style="display: block; text-align: right">
                 <v-btn x-small depressed color="cyan accent-4" dark @click="saveGithubSettings">
@@ -124,6 +129,7 @@
                     dialogTitle: 'Select Your Local Base Path',
                     path: localStorage.getItem('localRepoBasePath') === null ? 'Not Set' : localStorage.getItem('localRepoBasePath')
                 }],
+                gitRemoteLabel: 'Git Remote Names',
                 agsettings: [{
                         key: 'algoliaAppId',
                         label: 'AppID',
@@ -165,6 +171,22 @@
                 version: 'Yexo ' + packageJson.version,
                 dialogTransitionSelectList: ['fade-transition', 'scroll-x-transition', 'scroll-y-transition'],
                 dialogTransitionSelect: this.$store.state.dialogTransition
+            }
+        },
+        computed: {
+            gitRemoteNamesModel: {
+                get: function () {
+                    let rs = localStorage.getItem('gitRemoteNames')
+                    if (rs === null) {
+                        let def = 'origin'
+                        rs = def
+                        localStorage.setItem('gitRemoteNames', def)
+                    }
+                    return rs
+                },
+                set: function (nv) {
+                    localStorage.setItem('gitRemoteNames', nv)
+                }
             }
         },
         methods: {
