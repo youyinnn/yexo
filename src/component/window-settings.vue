@@ -151,7 +151,7 @@
                 ],
                 firstRowOfRs: [{
                     title: 'Scripts',
-                    fileName: 'scripts.md'
+                    fileName: 'scripts'
                 }, {
                     title: 'Todos',
                     fileName: 'todos.md'
@@ -175,7 +175,7 @@
         },
         computed: {
             gitRemoteNamesModel: {
-                get: function () {
+                get: function() {
                     let rs = localStorage.getItem('gitRemoteNames')
                     if (rs === null) {
                         let def = 'origin'
@@ -184,7 +184,7 @@
                     }
                     return rs
                 },
-                set: function (nv) {
+                set: function(nv) {
                     localStorage.setItem('gitRemoteNames', nv)
                 }
             }
@@ -201,7 +201,7 @@
                 return this.settings.find((set) => {
                     return set.key === key
                 })
-            },            
+            },
             findSetFromAlgoliaSettings(key) {
                 return this.agsettings.find((set) => {
                     return set.key === key
@@ -280,8 +280,13 @@
             },
             openRs(rs) {
                 let rsp = localStorage.getItem('webResourcesFolderPath')
+                let fullPath = path.join(rsp, rs)
                 if (rsp !== null) {
-                    execa(path.join(rsp, rs))
+                    if (path.extname(fullPath) === '') {
+                        execa(`explorer.exe "${fullPath}"`)
+                    } else {
+                        execa(fullPath)
+                    }
                 } else {
                     this.errorToast(`No Web Resources Folder Path Or No Such File`)
                 }
