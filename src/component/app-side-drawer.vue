@@ -247,8 +247,9 @@
                                     this.dialog = false
                                 }
                             })
-                            .add(allFiles)
-                            .commit(`commit from yexo at ${now}`)
+                            .add(allFiles, () => {
+                                gitS.commit(`commit from yexo at ${now}`)
+                            })
                     })
                 } else {
                     this.errorToast(`Please Set LocalRepoBasePath First!`)
