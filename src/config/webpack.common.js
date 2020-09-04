@@ -3,6 +3,9 @@ const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 module.exports = {
     target: 'electron-renderer',
+    node: {
+        __dirname: false,
+    },
     // JavaScript 执行入口文件
     entry: path.resolve(__dirname, '..', 'js', 'wp.main.js'),
     output: {
@@ -63,7 +66,11 @@ module.exports = {
                         emitFile: false
                     }
                 }
-            }
+            },
+            {
+                test: /\.node$/,
+                loader: 'node-loader',
+            },
         ]
     },
     plugins: [
