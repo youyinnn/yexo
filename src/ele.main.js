@@ -51,21 +51,21 @@ if (!gotTheLock) {
             rootPath: path.join(process.cwd(), 'src'),
             rules: [{
                     action: 'script',
-                    target: '.*\.less',
+                    target: '.*\\.less',
                     script: 'npm run less'
                 },
                 {
                     action: 'script',
-                    target: '.*\.js|.*\.vue',
+                    target: '.*\\.js|.*\\.vue',
                     script: 'npm run devwp'
                 },
                 {
                     action: 'app.relaunch',
-                    target: 'ele.main.js'
+                    target: 'ele\\.main\\.js'
                 },
                 {
                     action: 'app.reload',
-                    target: 'bundle.js'
+                    target: 'bundle\\.js'
                 }
             ],
             log: true,

@@ -98,6 +98,8 @@
     import fs from 'fs'
     import path from 'path'
     import execa from 'execa'
+    import open from 'mac-open'
+    import os from 'os'
     import {
         mdiFileDocumentBoxSearchOutline,
         mdiNewBox,
@@ -236,7 +238,15 @@
             },
             openMd(fileName) {
                 let mdpath = path.join(localStorage.getItem('articlesFolderPath'), fileName)
-                execa(mdpath)
+                if (os.type() == 'Windows_NT') {
+                    //windows
+                    execa(mdpath)
+                } else if (os.type() == 'Darwin') {
+                    //mac
+                    open(mdpath)
+                } else if (os.type() == 'Linux') {
+                    //Linux
+                }
             },
             refreshArticleGitStatus() {
                 this.updateCache()
