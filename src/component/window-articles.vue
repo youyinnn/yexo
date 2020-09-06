@@ -98,7 +98,6 @@
     import fs from 'fs'
     import path from 'path'
     import execa from 'execa'
-    import open from 'mac-open'
     import os from 'os'
     import {
         mdiFileDocumentBoxSearchOutline,
@@ -242,8 +241,19 @@
                     //windows
                     execa(mdpath)
                 } else if (os.type() == 'Darwin') {
-                    //mac
-                    open(mdpath)
+                    // mac
+                    (async () => {
+                        try {
+                            const {
+                                stdout
+                            } = await execa('open', [mdpath])
+                            if (stdout.trim().length !== 0) {
+                                console.log(stdout)
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    })()
                 } else if (os.type() == 'Linux') {
                     //Linux
                 }
