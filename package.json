@@ -6,7 +6,7 @@
   "main": "src/ele.main.js",
   "scripts": {
     "package": "npm run prodwp && electron-forge package",
-    "make": "electron-forge make --skip-package",
+    "make": "electron-forge make",
     "publish": "electron-forge publish",
     "lint": "echo \"No linting configured\"",
     "less": "lessc src/css/index.less src/css/style.css",
@@ -32,7 +32,16 @@
         {
           "name": "@electron-forge/maker-squirrel",
           "config": {
+            "iconUrl": "./src/img/logo.ico",
             "name": "yexo"
+          }
+        },
+        {
+          "name": "@electron-forge/maker-dmg",
+          "config": {
+            "icon": "./src/img/logo.icns",
+            "format": "ULFO",
+            "overwrite": true
           }
         }
       ]
@@ -54,6 +63,7 @@
   "devDependencies": {
     "@electron-forge/cli": "6.0.0-beta.50",
     "@electron-forge/maker-deb": "6.0.0-beta.50",
+    "@electron-forge/maker-dmg": "^6.0.0-beta.53",
     "@electron-forge/maker-rpm": "6.0.0-beta.50",
     "@electron-forge/maker-squirrel": "6.0.0-beta.50",
     "@electron-forge/maker-zip": "6.0.0-beta.50",

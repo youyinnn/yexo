@@ -114,6 +114,7 @@
     import execa from 'execa'
     import chokidar from 'chokidar'
     import packageJson from '../../package.json'
+    import os from 'os'
 
     var clear
 
@@ -282,10 +283,29 @@
                 let rsp = localStorage.getItem('webResourcesFolderPath')
                 let fullPath = path.join(rsp, rs)
                 if (rsp !== null) {
-                    if (path.extname(fullPath) === '') {
-                        execa(`explorer.exe "${fullPath}"`)
-                    } else {
-                        execa(fullPath)
+                    if (os.type() == 'Windows_NT') {
+                        //windows
+                        if (path.extname(fullPath) === '') {
+                            execa(`explorer.exe "${fullPath}"`)
+                        } else {
+                            execa(fullPath)
+                        }
+                    } else if (os.type() == 'Darwin') {
+                        // mac
+                        (async () => {
+                            try {
+                                const {
+                                    stdout
+                                } = await execa('open', [fullPath])
+                                if (stdout.trim().length !== 0) {
+                                    console.log(stdout)
+                                }
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        })()
+                    } else if (os.type() == 'Linux') {
+                        //Linux
                     }
                 } else {
                     this.errorToast(`No Web Resources Folder Path Or No Such File`)
@@ -342,7 +362,7 @@
     #footer {
         user-select: none;
         margin-top: 10px;
-        text-align: center;
+        text-align: right;
         color: #888888;
         font-size: 12px;
     }
