@@ -1,8 +1,7 @@
 const {
     app,
     BrowserWindow,
-    globalShortcut,
-    dialog
+    globalShortcut
 } = require('electron');
 const path = require('path');
 let win
@@ -110,17 +109,6 @@ if (!gotTheLock) {
             globalShortcut.register('CommandOrControl+Shift+C', () => {
                 app.quit()
             })
-            const os = require('os');
-            if (os.type() == 'Windows_NT') {
-                //windows
-
-                // BrowserWindow.addDevToolsExtension(path.join(process.env.LOCALAPPDATA, 'Google/Chrome/User Data/Default/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0', ))
-            } else if (os.type() == 'Darwin') {
-                //mac
-                // BrowserWindow.addDevToolsExtension('/Users/yinnnyou/Library/ApplicationSupport/Google/Chrome/Profile 1/Extensions/nhdogjmejiglipccpnnnanhbledajbpd/5.3.3_0')
-            } else if (os.type() == 'Linux') {
-                //Linux
-            }
         }
     } else {
         createWindow = () => {
