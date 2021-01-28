@@ -41,6 +41,7 @@ Vue.mixin({
         }
     },
     mounted: function() {
+        // 方便在任意组件访问其他组件
         this.vueMap.set(this.$el.id, this)
         this.mapKey = this.$el.id
     },
