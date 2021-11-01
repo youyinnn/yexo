@@ -1,6 +1,13 @@
 import fs from 'fs'
 import path from 'path'
 import os from 'os'
+
+// fix PATH problem on mac os. referring: https://github.com/electron/electron/issues/7688#issuecomment-255339146
+import fixPath from 'fix-path'
+if (os.type() == 'Darwin') {
+    fixPath()
+}
+
 export default () => {
     if (process.env.APPENV !== 'DEV') {
         let yc_location

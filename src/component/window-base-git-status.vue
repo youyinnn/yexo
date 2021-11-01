@@ -137,6 +137,7 @@
             }
         },
         mounted() {
+            this.updateStatus()
         }
     }
 </script>
